@@ -71,7 +71,17 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Blockers:
   - Registry-wide audit has unrelated `run_thread_missing` failures outside Lambchop; not caused by this update.
 - Next step:
-  - Commit this planner-loop update, then continue with pressure-test validation.
+  - Continue with pressure-test validation.
+
+### local-commit
+
+- Commit: `7281b2f`
+- Message: `feat: add autonomous scheduled work planning`
+- Validation recorded in commit body:
+  - JSON ledgers/templates parse.
+  - Non-template files have no unresolved angle-bracket placeholders.
+  - Lambchop automation config re-read includes scheduled-work-plan planner loop.
+  - Automation registry audit ran and only reported pre-existing global `run_thread_missing` failures outside Lambchop.
 
 ### automation-created
 

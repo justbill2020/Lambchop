@@ -129,7 +129,7 @@
       ],
       "branch": "master",
       "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
-      "commit": null,
+      "commit": "7281b2f",
       "blocker": null,
       "exclusive_scope": [
         "WORKFLOW.md",
@@ -148,7 +148,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "next_step": "Commit the planner-loop update, then continue with pressure-test validation.",
+      "next_step": "Continue with pressure-test validation.",
       "integration": {
         "target_branch": "master",
         "status": "ready",
