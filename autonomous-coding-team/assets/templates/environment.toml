@@ -1,0 +1,5 @@
+# Optional Codex local environment config for <PROJECT_NAME>.
+# Customize only when the repo needs setup commands before automation runs.
+
+[environment]
+name = "<PROJECT_SLUG>"

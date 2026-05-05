@@ -1,0 +1,90 @@
+{
+  "project": {
+    "name": "<PROJECT_NAME>",
+    "slug": "<PROJECT_SLUG>",
+    "phase": "<CURRENT_MILESTONE>",
+    "purpose": "<PROJECT_PURPOSE>",
+    "workflow_file": "WORKFLOW.md",
+    "specs_source": "<SPECS_SOURCE>",
+    "state_file": "docs/<PROJECT_SLUG>/state.json",
+    "progress_file": "docs/<PROJECT_SLUG>/progress.md",
+    "backoff_file": "docs/<PROJECT_SLUG>/backoff.json",
+    "worktree_root": ".worktrees",
+    "branch_prefix": "codex/",
+    "branch_name_template": "codex/<PROJECT_SLUG>-<work-item-key>",
+    "concurrency_mode": "cooperative",
+    "max_concurrent_runs": 3,
+    "lease_minutes": 120,
+    "main_branch": "<INTEGRATION_BRANCH>",
+    "external_issue_tracking": false,
+    "autonomy_policy": {
+      "default_mode": "local-commit",
+      "may_edit_code": true,
+      "may_run_checks": true,
+      "may_commit_locally": true,
+      "may_push": false,
+      "may_open_pr": false,
+      "may_deploy": false,
+      "may_modify_production_config": false,
+      "may_use_external_trackers": false
+    },
+    "updated_at": "<ISO8601_TIMESTAMP>"
+  },
+  "work_items": [
+    {
+      "key": "task-01-initial-discovery",
+      "title": "Complete autonomous project discovery",
+      "type": "setup",
+      "status": "todo",
+      "priority": 10,
+      "dependencies": [],
+      "source_refs": [
+        "WORKFLOW.md#first-run-discovery"
+      ],
+      "acceptance_criteria": [
+        "Repository stack, commands, docs, specs, and risks are recorded.",
+        "State and progress files match repository reality.",
+        "At least one implementation work item is created or a no-work reason is recorded."
+      ],
+      "implementation_notes": [
+        "Inspect before asking the user for missing product or policy decisions."
+      ],
+      "validation": [],
+      "branch": null,
+      "worktree": null,
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "docs/<PROJECT_SLUG>/state.json",
+        "docs/<PROJECT_SLUG>/progress.md",
+        "docs/<PROJECT_SLUG>/backoff.json"
+      ],
+      "shared_scope": [
+        "docs/"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Run first-run discovery and replace this setup item with project-specific work items.",
+      "integration": {
+        "target_branch": "<INTEGRATION_BRANCH>",
+        "status": "not_ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": null
+      },
+      "updated_at": "<ISO8601_TIMESTAMP>"
+    }
+  ],
+  "last_run": {
+    "timestamp": "<ISO8601_TIMESTAMP>",
+    "summary": "Autonomous workflow initialized.",
+    "active_work_item": null,
+    "next_action": "Run first-run discovery and normalize the work queue."
+  }
+}

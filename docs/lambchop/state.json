@@ -1,0 +1,245 @@
+{
+  "project": {
+    "name": "Lambchop",
+    "slug": "lambchop",
+    "phase": "autonomous-skill-mvp",
+    "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
+    "workflow_file": "WORKFLOW.md",
+    "specs_source": "autonomous-coding-team/",
+    "state_file": "docs/lambchop/state.json",
+    "progress_file": "docs/lambchop/progress.md",
+    "backoff_file": "docs/lambchop/backoff.json",
+    "worktree_root": ".worktrees",
+    "branch_prefix": "codex/",
+    "branch_name_template": "codex/lambchop-{work_item_key}",
+    "concurrency_mode": "cooperative",
+    "max_concurrent_runs": 3,
+    "lease_minutes": 120,
+    "main_branch": "master",
+    "external_issue_tracking": false,
+    "autonomy_policy": {
+      "default_mode": "local-commit",
+      "may_edit_code": true,
+      "may_run_checks": true,
+      "may_commit_locally": true,
+      "may_push": false,
+      "may_open_pr": false,
+      "may_deploy": false,
+      "may_modify_production_config": false,
+      "may_use_external_trackers": false
+    },
+    "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+  },
+  "work_items": [
+    {
+      "key": "task-01-foundation-skill-project",
+      "title": "Create autonomous coding team skill foundation",
+      "type": "skill-foundation",
+      "status": "done",
+      "priority": 10,
+      "dependencies": [],
+      "source_refs": [
+        "autonomous-coding-team/SKILL.md",
+        "autonomous-coding-team/references/",
+        "autonomous-coding-team/assets/templates/"
+      ],
+      "acceptance_criteria": [
+        "Skill entrypoint exists with Codex skill frontmatter.",
+        "References cover setup interview, workflow architecture, work item model, automation prompt, SeeItAI lessons, proof of work, and validation.",
+        "Templates exist for workflow, state, progress, backoff, and environment config.",
+        "No user-facing Python setup flow is required."
+      ],
+      "implementation_notes": [
+        "Initial setup was performed in the main checkout because the repository had no prior autonomous workflow or commits."
+      ],
+      "validation": [
+        "state.json template parsed as JSON",
+        "backoff.json template parsed as JSON",
+        "non-template docs scanned clean for angle-bracket placeholders",
+        "skill and references include local-only safety defaults"
+      ],
+      "branch": "master",
+      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/"
+      ],
+      "shared_scope": [
+        "docs/",
+        "WORKFLOW.md",
+        ".gitignore"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Create the initial local commit, then continue with pressure-test validation.",
+      "integration": {
+        "target_branch": "master",
+        "status": "ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": "2026-05-05T09:11:11.5771114-05:00"
+      },
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+    },
+    {
+      "key": "task-02-pressure-test-empty-repo-setup",
+      "title": "Pressure-test empty repo autonomous setup",
+      "type": "skill-validation",
+      "status": "todo",
+      "priority": 20,
+      "dependencies": [
+        "task-01-foundation-skill-project"
+      ],
+      "source_refs": [
+        "autonomous-coding-team/references/validation-checklist.md#pressure-scenarios"
+      ],
+      "acceptance_criteria": [
+        "A fresh empty repo scenario proves Codex inspects first and asks only missing product questions.",
+        "Generated workflow/state/progress/backoff files are complete and placeholder-free.",
+        "Progress records proof of setup and local-only safety defaults."
+      ],
+      "implementation_notes": [
+        "Use a temporary local fixture repo or a fresh subagent scenario. Do not require the user to run scripts."
+      ],
+      "validation": [],
+      "branch": null,
+      "worktree": null,
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/references/validation-checklist.md",
+        "docs/lambchop/"
+      ],
+      "shared_scope": [
+        "autonomous-coding-team/assets/templates/"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Run a validation scenario against an empty fixture repo and record proof.",
+      "integration": {
+        "target_branch": "master",
+        "status": "not_ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": null
+      },
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+    },
+    {
+      "key": "task-03-pressure-test-existing-repo-setup",
+      "title": "Pressure-test existing repo autonomous setup",
+      "type": "skill-validation",
+      "status": "todo",
+      "priority": 30,
+      "dependencies": [
+        "task-02-pressure-test-empty-repo-setup"
+      ],
+      "source_refs": [
+        "autonomous-coding-team/references/setup-interview.md",
+        "autonomous-coding-team/references/validation-checklist.md#pressure-scenarios"
+      ],
+      "acceptance_criteria": [
+        "An existing app/library repo scenario proves Codex infers stack, commands, and source-of-truth files before asking questions.",
+        "The setup updates or avoids duplicate automation when overlap exists.",
+        "State and progress capture evidence sufficient for a future automation run."
+      ],
+      "implementation_notes": [
+        "Prefer a temporary fixture or a safe local sample. Do not mutate unrelated user projects without explicit instruction."
+      ],
+      "validation": [],
+      "branch": null,
+      "worktree": null,
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/references/setup-interview.md",
+        "autonomous-coding-team/references/validation-checklist.md",
+        "docs/lambchop/"
+      ],
+      "shared_scope": [
+        "autonomous-coding-team/assets/templates/"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Run an existing-repo setup scenario and record proof.",
+      "integration": {
+        "target_branch": "master",
+        "status": "not_ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": null
+      },
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+    },
+    {
+      "key": "task-04-install-and-deploy-skill-locally",
+      "title": "Install and document local deployment of the skill",
+      "type": "deployment",
+      "status": "todo",
+      "priority": 40,
+      "dependencies": [
+        "task-03-pressure-test-existing-repo-setup"
+      ],
+      "source_refs": [
+        "autonomous-coding-team/SKILL.md",
+        "C:\\Users\\BillMartin\\.codex\\skills"
+      ],
+      "acceptance_criteria": [
+        "The skill can be installed or linked into Codex skills for local use.",
+        "A target-project deployment checklist is recorded.",
+        "No Cursor or Claude Code requirements are added to v1."
+      ],
+      "implementation_notes": [
+        "Keep deployment Codex-first. Cursor support is a later phase."
+      ],
+      "validation": [],
+      "branch": null,
+      "worktree": null,
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/",
+        "docs/lambchop/"
+      ],
+      "shared_scope": [],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Install or link the skill after validation tasks pass.",
+      "integration": {
+        "target_branch": "master",
+        "status": "not_ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": null
+      },
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+    }
+  ],
+  "last_run": {
+    "timestamp": "2026-05-05T09:11:11.5771114-05:00",
+    "summary": "Initialized Lambchop as the autonomous coding team skill project, added a work queue for validation and local deployment, and created the Codex automation.",
+    "active_work_item": "task-01-foundation-skill-project",
+    "next_action": "Commit the initialized workflow and skill project, then let automation continue with pressure-test validation."
+  }
+}

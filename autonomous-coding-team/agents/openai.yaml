@@ -1,0 +1,6 @@
+interface:
+  display_name: "Autonomous Coding Team"
+  short_description: "Set up repos for autonomous Codex work"
+  default_prompt: "Use $autonomous-coding-team to set this repository up as a local autonomous Codex coding team."
+policy:
+  allow_implicit_invocation: true
