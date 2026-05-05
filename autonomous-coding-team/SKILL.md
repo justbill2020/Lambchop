@@ -17,9 +17,12 @@ Install this skill into your local Codex skill folder so it can be used across r
 
 
 ## Local Installation (this repo)
-To install or link this skill into your local Codex skills folder, use:
+See [`references/local-skill-install.md`](references/local-skill-install.md) for scripted copy installs and optional junction installs.
 
-- `references/local-skill-deployment.md`
+## Cursor / Claude Code Notes
+These notes are informational and do not change the Codex-first v1 workflow.
+
+- Tool compatibility notes: [`references/cursor-claude-compatibility.md`](references/cursor-claude-compatibility.md)
 
 ## When To Use
 - User asks to set up a repo as an autonomous coding team, self-driving repo, recurring Codex worker, or autonomous implementation loop.

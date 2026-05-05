@@ -62,3 +62,7 @@ If preflight fails, record a blocked/no-work run with exact evidence and next st
 - deleting or reverting user work
 - editing implementation code in the main checkout
 - marking work done without validation evidence
+## Tool Compatibility
+These workflow files are designed to be mostly tool-agnostic, but the automation scheduler and memory conventions are Codex-specific.
+
+- See: [`cursor-claude-compatibility.md`](cursor-claude-compatibility.md)
