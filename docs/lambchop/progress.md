@@ -155,3 +155,31 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Scheduler persistence update: skipped (no automation-update tooling available in-run).
 - Next step:
   - Run `task-03-pressure-test-existing-repo-setup` after this item lands.
+
+## 2026-05-05 09:52 - pressure-test-existing-repo-setup
+
+- Status: done
+- Run id: `run-2026-05-05T145145269Z-98448c`
+- Branch: `codex/lambchop-task-03-pressure-test-existing-repo-setup`
+- Worktree: `C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-03-pressure-test-existing-repo-setup`
+- Changes:
+  - Added a concrete “Existing App/Library Repo Setup” pressure script to `autonomous-coding-team/references/validation-checklist.md`.
+  - Expanded `autonomous-coding-team/references/setup-interview.md` to require stack/command inference and an automation overlap check before asking questions.
+- Fixture:
+  - Path: `C:\\tmp\\lambchop-fixture-existing-repo-run-2026-05-05T145145269Z-98448c`
+  - Stack markers: `package.json` (ESM)
+  - Inferred commands (from `package.json` scripts):
+    - test: `node --test`
+    - lint: `node -e "console.log(\"lint placeholder\")"`
+    - build: `node -e "console.log(\"build placeholder\")"`
+  - Source-of-truth candidates discovered:
+    - `docs/plan.md`
+    - `README.md`
+    - `package.json` scripts
+- Validation:
+  - Fixture tests: `node --test` pass (1/1)
+- Notes:
+  - Shell runner remains blocked (`CreateProcessAsUserW failed: 5`); used `node_repl` for repo inspection and validation commands.
+  - Automation overlap requirement is covered by the pressure script (reuse/update existing Codex automation rather than creating duplicates).
+- Next step:
+  - Proceed to `task-04-install-and-deploy-skill-locally`.

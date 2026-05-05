@@ -69,3 +69,26 @@ Use this as a step-by-step “pressure” checklist for a brand-new repo with no
    - automation id + desired cadence
    - first queued work item
    - git write-access preflight result (or exact blocker if no initial commit yet)
+
+### Existing App/Library Repo Setup — Concrete Pressure Script
+Use this as a step-by-step “pressure” checklist for a repo that already has working source code, tests, and build tooling.
+
+1. Inspect before asking:
+   - Confirm git status/branch/remotes, and whether there are local modifications.
+   - Locate stack markers (examples: `package.json`, `pyproject.toml`, `Cargo.toml`, `.sln`, `go.mod`, `pom.xml`).
+   - Infer test/build/lint/typecheck commands from the repo itself (examples: `package.json` scripts, `Makefile`, `justfile`, CI config).
+   - Identify likely sources of truth for the initial work queue (examples: `docs/`, `README`, `PLAN.md`, `TODO`, issues referenced in docs).
+2. Classify as “existing app/library repo” and summarize what was inferred (stack + commands + source-of-truth candidates) before asking any user questions.
+3. Ask only product/policy decisions that cannot be inferred safely:
+   - the next milestone / desired outcome for the automation
+   - whether local-only autonomy remains the default safety boundary
+   - any required checks before marking work items done (if not inferable from existing CI)
+4. Avoid duplicate automation:
+   - If a Codex automation already exists for the same repo/workspace/prompt, update it rather than creating a second automation.
+   - If the repo already contains workflow/state/progress/backoff/scheduled-plan files, repair or reconcile them instead of overwriting or duplicating.
+5. Record evidence in progress:
+   - repo path
+   - inferred stack markers and commands
+   - selected source-of-truth files for the initial queue
+   - automation overlap decision (reuse/update vs create)
+   - git write-access preflight result
