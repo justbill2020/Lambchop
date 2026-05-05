@@ -350,3 +350,12 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Reviewed `docs/lambchop/scheduled-work-plan.md` backlog seeds; no additional source-backed items remain for the current milestone.
 - Decision:
   - No new work item created; next run should treat this as an idle run unless new source evidence appears.
+
+## 2026-05-05 12:07 - backoff update (idle)
+
+- Result: no_work
+- Run id: `run-2026-05-05T162654937Z-fdfab5`
+- Desired interval: 40 minutes
+- Scheduler persistence:
+  - Status: created_in_codex_app (no in-run update tooling)
+  - Actual interval (last known): 20 minutes
