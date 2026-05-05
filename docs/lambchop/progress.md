@@ -152,5 +152,6 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - `docs/fixture-empty-repo/state.json` parse: pass.
   - `docs/fixture-empty-repo/backoff.json` parse: pass.
   - Fixture git preflight branch/worktree create/delete: pass.
+  - Scheduler persistence update: skipped (no automation-update tooling available in-run).
 - Next step:
   - Run `task-03-pressure-test-existing-repo-setup` after this item lands.
