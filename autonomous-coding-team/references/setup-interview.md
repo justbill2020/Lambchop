@@ -22,6 +22,14 @@ Collect repo facts before asking:
 - Partially configured repo: repair missing or stale workflow/state/progress/backoff files.
 - Already automated repo: update existing setup; do not duplicate automations.
 
+## Existing App/Library Repo Expectations
+Before asking questions, summarize what the repo already tells you:
+
+- Stack markers found (examples: `package.json`, `pyproject.toml`, `Cargo.toml`, `.sln`, `go.mod`, `pom.xml`).
+- Inferred commands (test/build/lint/typecheck) pulled from repo scripts/config, not from the user.
+- Candidate sources of truth for the first queue (plans/specs, `README`, `docs/`, TODOs).
+- Automation overlap check (reuse/update an existing Codex automation rather than creating duplicates).
+
 ## Questions To Ask
 Ask only what cannot be inferred safely:
 
