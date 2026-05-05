@@ -9,6 +9,7 @@
     "state_file": "docs/lambchop/state.json",
     "progress_file": "docs/lambchop/progress.md",
     "backoff_file": "docs/lambchop/backoff.json",
+    "scheduled_work_plan_file": "docs/lambchop/scheduled-work-plan.md",
     "worktree_root": ".worktrees",
     "branch_prefix": "codex/",
     "branch_name_template": "codex/lambchop-{work_item_key}",
@@ -17,6 +18,14 @@
     "lease_minutes": 120,
     "main_branch": "master",
     "external_issue_tracking": false,
+    "planning_policy": {
+      "mode": "fully-autonomous-local",
+      "planner_runs_after_each_item": true,
+      "create_next_task_when_queue_empty": true,
+      "requires_source_backed_tasks": true,
+      "default_task_size": "one coherent local commit",
+      "no_work_requires_scheduled_plan_check": true
+    },
     "autonomy_policy": {
       "default_mode": "local-commit",
       "may_edit_code": true,
@@ -89,13 +98,75 @@
       "updated_at": "2026-05-05T09:11:11.5771114-05:00"
     },
     {
+      "key": "task-02-fully-autonomous-planner-loop",
+      "title": "Add scheduled work planning loop",
+      "type": "workflow-automation",
+      "status": "done",
+      "priority": 15,
+      "dependencies": [
+        "task-01-foundation-skill-project"
+      ],
+      "source_refs": [
+        "WORKFLOW.md",
+        "docs/lambchop/scheduled-work-plan.md",
+        "autonomous-coding-team/references/scheduled-work-plan.md",
+        "autonomous-coding-team/assets/templates/scheduled-work-plan.md"
+      ],
+      "acceptance_criteria": [
+        "Reusable skill explains scheduled work planning as part of full autonomy.",
+        "Generated repo templates include a scheduled work plan file and planner loop.",
+        "Lambchop workflow requires creating the next source-backed task before declaring no-work.",
+        "Active automation prompt includes the planner loop after completing or blocking an item."
+      ],
+      "implementation_notes": [
+        "This task was created from Bill's request that the system plan the next task after completing the previous task."
+      ],
+      "validation": [
+        "state and backoff JSON parsed after planner updates",
+        "automation updated through Codex app tooling",
+        "automation config re-read after update",
+        "automation registry audit ran and reported pre-existing run_thread_missing failures outside Lambchop"
+      ],
+      "branch": "master",
+      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "docs/lambchop/scheduled-work-plan.md",
+        "autonomous-coding-team/references/scheduled-work-plan.md"
+      ],
+      "shared_scope": [
+        "docs/lambchop/",
+        "autonomous-coding-team/",
+        "C:\\Users\\BillMartin\\.codex\\automations\\lambchop-autonomous-coding-team\\automation.toml"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Commit the planner-loop update, then continue with pressure-test validation.",
+      "integration": {
+        "target_branch": "master",
+        "status": "ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": "2026-05-05T09:11:11.5771114-05:00"
+      },
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+    },
+    {
       "key": "task-02-pressure-test-empty-repo-setup",
       "title": "Pressure-test empty repo autonomous setup",
       "type": "skill-validation",
       "status": "todo",
       "priority": 20,
       "dependencies": [
-        "task-01-foundation-skill-project"
+        "task-01-foundation-skill-project",
+        "task-02-fully-autonomous-planner-loop"
       ],
       "source_refs": [
         "autonomous-coding-team/references/validation-checklist.md#pressure-scenarios"
@@ -239,8 +310,8 @@
   ],
   "last_run": {
     "timestamp": "2026-05-05T09:11:11.5771114-05:00",
-    "summary": "Initialized Lambchop as the autonomous coding team skill project, added a work queue for validation and local deployment, created the Codex automation, and verified git worktree preflight.",
-    "active_work_item": "task-01-foundation-skill-project",
-    "next_action": "Let automation continue with pressure-test validation."
+    "summary": "Added full autonomy planning: scheduled work plan, planner loop, reusable templates, and automation prompt behavior.",
+    "active_work_item": "task-02-fully-autonomous-planner-loop",
+    "next_action": "Let automation continue with pressure-test validation, creating future tasks from the scheduled work plan when the queue is empty."
   }
 }

@@ -9,6 +9,7 @@ automation:
   state_file: docs/<PROJECT_SLUG>/state.json
   progress_file: docs/<PROJECT_SLUG>/progress.md
   backoff_file: docs/<PROJECT_SLUG>/backoff.json
+  scheduled_work_plan_file: docs/<PROJECT_SLUG>/scheduled-work-plan.md
   memory_file_primary: $CODEX_HOME/automations/<AUTOMATION_ID>/memory.md
   memory_file_fallback_windows: C:\Users\<WINDOWS_USERNAME>\.codex\automations\<AUTOMATION_ID>\memory.md
   memory_file_fallback_unix: ~/.codex/automations/<AUTOMATION_ID>/memory.md
@@ -35,9 +36,10 @@ Use these sources in this order:
 1. `WORKFLOW.md` defines how the automation works.
 2. `docs/<PROJECT_SLUG>/state.json` defines the local work queue and machine-readable status.
 3. `docs/<PROJECT_SLUG>/progress.md` records human-readable proof of work.
-4. `<SPECS_SOURCE>` contains project requirements, plans, specs, TODOs, or user instructions.
-5. Repository code and tests are the source of truth for implemented behavior.
-6. Existing documentation explains expected operation and should be updated when behavior changes.
+4. `docs/<PROJECT_SLUG>/scheduled-work-plan.md` defines how future tasks are planned when the queue is empty.
+5. `<SPECS_SOURCE>` contains project requirements, plans, specs, TODOs, or user instructions.
+6. Repository code and tests are the source of truth for implemented behavior.
+7. Existing documentation explains expected operation and should be updated when behavior changes.
 
 If these sources disagree, stop and reconcile them in this order:
 
@@ -92,7 +94,7 @@ Record the discovery result in `docs/<PROJECT_SLUG>/progress.md` and normalize `
 Every automation run must:
 
 1. Generate a unique `run_id`, such as `run-<yyyyMMdd-HHmmss>-<short-random>`.
-2. Read `WORKFLOW.md`, `docs/<PROJECT_SLUG>/state.json`, `docs/<PROJECT_SLUG>/progress.md`, and `docs/<PROJECT_SLUG>/backoff.json`.
+2. Read `WORKFLOW.md`, `docs/<PROJECT_SLUG>/state.json`, `docs/<PROJECT_SLUG>/progress.md`, `docs/<PROJECT_SLUG>/backoff.json`, and `docs/<PROJECT_SLUG>/scheduled-work-plan.md`.
 3. Resolve automation memory:
    - primary: `$CODEX_HOME/automations/<AUTOMATION_ID>/memory.md`
    - Windows fallback: `C:\Users\<WINDOWS_USERNAME>\.codex\automations\<AUTOMATION_ID>\memory.md`
@@ -105,7 +107,7 @@ Every automation run must:
 6. Reconcile state/progress with repository reality before selecting work.
 7. Re-test any blocker before honoring a `blocked` item.
 8. Apply cooperative concurrency rules before selecting work.
-9. Select exactly one eligible work item.
+9. Select exactly one eligible work item, or create the next source-backed item from `docs/<PROJECT_SLUG>/scheduled-work-plan.md` when no queued item is eligible.
 10. Create or reuse `.worktrees/<work-item-key>` for the active item.
 11. Use branch `codex/<PROJECT_SLUG>-<work-item-key>`.
 12. Work only the active item until complete or blocked.
@@ -113,9 +115,10 @@ Every automation run must:
 14. Run relevant verification for the changed behavior.
 15. Update documentation when behavior, setup, commands, architecture, or limitations change.
 16. Commit coherent completed changes locally with validation details in the commit body.
-17. Update state, progress, and backoff ledgers.
-18. Update the actual automation schedule field after applying adaptive backoff.
-19. Append an operator summary for the user.
+17. After completing or blocking the active item, run the planner loop: reconcile state, inspect the scheduled work plan, add the next bounded source-backed work item when work remains, or record the no-work reason.
+18. Update state, progress, and backoff ledgers.
+19. Update the actual automation schedule field after applying adaptive backoff.
+20. Append an operator summary for the user.
 
 If the active item cannot be finished in one run, leave it `in_progress` or `blocked` with an exact next step.
 
@@ -178,6 +181,11 @@ Use `docs/<PROJECT_SLUG>/backoff.json` as the interval ledger.
 - Update the actual Codex automation schedule field to match the computed interval.
 
 No-work includes all work complete, blocked dependencies, concurrency cap reached, no dependency-safe item with non-overlapping exclusive scope, and git preflight failure.
+
+## Scheduled Work Planning
+Use `docs/<PROJECT_SLUG>/scheduled-work-plan.md` as the roadmap and task-generation source.
+
+Before declaring no-work, inspect the scheduled work plan and current source files. If source-backed work remains, create the next bounded work item in state with dependencies, acceptance criteria, source references, validation expectations, exclusive scope, shared scope, and next step. If no source-backed task can be created, append the inspected sources and no-work reason to progress.
 
 ## Definition Of Done
 A work item is done only when:

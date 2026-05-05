@@ -9,6 +9,7 @@ automation:
   state_file: docs/lambchop/state.json
   progress_file: docs/lambchop/progress.md
   backoff_file: docs/lambchop/backoff.json
+  scheduled_work_plan_file: docs/lambchop/scheduled-work-plan.md
   memory_file_primary: $CODEX_HOME/automations/lambchop-autonomous-coding-team/memory.md
   memory_file_fallback_windows: C:\Users\BillMartin\.codex\automations\lambchop-autonomous-coding-team\memory.md
   memory_file_fallback_unix: ~/.codex/automations/lambchop-autonomous-coding-team/memory.md
@@ -35,8 +36,9 @@ Use these sources in this order:
 1. `WORKFLOW.md` defines how the automation works.
 2. `docs/lambchop/state.json` defines the local work queue and machine-readable status.
 3. `docs/lambchop/progress.md` records human-readable proof of work.
-4. `autonomous-coding-team/` contains the skill, references, and templates.
-5. Repository files and validation results are the source of truth for implemented behavior.
+4. `docs/lambchop/scheduled-work-plan.md` defines how future tasks are planned when the queue is empty.
+5. `autonomous-coding-team/` contains the skill, references, and templates.
+6. Repository files and validation results are the source of truth for implemented behavior.
 
 If these sources disagree, preserve explicit user intent first, then implemented passing behavior, then safety and data integrity. Update state/progress to match reality and record the reconciliation.
 
@@ -50,19 +52,20 @@ Automation must not publish branches, open pull requests, deploy, modify product
 Every automation run must:
 
 1. Generate a unique `run_id`.
-2. Read this workflow plus state, progress, and backoff ledgers.
+2. Read this workflow plus state, progress, backoff, and scheduled work plan ledgers.
 3. Resolve automation memory.
 4. Inspect repository structure, git status, branches, remotes, and worktrees.
 5. Run git write-access preflight before selecting work.
 6. Reconcile state/progress with repository reality.
-7. Select exactly one eligible work item using dependency and lease rules.
+7. Select exactly one eligible work item using dependency and lease rules, or create the next source-backed work item from `docs/lambchop/scheduled-work-plan.md` when no queued item is eligible.
 8. Claim it with a lease.
 9. Work in `.worktrees/{work_item_key}` on `codex/lambchop-{work_item_key}`.
 10. Use TDD-style proof for skill behavior: write or identify a pressure scenario first, then update the skill/templates, then validate that the scenario is addressed.
 11. Run relevant validation.
 12. Commit coherent completed changes locally with validation details.
-13. Update state, progress, and backoff.
-14. Attempt actual automation schedule persistence when tooling is available; otherwise record the infrastructure gap.
+13. After completing or blocking the active item, run the planner loop: reconcile state, inspect the scheduled work plan, add the next bounded source-backed work item when work remains, or record the no-work reason.
+14. Update state, progress, and backoff.
+15. Attempt actual automation schedule persistence when tooling is available; otherwise record the infrastructure gap.
 
 ## Work Item Statuses
 Use only `todo`, `in_progress`, `blocked`, `done`, and `skipped`.
@@ -80,6 +83,11 @@ Use `docs/lambchop/backoff.json`.
 - No-work includes all work complete, blocked dependencies, concurrency cap, overlapping exclusive scope, and git preflight failure.
 - Persist the ledger, append the decision to progress, and update the actual Codex automation schedule when tooling is available.
 - Record desired interval and actual scheduler persistence separately.
+
+## Scheduled Work Planning
+Use `docs/lambchop/scheduled-work-plan.md` as the roadmap and task-generation source.
+
+Before declaring no-work, inspect the scheduled work plan, skill files, validation gaps, and current source files. If source-backed work remains, create the next bounded work item in `docs/lambchop/state.json` with dependencies, acceptance criteria, source references, validation expectations, exclusive scope, shared scope, and next step. If no source-backed task can be created, append the inspected sources and no-work reason to progress before applying backoff.
 
 ## Definition Of Done
 A work item is done only when acceptance criteria are satisfied, validation evidence is recorded, state and progress agree, code/docs changes are locally committed when appropriate, and the next step is clear.

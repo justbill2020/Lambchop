@@ -26,7 +26,7 @@ Default autonomy is local-only: worktrees, branches, code changes, tests, docs, 
 2. Classify the repo as empty, docs/spec-only, existing app/library, partially configured, or already automated.
 3. Ask only for decisions that cannot be inferred, such as project purpose, source of truth, initial cadence, autonomy limits, and current milestone definition of done.
 4. Load `references/setup-interview.md` for the interview and setup sequence.
-5. Load `references/workflow-architecture.md`, `references/work-item-model.md`, `references/automation-prompt.md`, and `references/proof-of-work.md` before writing workflow, state, progress, backoff, or automation prompt content.
+5. Load `references/workflow-architecture.md`, `references/work-item-model.md`, `references/scheduled-work-plan.md`, `references/automation-prompt.md`, and `references/proof-of-work.md` before writing workflow, state, progress, backoff, schedule plan, or automation prompt content.
 6. Copy and customize templates from `assets/templates/`; remove all placeholders before finishing.
 7. Load `references/validation-checklist.md` and validate the generated setup before claiming completion.
 8. Load `references/seeitai-lessons.md` when adapting, repairing, or extending the operating contract.
@@ -37,6 +37,7 @@ Default autonomy is local-only: worktrees, branches, code changes, tests, docs, 
 - Use TDD for production behavior and record RED/GREEN evidence.
 - Commit coherent completed changes locally with validation in the commit body.
 - Update state, progress, and backoff ledgers after every run.
+- After completing one item, plan or select the next eligible item from the scheduled work plan before applying backoff.
 - Never publish, deploy, or mutate external trackers unless explicitly enabled by the user.
 
 ## Common Mistakes

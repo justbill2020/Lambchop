@@ -9,6 +9,7 @@
     "state_file": "docs/<PROJECT_SLUG>/state.json",
     "progress_file": "docs/<PROJECT_SLUG>/progress.md",
     "backoff_file": "docs/<PROJECT_SLUG>/backoff.json",
+    "scheduled_work_plan_file": "docs/<PROJECT_SLUG>/scheduled-work-plan.md",
     "worktree_root": ".worktrees",
     "branch_prefix": "codex/",
     "branch_name_template": "codex/<PROJECT_SLUG>-<work-item-key>",
@@ -17,6 +18,14 @@
     "lease_minutes": 120,
     "main_branch": "<INTEGRATION_BRANCH>",
     "external_issue_tracking": false,
+    "planning_policy": {
+      "mode": "fully-autonomous-local",
+      "planner_runs_after_each_item": true,
+      "create_next_task_when_queue_empty": true,
+      "requires_source_backed_tasks": true,
+      "default_task_size": "one coherent local commit",
+      "no_work_requires_scheduled_plan_check": true
+    },
     "autonomy_policy": {
       "default_mode": "local-commit",
       "may_edit_code": true,

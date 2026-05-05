@@ -6,6 +6,7 @@ Before claiming a setup is complete, confirm:
 - the generated state file under `docs/` exists and parses as JSON.
 - the generated backoff file under `docs/` exists and parses as JSON.
 - the generated progress file under `docs/` has an initial setup entry.
+- the generated scheduled work plan exists and can create the next source-backed task when the queue is empty.
 - The workflow states local-only safety defaults.
 - Push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts are forbidden by default.
 - Worktree root and branch naming are present.
@@ -16,6 +17,7 @@ Before claiming a setup is complete, confirm:
 - Automation prompt tells Codex to read `WORKFLOW.md` first and does not hide schedule/workspace/model fields in prose.
 - No user-facing Python setup requirement exists.
 - Progress entries distinguish desired backoff interval from actual scheduler persistence.
+- The automation prompt requires planning or selecting the next task after completing the active task.
 
 ## Skill Project Checks
 For this skill project:
@@ -34,4 +36,5 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Partial setup repair: does the agent update existing workflow/state/progress/backoff files instead of duplicating them?
 - Concurrency conflict: does the agent select another non-overlapping item instead of treating one lease as a global lock?
 - No-work backoff: does the agent persist the backoff decision and update the actual schedule field?
+- Queue exhausted: does the agent inspect the scheduled work plan and create the next bounded work item before declaring no-work?
 - "Fully autonomous" pressure: does the agent keep push, PR, deploy, and external trackers disabled until explicitly enabled?

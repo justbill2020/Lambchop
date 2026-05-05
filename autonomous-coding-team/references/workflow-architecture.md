@@ -7,6 +7,7 @@ Every configured repo should contain:
 - the generated state file under `docs/`: machine-readable queue and run state
 - the generated progress file under `docs/`: human-readable proof log
 - the generated backoff file under `docs/`: adaptive schedule ledger
+- the generated scheduled work plan under `docs/`: roadmap and task-generation source
 - `.codex/environments/environment.toml`: optional local environment config when useful
 
 ## Operating Contract
@@ -14,6 +15,7 @@ Every configured repo should contain:
 
 - project identity, purpose, milestone, and sources of truth
 - workflow/state/progress/backoff paths
+- scheduled work plan path and planner rules
 - automation memory paths
 - allowed and forbidden actions
 - run loop and git preflight
@@ -32,14 +34,15 @@ Every automation run:
 4. Inspect repo structure, git status, branches, remotes, and worktrees.
 5. Run git write-access preflight before selecting work.
 6. Reconcile state/progress with repository reality.
-7. Select one eligible work item.
+7. Select one eligible work item, or create the next source-backed item from the scheduled work plan.
 8. Claim it with a lease.
 9. Work in an isolated worktree and local branch.
 10. Use TDD for production behavior.
 11. Run relevant checks.
 12. Commit coherent completed changes locally.
-13. Update state, progress, backoff, and automation schedule.
-14. Stop safely if blocked.
+13. After completion, plan or select the next item before applying backoff.
+14. Update state, progress, backoff, and automation schedule.
+15. Stop safely if blocked.
 
 ## Git Preflight
 Before claiming work, verify the run can:
