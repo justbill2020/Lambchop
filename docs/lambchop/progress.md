@@ -288,6 +288,9 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - `pwsh -NoProfile -ExecutionPolicy Bypass -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543 -Force`
 - Validation:
   - `C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543\\autonomous-coding-team\\SKILL.md` exists
+- Commits:
+  - Feature: `53bda57`
+  - Merge: `edeb2ff`
 
 ## 2026-05-05 11:51 - planner loop (post task-05)
 
