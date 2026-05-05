@@ -10,6 +10,17 @@ Turn a new or existing repository into a Codex-first autonomous coding team. The
 
 Default autonomy is local-only: worktrees, branches, code changes, tests, docs, progress ledgers, adaptive backoff, and local commits are allowed. Pushes, PRs, deploys, production config changes, and external trackers are forbidden unless the user explicitly enables them.
 
+## Local Installation (Codex)
+Install this skill into your local Codex skill folder so it can be used across repositories.
+
+- Local skill install: [`references/local-skill-installation.md`](references/local-skill-installation.md)
+
+
+## Local Installation (this repo)
+To install or link this skill into your local Codex skills folder, use:
+
+- `references/local-skill-deployment.md`
+
 ## When To Use
 - User asks to set up a repo as an autonomous coding team, self-driving repo, recurring Codex worker, or autonomous implementation loop.
 - User wants Codex to keep advancing a project across runs without relying on chat history.
@@ -26,11 +37,12 @@ Default autonomy is local-only: worktrees, branches, code changes, tests, docs, 
 2. Classify the repo as empty, docs/spec-only, existing app/library, partially configured, or already automated.
 3. Ask only for decisions that cannot be inferred, such as project purpose, source of truth, initial cadence, autonomy limits, and current milestone definition of done.
 4. Load `references/setup-interview.md` for the interview and setup sequence.
-5. Load `references/github-repo-deployment.md` when the user points to a GitHub repo, remote URL, or local project path to receive the autonomous team.
-6. Load `references/workflow-architecture.md`, `references/work-item-model.md`, `references/scheduled-work-plan.md`, `references/automation-prompt.md`, and `references/proof-of-work.md` before writing workflow, state, progress, backoff, schedule plan, or automation prompt content.
-7. Copy and customize templates from `assets/templates/`; remove all placeholders before finishing.
-8. Load `references/validation-checklist.md` and validate the generated setup before claiming completion.
-9. Load `references/seeitai-lessons.md` when adapting, repairing, or extending the operating contract.
+5. Load `references/local-skill-deployment.md` when installing or linking this skill for local use.
+6. Load `references/github-repo-deployment.md` when the user points to a GitHub repo, remote URL, or local project path to receive the autonomous team.
+7. Load `references/workflow-architecture.md`, `references/work-item-model.md`, `references/scheduled-work-plan.md`, `references/automation-prompt.md`, and `references/proof-of-work.md` before writing workflow, state, progress, backoff, schedule plan, or automation prompt content.
+8. Copy and customize templates from `assets/templates/`; remove all placeholders before finishing.
+9. Load `references/validation-checklist.md` and validate the generated setup before claiming completion.
+10. Load `references/seeitai-lessons.md` when adapting, repairing, or extending the operating contract.
 
 ## Safety Defaults
 - Create implementation work in a per-item `.worktrees/` folder on a `codex/` branch named for the project slug and work item.
