@@ -276,3 +276,21 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Scheduler persistence:
   - Status: created_in_codex_app (no in-run update tooling)
   - Actual interval (last known): 20 minutes
+
+## 2026-05-05 11:51 - pressure-test-local-skill-install
+
+- Status: done
+- Run id: `run-20260505T162913939Z-0ae543`
+- Branch: `codex/lambchop-task-05-pressure-test-local-skill-install`
+- Worktree: `C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-05-pressure-test-local-skill-install`
+- Sandbox destination: `C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543`
+- Command:
+  - `pwsh -NoProfile -ExecutionPolicy Bypass -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543 -Force`
+- Validation:
+  - `C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543\\autonomous-coding-team\\SKILL.md` exists
+
+## 2026-05-05 11:51 - planner loop (post task-05)
+
+- Status: work_planned
+- Result:
+  - Created `task-06-cursor-claude-compat-notes` from scheduled-work-plan backlog seed (post Codex-first proof)

@@ -37,7 +37,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-05T11:45:07.734-05:00"
+    "updated_at": "2026-05-05T11:51:26-05:00"
   },
   "work_items": [
     {
@@ -381,7 +381,7 @@
       "key": "task-05-pressure-test-local-skill-install",
       "title": "Pressure-test local skill installation script",
       "type": "validation",
-      "status": "todo",
+      "status": "done",
       "priority": 35,
       "dependencies": [
         "task-04-install-and-deploy-skill-locally"
@@ -401,11 +401,11 @@
         "Prefer a sandbox destination (C:\\tmp) to avoid touching real Codex home if restricted."
       ],
       "validation": [
-        "pwsh -NoProfile -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox -Force",
-        "Verify C:\\tmp\\codex-skills-sandbox\\autonomous-coding-team\\SKILL.md exists"
+        "pwsh -NoProfile -ExecutionPolicy Bypass -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543 -Force",
+        "Verify C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543\\autonomous-coding-team\\SKILL.md exists"
       ],
-      "branch": null,
-      "worktree": null,
+      "branch": "codex/lambchop-task-05-pressure-test-local-skill-install",
+      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-05-pressure-test-local-skill-install",
       "commit": null,
       "blocker": null,
       "exclusive_scope": [
@@ -428,12 +428,62 @@
         "merge_commit": null,
         "reconciled_at": null
       },
-      "updated_at": "2026-05-05T11:46:39.956-05:00"
+      "updated_at": "2026-05-05T11:51:26-05:00"
+    },
+    {
+      "key": "task-06-cursor-claude-compat-notes",
+      "title": "Add Cursor/Claude Code compatibility notes",
+      "type": "documentation",
+      "status": "todo",
+      "priority": 15,
+      "dependencies": [
+        "task-05-pressure-test-local-skill-install"
+      ],
+      "source_refs": [
+        "docs/lambchop/scheduled-work-plan.md",
+        "autonomous-coding-team/SKILL.md",
+        "autonomous-coding-team/references/workflow-architecture.md"
+      ],
+      "acceptance_criteria": [
+        "Docs explain what is Codex-first vs tool-agnostic.",
+        "Docs list what would change for Cursor/Claude Code without requiring them for v1."
+      ],
+      "implementation_notes": [
+        "Keep this informational; do not add new install steps requiring non-Codex tools."
+      ],
+      "validation": [
+        "Manual read-through: notes are accurate and do not change the Codex-first flow"
+      ],
+      "branch": null,
+      "worktree": null,
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/",
+        "docs/lambchop/"
+      ],
+      "shared_scope": [],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Draft a short compatibility note section and link from SKILL.md.",
+      "integration": {
+        "target_branch": "master",
+        "status": "not_ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": null
+      },
+      "updated_at": "2026-05-05T11:51:26-05:00"
     }
   ],
   "last_run": {
-    "run_id": "29dd23d1-89ea-4711-8da8-2bf1c9d11c45",
-    "started_at": "2026-05-05T11:46:39.956-05:00",
-    "work_item_key": "task-04-install-and-deploy-skill-locally"
+    "run_id": "run-20260505T162913939Z-0ae543",
+    "started_at": "2026-05-05T11:47:11-05:00",
+    "work_item_key": "task-05-pressure-test-local-skill-install"
   }
 }
