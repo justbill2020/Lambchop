@@ -43,7 +43,14 @@ if (Test-Path -LiteralPath $target) {
   if (-not $Force) {
     throw "Target already exists. Re-run with -Force to replace: $target"
   }
-  Remove-Item -LiteralPath $target -Recurse -Force
+  $item = Get-Item -LiteralPath $target -Force
+  $isReparsePoint = (($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0)
+  if ($isReparsePoint) {
+    # Safety: avoid deleting the linked target contents (junction/symlink). Remove only the link itself.
+    Remove-Item -LiteralPath $target -Force
+  } else {
+    Remove-Item -LiteralPath $target -Recurse -Force
+  }
 }
 
 if ($Mode -eq 'copy') {

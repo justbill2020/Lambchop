@@ -44,17 +44,17 @@ Recommended (scripted):
 pwsh -NoProfile -File autonomous-coding-team\\tools\\install-skill.ps1 -Mode junction
 ```
 
-Manual example (this repo on Bill's machine):
+Manual example:
 ```powershell
-$source = "C:\Users\BillMartin\dev\Lambchop\autonomous-coding-team"
-$dest = "C:\Users\BillMartin\.codex\skills\autonomous-coding-team"
+$source = "C:\path\to\Lambchop\autonomous-coding-team"
+$dest = "C:\Users\<YOU>\.codex\skills\autonomous-coding-team"
 
 New-Item -ItemType Junction -Path $dest -Target $source
 ```
 
 To uninstall:
 ```powershell
-Remove-Item "C:\Users\BillMartin\.codex\skills\autonomous-coding-team"
+Remove-Item "C:\Users\<YOU>\.codex\skills\autonomous-coding-team"
 ```
 
 ### macOS/Linux — Symlink

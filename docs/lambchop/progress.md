@@ -191,3 +191,34 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Scheduler persistence:
   - Status: created in Codex app (no in-run update tooling)
   - Actual interval (last known): 20 minutes
+
+## 2026-05-05 11:40 - install-and-deploy-skill-locally
+
+- Status: done
+- Run id: `run-20260505T162553Z-abd495`
+- Branch: `codex/lambchop-task-04-install-and-deploy-skill-locally`
+- Worktree: `C:\Users\BillMartin\dev\Lambchop\.worktrees\task-04-install-and-deploy-skill-locally`
+- Changes:
+  - Added local skill installation guidance in `autonomous-coding-team/references/local-skill-install.md`.
+  - Added installer helper `autonomous-coding-team/tools/install-skill.ps1` supporting copy and junction modes.
+  - Added deployment checklist docs and wired them into deployment guidance.
+  - Fixed skill entrypoint link to the local install doc.
+- Validation:
+  - Install script copy install: `pwsh -NoProfile -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox-run-20260505T162553Z-abd495 -Force`
+- Notes:
+  - Shell runner remains blocked (`CreateProcessAsUserW failed: 5`); used `node_repl` for git + validation commands.
+- Next step:
+  - Planner loop: queue empty; scheduled work plan reviewed; no new source-backed items generated (milestone complete).
+
+### local-commit
+
+- Commit: `ba73dbf`
+- Message: `docs: fix local skill install link`
+
+## 2026-05-05 11:40 - backoff update
+
+- Result: work_completed
+- Desired interval: 20 minutes
+- Scheduler persistence:
+  - Status: created_in_codex_app
+  - Actual interval (last known): 20 minutes
