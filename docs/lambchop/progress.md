@@ -297,3 +297,23 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Status: work_planned
 - Result:
   - Created `task-06-cursor-claude-compat-notes` from scheduled-work-plan backlog seed (post Codex-first proof)
+
+## 2026-05-05 12:03 - cursor-claude-compat-notes
+
+- Status: done
+- Run id: `run-20260505T170312Z-37a822`
+- Branch: `master`
+- Merge commit: `1753bf1`
+- Changes:
+  - Added a short tool compatibility note explaining Codex-first vs tool-agnostic pieces.
+  - Documented what would change for Cursor and for Claude Code without requiring either tool.
+- Validation:
+  - Manual read-through: notes are accurate and do not change the Codex-first flow.
+
+## 2026-05-05 12:03 - backoff update
+
+- Result: work_completed
+- Desired interval: 20 minutes
+- Scheduler persistence:
+  - Status: created_in_codex_app (no in-run update tooling)
+  - Actual interval (last known): 20 minutes

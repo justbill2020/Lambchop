@@ -37,7 +37,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-05T11:59:24.143-05:00"
+    "updated_at": "2026-05-05T12:03:12.834-05:00"
   },
   "work_items": [
     {
@@ -434,7 +434,7 @@
       "key": "task-06-cursor-claude-compat-notes",
       "title": "Add Cursor/Claude Code compatibility notes",
       "type": "documentation",
-      "status": "in_progress",
+      "status": "done",
       "priority": 15,
       "dependencies": [
         "task-05-pressure-test-local-skill-install"
@@ -452,11 +452,12 @@
         "Keep this informational; do not add new install steps requiring non-Codex tools."
       ],
       "validation": [
-        "Manual read-through: notes are accurate and do not change the Codex-first flow"
+        "Manual read-through: notes are accurate and do not change the Codex-first flow",
+        "git: merged codex/lambchop-task-06-cursor-claude-compat-notes into master (1753bf1)"
       ],
-      "branch": "codex/lambchop-task-06-cursor-claude-compat-notes",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-06-cursor-claude-compat-notes",
-      "commit": null,
+      "branch": "master",
+      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "commit": "1753bf1",
       "blocker": null,
       "exclusive_scope": [
         "autonomous-coding-team/",
@@ -464,26 +465,26 @@
       ],
       "shared_scope": [],
       "lease": {
-        "run_id": "run-20260505T165924Z-6ee033",
-        "owner": "lambchop-autonomous-coding-team",
-        "claimed_at": "2026-05-05T11:59:24.143-05:00",
-        "expires_at": "2026-05-05T13:59:24.143-05:00",
-        "heartbeat_at": "2026-05-05T11:59:24.143-05:00"
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
       },
       "next_step": "Draft a short compatibility note section and link from SKILL.md.",
       "integration": {
         "target_branch": "master",
-        "status": "not_ready",
-        "merged_at": null,
-        "merge_commit": null,
-        "reconciled_at": null
+        "status": "ready",
+        "merged_at": "2026-05-05T12:03:12.834-05:00",
+        "merge_commit": "1753bf1",
+        "reconciled_at": "2026-05-05T12:03:12.834-05:00"
       },
-      "updated_at": "2026-05-05T11:59:24.143-05:00"
+      "updated_at": "2026-05-05T12:03:12.834-05:00"
     }
   ],
   "last_run": {
-    "run_id": "run-20260505T165924Z-6ee033",
-    "started_at": "2026-05-05T11:59:24.143-05:00",
+    "run_id": "run-20260505T170312Z-37a822",
+    "started_at": "2026-05-05T12:03:12.834-05:00",
     "work_item_key": "task-06-cursor-claude-compat-notes"
   }
 }
