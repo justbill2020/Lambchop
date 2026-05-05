@@ -17,6 +17,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - `autonomous-coding-team/assets/templates/backoff.json` parses as JSON.
   - Non-template skill/reference files contain no angle-bracket template placeholders.
   - Existing Lambchop automation duplicate check: pass; no overlapping automation was found.
+  - Git preflight branch/worktree create/delete: pass.
 - Acceptance criteria mapped:
   - Conversational Codex-first setup is encoded in `autonomous-coding-team/SKILL.md`.
   - Reusable deployment templates exist under `autonomous-coding-team/assets/templates/`.
@@ -25,7 +26,22 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Blockers:
   - None.
 - Next step:
-  - Locally commit the initialized project and let automation continue with pressure-test validation.
+  - Let automation continue with pressure-test validation.
+
+### local-commit
+
+- Commit: `533fb36`
+- Message: `feat: initialize autonomous coding team skill`
+- Validation recorded in commit body:
+  - JSON ledgers and templates parse.
+  - Non-template files contain no unresolved angle-bracket placeholders.
+  - Codex automation `lambchop-autonomous-coding-team` exists at a 20-minute cadence.
+
+### git-preflight
+
+- Temporary branch: `codex/preflight-lambchop-20260505`
+- Temporary worktree: `.worktrees/preflight-lambchop-20260505`
+- Result: pass; branch and worktree were created and removed.
 
 ### automation-created
 
