@@ -482,8 +482,8 @@
     }
   ],
   "last_run": {
-    "run_id": "run-20260505T164524Z-baddc3",
-    "started_at": "2026-05-05T11:48:27.158-05:00",
-    "work_item_key": "task-04-install-and-deploy-skill-locally"
+    "run_id": "run-20260505T162913939Z-0ae543",
+    "started_at": "2026-05-05T11:47:11-05:00",
+    "work_item_key": "task-05-pressure-test-local-skill-install"
   }
 }
