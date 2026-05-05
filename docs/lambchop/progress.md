@@ -222,3 +222,8 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Scheduler persistence:
   - Status: created_in_codex_app
   - Actual interval (last known): 20 minutes
+
+## 2026-05-05 11:45 - reconciliation (task-04 merge)
+
+- Master HEAD: `c014f90`
+- Note: earlier task-04 progress/state entries referenced an intermediate commit; master now contains the merged result.
