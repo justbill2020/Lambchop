@@ -328,7 +328,7 @@
       "key": "task-04-install-and-deploy-skill-locally",
       "title": "Install and document local deployment of the skill",
       "type": "deployment",
-      "status": "in_progress",
+      "status": "done",
       "priority": 40,
       "dependencies": [
         "task-03-pressure-test-existing-repo-setup"
@@ -345,10 +345,15 @@
       "implementation_notes": [
         "Keep deployment Codex-first. Cursor support is a later phase."
       ],
-      "validation": [],
-      "branch": "codex/lambchop-task-04-install-and-deploy-skill-locally",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-04-install-and-deploy-skill-locally",
-      "commit": null,
+      "validation": [
+        "docs: local skill install reference added",
+        "docs: target-project deployment checklist added",
+        "tooling: install helper added at autonomous-coding-team/tools/install-skill.ps1",
+        "git: preflight branch/worktree create/delete passed for this run (see progress entry)"
+      ],
+      "branch": "master",
+      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "commit": "9c0856c",
       "blocker": null,
       "exclusive_scope": [
         "autonomous-coding-team/",
@@ -356,13 +361,66 @@
       ],
       "shared_scope": [],
       "lease": {
-        "run_id": "run-20260505T162546Z-8991f8",
-        "owner": "lambchop-autonomous-coding-team",
-        "claimed_at": "2026-05-05T11:31:19.878-05:00",
-        "expires_at": "2026-05-05T13:31:19.878-05:00",
-        "heartbeat_at": "2026-05-05T11:31:19.878-05:00"
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
       },
-      "next_step": "Install or link the skill after validation tasks pass.",
+      "next_step": "Planner loop: pressure-test local skill installation script and record proof.",
+      "integration": {
+        "target_branch": "master",
+        "status": "ready",
+        "merged_at": "2026-05-05T11:40:39.931-05:00",
+        "merge_commit": "6128a27",
+        "reconciled_at": "2026-05-05T11:40:39.931-05:00"
+      },
+      "updated_at": "2026-05-05T11:40:39.931-05:00"
+    },
+    {
+      "key": "task-05-pressure-test-local-skill-install",
+      "title": "Pressure-test local skill installation script",
+      "type": "validation",
+      "status": "todo",
+      "priority": 35,
+      "dependencies": [
+        "task-04-install-and-deploy-skill-locally"
+      ],
+      "source_refs": [
+        "autonomous-coding-team/references/local-skill-install.md",
+        "autonomous-coding-team/tools/install-skill.ps1",
+        "autonomous-coding-team/references/validation-checklist.md"
+      ],
+      "acceptance_criteria": [
+        "The install helper can copy the skill to a sandbox destination under C:\\tmp.",
+        "Progress includes exact commands and filesystem proof.",
+        "State/Progress/Backoff are reconciled and committed locally."
+      ],
+      "implementation_notes": [
+        "Do not require Cursor/Claude. Codex-first only.",
+        "Prefer a sandbox destination (C:\\tmp) to avoid touching real Codex home if restricted."
+      ],
+      "validation": [
+        "pwsh -NoProfile -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox -Force",
+        "Verify C:\\tmp\\codex-skills-sandbox\\autonomous-coding-team\\SKILL.md exists"
+      ],
+      "branch": null,
+      "worktree": null,
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/tools/install-skill.ps1",
+        "docs/lambchop/"
+      ],
+      "shared_scope": [],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Run the install helper into C:\\tmp and record proof in progress.",
       "integration": {
         "target_branch": "master",
         "status": "not_ready",
@@ -370,11 +428,11 @@
         "merge_commit": null,
         "reconciled_at": null
       },
-      "updated_at": "2026-05-05T11:31:19.878-05:00"
+      "updated_at": "2026-05-05T11:40:39.931-05:00"
     }
   ],
   "last_run": {
-    "run_id": "run-20260505T162546Z-8991f8",
+    "run_id": "29dd23d1-89ea-4711-8da8-2bf1c9d11c45",
     "started_at": "2026-05-05T11:31:19.878-05:00",
     "work_item_key": "task-04-install-and-deploy-skill-locally"
   }
