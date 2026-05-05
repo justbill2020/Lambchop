@@ -209,13 +209,71 @@
       "updated_at": "2026-05-05T09:11:11.5771114-05:00"
     },
     {
+      "key": "task-03-github-repo-deployment-method",
+      "title": "Add reusable GitHub repo deployment method",
+      "type": "deployment-method",
+      "status": "done",
+      "priority": 25,
+      "dependencies": [
+        "task-02-fully-autonomous-planner-loop"
+      ],
+      "source_refs": [
+        "autonomous-coding-team/references/github-repo-deployment.md",
+        "autonomous-coding-team/SKILL.md",
+        "autonomous-coding-team/references/setup-interview.md"
+      ],
+      "acceptance_criteria": [
+        "Skill includes a reusable method for a user to point Codex at a GitHub URL or local repo path.",
+        "Deployment method creates project-specific workflow, state, progress, backoff, scheduled plan, and automation.",
+        "Default deployment safety forbids push, PR, deploy, production config changes, external trackers, and user-work reverts.",
+        "Validation records target path, remote identity, automation id, first queued item, and blockers."
+      ],
+      "implementation_notes": [
+        "Added in response to Bill's requirement that Lambchop be applicable to another GitHub repo as a full project-specific autonomous coding team."
+      ],
+      "validation": [
+        "state and backoff JSON parsed after deployment-method update",
+        "non-template files scanned clean for angle-bracket placeholders"
+      ],
+      "branch": "master",
+      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/references/github-repo-deployment.md",
+        "autonomous-coding-team/SKILL.md",
+        "autonomous-coding-team/references/setup-interview.md"
+      ],
+      "shared_scope": [
+        "docs/lambchop/",
+        "autonomous-coding-team/references/validation-checklist.md"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Commit the GitHub deployment method, then continue validation scenarios.",
+      "integration": {
+        "target_branch": "master",
+        "status": "ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": "2026-05-05T09:11:11.5771114-05:00"
+      },
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+    },
+    {
       "key": "task-03-pressure-test-existing-repo-setup",
       "title": "Pressure-test existing repo autonomous setup",
       "type": "skill-validation",
       "status": "todo",
       "priority": 30,
       "dependencies": [
-        "task-02-pressure-test-empty-repo-setup"
+        "task-02-pressure-test-empty-repo-setup",
+        "task-03-github-repo-deployment-method"
       ],
       "source_refs": [
         "autonomous-coding-team/references/setup-interview.md",
@@ -310,8 +368,8 @@
   ],
   "last_run": {
     "timestamp": "2026-05-05T09:11:11.5771114-05:00",
-    "summary": "Added full autonomy planning: scheduled work plan, planner loop, reusable templates, and automation prompt behavior.",
-    "active_work_item": "task-02-fully-autonomous-planner-loop",
-    "next_action": "Let automation continue with pressure-test validation, creating future tasks from the scheduled work plan when the queue is empty."
+    "summary": "Added reusable GitHub/local repo deployment method for applying Lambchop to another project.",
+    "active_work_item": "task-03-github-repo-deployment-method",
+    "next_action": "Commit the GitHub deployment method, then continue validation scenarios."
   }
 }

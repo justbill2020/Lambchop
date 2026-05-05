@@ -40,5 +40,6 @@ Do not invent work when there is no source of truth. Stop and record a blocker w
 - Pressure-test empty repo setup and record proof.
 - Pressure-test existing repo setup and record proof.
 - Install or link the skill into local Codex skills after validation.
+- Add and validate a GitHub/local target-project deployment method.
 - Add a target-project deployment checklist after the first successful external repo setup.
 - Add Cursor/Claude Code compatibility notes only after the Codex-first flow is proven.

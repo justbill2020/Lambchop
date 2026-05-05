@@ -13,6 +13,7 @@ Collect repo facts before asking:
 - config, environment, deployment, and CI files
 - existing project state, progress, and backoff ledgers under `docs/`
 - existing Codex automations with overlapping name, workspace, or prompt
+- if the user supplied GitHub input, the resolved local checkout path and remote identity
 
 ## Repo Classification
 - Empty repo: no product files yet; create workflow from user brief.
@@ -24,6 +25,7 @@ Collect repo facts before asking:
 ## Questions To Ask
 Ask only what cannot be inferred safely:
 
+- Where should this GitHub repo be cloned if no local checkout exists and no safe default is obvious?
 - What is the project trying to become?
 - Which source of truth should drive the first work queue?
 - What milestone should the automation work toward first?

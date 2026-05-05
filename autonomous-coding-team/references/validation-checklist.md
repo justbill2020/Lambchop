@@ -18,6 +18,7 @@ Before claiming a setup is complete, confirm:
 - No user-facing Python setup requirement exists.
 - Progress entries distinguish desired backoff interval from actual scheduler persistence.
 - The automation prompt requires planning or selecting the next task after completing the active task.
+- GitHub/local target deployment records the target path, remote identity, created files, automation id, and first queued item.
 
 ## Skill Project Checks
 For this skill project:

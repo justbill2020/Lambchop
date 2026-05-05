@@ -83,6 +83,32 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Lambchop automation config re-read includes scheduled-work-plan planner loop.
   - Automation registry audit ran and only reported pre-existing global `run_thread_missing` failures outside Lambchop.
 
+## 2026-05-05 09:11 - github-repo-deployment-method
+
+- Status: done
+- Branch: `master`
+- Worktree: `C:\Users\BillMartin\dev\Lambchop`
+- Changes:
+  - Added `autonomous-coding-team/references/github-repo-deployment.md`.
+  - Updated the skill entrypoint to load the GitHub/local repo deployment method when the user points to a target repo.
+  - Updated setup interview guidance to resolve GitHub/local checkout details before asking product questions.
+  - Updated validation guidance to require target path, remote identity, automation id, first queued item, and blocker proof.
+- Validation:
+  - `docs/lambchop/state.json` parse: pass.
+  - `docs/lambchop/backoff.json` parse: pass.
+  - Template `state.json` parse: pass.
+  - Template `backoff.json` parse: pass.
+  - Non-template placeholder scan: pass after replacing an explanatory target docs path.
+- Acceptance criteria mapped:
+  - User can point Codex at a GitHub URL, shorthand, remote, current directory, or local repo path.
+  - Codex creates project-specific workflow/state/progress/backoff/scheduled-plan files.
+  - Codex creates or updates one target-specific Codex automation.
+  - GitHub remote identity does not imply permission to push, PR, deploy, or mutate external systems.
+- Blockers:
+  - None.
+- Next step:
+  - Commit this deployment-method update, then continue validation scenarios.
+
 ### automation-created
 
 - Automation id: `lambchop-autonomous-coding-team`
