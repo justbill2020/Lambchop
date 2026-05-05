@@ -61,3 +61,16 @@ Report:
 
 ## Safety Defaults
 Do not push to GitHub, open PRs, deploy, or mutate external issue trackers during deployment. A remote URL is a source and destination identity, not permission to publish.
+
+
+## Deployment Checklist
+Use this checklist when deploying the autonomous team into a target repo (see also `references/target-project-deployment-checklist.md`).
+
+- Confirm the target path is correct and writable (avoid cloning into the wrong folder).
+- Inspect before asking: git status/branch/remotes/worktrees, docs/specs/TODOs, stack markers, and scripts/commands.
+- Reuse/update an existing overlapping Codex automation instead of creating duplicates.
+- Generate or repair: `WORKFLOW.md`, plus `docs/<slug>/{state.json,progress.md,backoff.json,scheduled-work-plan.md}`.
+- Run git write-access preflight (temp branch + temp worktree) before claiming work.
+- Validate: JSON ledgers parse; no unresolved placeholders outside templates; local-only safety defaults are explicit.
+- Record proof: target repo path + remote, created/updated files, automation id + cadence, first queued item, validation evidence, blockers/next step.
+- Keep pushes/PRs/deploys/external trackers disabled unless the user explicitly enables them.

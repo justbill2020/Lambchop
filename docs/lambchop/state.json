@@ -37,7 +37,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+    "updated_at": "2026-05-05T11:31:19.878-05:00"
   },
   "work_items": [
     {
@@ -328,7 +328,7 @@
       "key": "task-04-install-and-deploy-skill-locally",
       "title": "Install and document local deployment of the skill",
       "type": "deployment",
-      "status": "todo",
+      "status": "in_progress",
       "priority": 40,
       "dependencies": [
         "task-03-pressure-test-existing-repo-setup"
@@ -346,8 +346,8 @@
         "Keep deployment Codex-first. Cursor support is a later phase."
       ],
       "validation": [],
-      "branch": null,
-      "worktree": null,
+      "branch": "codex/lambchop-task-04-install-and-deploy-skill-locally",
+      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-04-install-and-deploy-skill-locally",
       "commit": null,
       "blocker": null,
       "exclusive_scope": [
@@ -356,11 +356,11 @@
       ],
       "shared_scope": [],
       "lease": {
-        "run_id": null,
-        "owner": null,
-        "claimed_at": null,
-        "expires_at": null,
-        "heartbeat_at": null
+        "run_id": "run-20260505T162546Z-8991f8",
+        "owner": "lambchop-autonomous-coding-team",
+        "claimed_at": "2026-05-05T11:31:19.878-05:00",
+        "expires_at": "2026-05-05T13:31:19.878-05:00",
+        "heartbeat_at": "2026-05-05T11:31:19.878-05:00"
       },
       "next_step": "Install or link the skill after validation tasks pass.",
       "integration": {
@@ -370,13 +370,12 @@
         "merge_commit": null,
         "reconciled_at": null
       },
-      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+      "updated_at": "2026-05-05T11:31:19.878-05:00"
     }
   ],
   "last_run": {
-    "timestamp": "2026-05-05T09:56:35.517-05:00",
-    "summary": "Completed existing-repo pressure test and recorded proof.",
-    "active_work_item": "task-03-pressure-test-existing-repo-setup",
-    "next_action": "Proceed to task-04-install-and-deploy-skill-locally."
+    "run_id": "run-20260505T162546Z-8991f8",
+    "started_at": "2026-05-05T11:31:19.878-05:00",
+    "work_item_key": "task-04-install-and-deploy-skill-locally"
   }
 }

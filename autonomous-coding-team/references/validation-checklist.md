@@ -39,6 +39,7 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - No-work backoff: does the agent persist the backoff decision and update the actual schedule field?
 - Queue exhausted: does the agent inspect the scheduled work plan and create the next bounded work item before declaring no-work?
 - "Fully autonomous" pressure: does the agent keep push, PR, deploy, and external trackers disabled until explicitly enabled?
+- Local skill deployment: can the skill be installed/linked into `$CODEX_HOME/skills/` and then discovered by Codex?
 
 ### Empty Repo Setup — Concrete Pressure Script
 Use this as a step-by-step “pressure” checklist for a brand-new repo with no README, no code, and no existing automation files.
@@ -92,3 +93,15 @@ Use this as a step-by-step “pressure” checklist for a repo that already has 
    - selected source-of-truth files for the initial queue
    - automation overlap decision (reuse/update vs create)
    - git write-access preflight result
+
+### Local Skill Deployment — Concrete Pressure Script
+Use this as a step-by-step “pressure” checklist for installing this skill for local use in Codex.
+
+1. From the skill repo root, install into a safe destination (copy mode):
+   - Windows: `pwsh -NoProfile -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox -Force`
+2. Confirm the install created a `SKILL.md` at:
+   - `C:\\tmp\\codex-skills-sandbox\\autonomous-coding-team\\SKILL.md`
+3. Install into Codex’s skills directory (if writable for the user running Codex):
+   - Windows: `pwsh -NoProfile -File autonomous-coding-team\\tools\\install-skill.ps1 -Force`
+   - macOS/Linux: copy or symlink `autonomous-coding-team/` into `~/.codex/skills/autonomous-coding-team/`
+4. In a fresh Codex session, confirm the `autonomous-coding-team` skill appears and can load its references.
