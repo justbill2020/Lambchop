@@ -13,7 +13,7 @@ Default autonomy is local-only: worktrees, branches, code changes, tests, docs, 
 ## Local Installation (Codex)
 Install this skill into your local Codex skill folder so it can be used across repositories.
 
-- Local skill install: [`references/local-skill-installation.md`](references/local-skill-installation.md)
+- Local skill install: [`references/local-skill-install.md`](references/local-skill-install.md)
 
 
 ## Local Installation (this repo)
