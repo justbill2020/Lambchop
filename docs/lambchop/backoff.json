@@ -1,13 +1,13 @@
 {
-  "current_interval_minutes": 20,
-  "last_work_found": true,
-  "last_result": "work_completed",
-  "updated_at": "2026-05-05T12:03:12.834-05:00",
+  "current_interval_minutes": 40,
+  "last_work_found": false,
+  "last_result": "no_work_concurrency",
+  "updated_at": "2026-05-05T12:03:51.959-05:00",
   "scheduler_persistence": {
-    "desired_interval_minutes": 20,
+    "desired_interval_minutes": 40,
     "actual_interval_minutes": 20,
     "status": "created_in_codex_app",
     "automation_id": "lambchop-autonomous-coding-team",
-    "last_checked_at": "2026-05-05T12:03:12.834-05:00"
+    "last_checked_at": "2026-05-05T12:03:51.959-05:00"
   }
 }
