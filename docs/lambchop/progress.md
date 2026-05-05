@@ -107,7 +107,15 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Blockers:
   - None.
 - Next step:
-  - Commit this deployment-method update, then continue validation scenarios.
+  - Continue validation scenarios.
+
+### local-commit
+
+- Commit: `dd563de`
+- Message: `feat: add GitHub repo deployment method`
+- Validation recorded in commit body:
+  - Lambchop and template JSON parse.
+  - Non-template placeholder scan passes.
 
 ### automation-created
 

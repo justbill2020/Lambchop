@@ -182,7 +182,7 @@
       "validation": [],
       "branch": null,
       "worktree": null,
-      "commit": null,
+      "commit": "dd563de",
       "blocker": null,
       "exclusive_scope": [
         "autonomous-coding-team/references/validation-checklist.md",
@@ -255,7 +255,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "next_step": "Commit the GitHub deployment method, then continue validation scenarios.",
+      "next_step": "Continue validation scenarios.",
       "integration": {
         "target_branch": "master",
         "status": "ready",
@@ -370,6 +370,6 @@
     "timestamp": "2026-05-05T09:11:11.5771114-05:00",
     "summary": "Added reusable GitHub/local repo deployment method for applying Lambchop to another project.",
     "active_work_item": "task-03-github-repo-deployment-method",
-    "next_action": "Commit the GitHub deployment method, then continue validation scenarios."
+    "next_action": "Continue validation scenarios."
   }
 }
