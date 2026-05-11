@@ -15,7 +15,7 @@ So Lambchop is the little autonomous workflow that keeps moving the project forw
 Paste this into Codex from the target repository:
 
 ```text
-Use the latest Lambchop autonomous coding team skill from `git@github.com:justbill2020/Lambchop.git`, using the skill at `autonomous-coding-team/`.
+Use the latest Lambchop autonomous coding team skill from `https://github.com/justbill2020/Lambchop`, using the skill at `autonomous-coding-team/`.
 
 Set up this repository as a local-only autonomous Codex coding team.
 
@@ -142,7 +142,7 @@ If you previously ran Lambchop in a target repo, do not delete the existing work
 Paste this from the already-configured target repo:
 
 ```text
-Use the latest Lambchop autonomous coding team skill from `git@github.com:justbill2020/Lambchop.git`, using the skill at `autonomous-coding-team/`.
+Use the latest Lambchop autonomous coding team skill from `https://github.com/justbill2020/Lambchop`, using the skill at `autonomous-coding-team/`.
 
 This repository already has Lambchop workflow files. Upgrade the existing setup in place instead of overwriting history.
 
