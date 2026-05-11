@@ -1,10 +1,22 @@
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { existsSync, watch } from "node:fs";
 import path from "node:path";
 
+const role = process.env.LAMBCHOP_DASHBOARD_ROLE || "project-api";
 const root = process.env.LAMBCHOP_STATUS_ROOT || "/data";
-const port = Number(process.env.PORT || 8765);
+const registryRoot = process.env.LAMBCHOP_REGISTRY_ROOT || "/registry";
+const port = Number(process.env.PORT || (role === "hub" ? 8765 : 8766));
+const projectSlug = process.env.LAMBCHOP_PROJECT_SLUG || "lambchop";
+const projectName = process.env.LAMBCHOP_PROJECT_NAME || "Lambchop";
+const projectApiUrl = process.env.LAMBCHOP_PROJECT_API_PUBLIC_URL || "http://127.0.0.1:8766";
+const projectRegistrationFile = path.join(registryRoot, `${projectSlug}.json`);
+const watchFiles = ["state.json", "dashboard-data.json", "backoff.json", "progress.md", "scheduled-work-plan.md"];
+
+const statusClients = new Set();
+const registryClients = new Set();
+let lastStatusBody = "";
+let lastRegistryBody = "";
 
 async function readJson(fileName) {
   try {
@@ -41,7 +53,8 @@ async function statusPayload() {
   return {
     generated_at: new Date().toISOString(),
     project: state?.project || dashboard?.project || {
-      name: "Lambchop project",
+      name: projectName,
+      slug: projectSlug,
       purpose: "Autonomous coding team workflow"
     },
     summary: {
@@ -66,6 +79,45 @@ async function statusPayload() {
   };
 }
 
+async function registrationPayload() {
+  const status = await statusPayload();
+  return {
+    slug: status.project?.slug || projectSlug,
+    name: status.project?.name || projectName,
+    purpose: status.project?.purpose || "",
+    api_url: projectApiUrl,
+    status_endpoint: `${projectApiUrl}/api/status`,
+    events_endpoint: `${projectApiUrl}/api/events`,
+    last_seen_at: new Date().toISOString()
+  };
+}
+
+async function registerProject() {
+  await mkdir(registryRoot, { recursive: true });
+  await writeFile(projectRegistrationFile, `${JSON.stringify(await registrationPayload(), null, 2)}\n`);
+}
+
+async function registeredProjects() {
+  try {
+    await mkdir(registryRoot, { recursive: true });
+    const files = await readdir(registryRoot);
+    const projects = [];
+    for (const file of files.filter((entry) => entry.endsWith(".json"))) {
+      try {
+        const fullPath = path.join(registryRoot, file);
+        const parsed = JSON.parse(await readFile(fullPath, "utf8"));
+        const info = await stat(fullPath);
+        projects.push({ ...parsed, registry_updated_at: info.mtime.toISOString() });
+      } catch {
+        // Ignore partial writes from containers that are currently registering.
+      }
+    }
+    return projects.sort((a, b) => String(a.name || a.slug).localeCompare(String(b.name || b.slug)));
+  } catch {
+    return [];
+  }
+}
+
 function send(res, status, contentType, body) {
   res.writeHead(status, {
     "content-type": contentType,
@@ -75,11 +127,92 @@ function send(res, status, contentType, body) {
   res.end(body);
 }
 
+function sendSse(res) {
+  res.writeHead(200, {
+    "content-type": "text/event-stream; charset=utf-8",
+    "cache-control": "no-store",
+    "connection": "keep-alive",
+    "access-control-allow-origin": "*",
+    "x-accel-buffering": "no"
+  });
+  res.write(": connected\n\n");
+}
+
+function emitEvent(clients, eventName, payload) {
+  const body = `event: ${eventName}\ndata: ${JSON.stringify(payload)}\n\n`;
+  for (const client of clients) {
+    client.write(body);
+  }
+}
+
+async function publishStatus(force = false) {
+  if (role !== "project-api") return;
+  const payload = await statusPayload();
+  const body = JSON.stringify(payload);
+  if (force || body !== lastStatusBody) {
+    lastStatusBody = body;
+    emitEvent(statusClients, "status", payload);
+    await registerProject();
+  }
+}
+
+async function publishRegistry(force = false) {
+  if (role !== "hub") return;
+  const payload = { generated_at: new Date().toISOString(), projects: await registeredProjects() };
+  const body = JSON.stringify(payload);
+  if (force || body !== lastRegistryBody) {
+    lastRegistryBody = body;
+    emitEvent(registryClients, "projects", payload);
+  }
+}
+
+function watchStatusFiles() {
+  for (const fileName of watchFiles) {
+    const fullPath = path.join(root, fileName);
+    if (existsSync(fullPath)) {
+      watch(fullPath, { persistent: false }, () => {
+        setTimeout(() => publishStatus(), 75);
+      });
+    }
+  }
+  setInterval(() => publishStatus(), 1000).unref();
+}
+
+function watchRegistry() {
+  if (existsSync(registryRoot)) {
+    watch(registryRoot, { persistent: false }, () => {
+      setTimeout(() => publishRegistry(), 75);
+    });
+  }
+  setInterval(() => publishRegistry(), 1000).unref();
+}
+
 const server = createServer(async (req, res) => {
   const url = new URL(req.url || "/", `http://${req.headers.host || "127.0.0.1"}`);
 
   if (url.pathname === "/api/status") {
     send(res, 200, "application/json; charset=utf-8", JSON.stringify(await statusPayload()));
+    return;
+  }
+
+  if (url.pathname === "/api/events") {
+    sendSse(res);
+    statusClients.add(res);
+    emitEvent(statusClients, "status", await statusPayload());
+    req.on("close", () => statusClients.delete(res));
+    return;
+  }
+
+  if (url.pathname === "/api/projects") {
+    send(res, 200, "application/json; charset=utf-8", JSON.stringify({ generated_at: new Date().toISOString(), projects: await registeredProjects() }));
+    return;
+  }
+
+  if (url.pathname === "/api/project-events") {
+    sendSse(res);
+    registryClients.add(res);
+    emitEvent(registryClients, "projects", { generated_at: new Date().toISOString(), projects: await registeredProjects() });
+    req.on("close", () => registryClients.delete(res));
     return;
   }
 
@@ -96,6 +229,14 @@ const server = createServer(async (req, res) => {
   send(res, 404, "text/plain; charset=utf-8", "Not found");
 });
 
-server.listen(port, "0.0.0.0", () => {
-  console.log(`Lambchop live status dashboard: http://127.0.0.1:${port}/dashboard.html`);
+server.listen(port, "0.0.0.0", async () => {
+  if (role === "project-api") {
+    await registerProject();
+    watchStatusFiles();
+    console.log(`Lambchop project API: ${projectApiUrl}/api/status`);
+  } else {
+    await mkdir(registryRoot, { recursive: true });
+    watchRegistry();
+    console.log(`Lambchop dashboard hub: http://127.0.0.1:${port}/dashboard.html`);
+  }
 });

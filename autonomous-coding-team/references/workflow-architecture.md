@@ -8,7 +8,7 @@ Every configured repo should contain:
 - the generated progress file under `docs/`: human-readable proof log
 - the generated backoff file under `docs/`: historical schedule/trigger ledger
 - the generated scheduled work plan under `docs/`: roadmap and task-generation source
-- the generated dashboard data, HTML, compose file, and server files under `docs/`: live visual operating picture
+- the generated dashboard data, HTML, compose/env files, and server files under `docs/`: live visual operating picture
 - `.codex/environments/environment.toml`: optional local environment config when useful
 
 ## Operating Contract
@@ -62,13 +62,13 @@ Each lane needs a separate work item, branch, worktree, lease, acceptance criter
 If Superpowers or multi-agent support is unavailable, record the blocker or `not_useful` reason and continue with the safest single-item local workflow.
 
 ## Visual Dashboard
-The dashboard is live, repo-local, and Dockerized:
+The dashboard is live, repo-local, reactive, and Dockerized:
 
 - `docs/<project-slug>/dashboard-data.json` contains normalized status from state, scheduled work, progress, backoff, validation, leases, blockers, commits, and next actions.
-- `docs/<project-slug>/dashboard.html` renders the roadmap, active sprint lanes, blocked work, validation/commit evidence, current run, progress tail, and next work.
-- `docs/<project-slug>/dashboard.compose.yml` and `docs/<project-slug>/dashboard-server/` run a local container that mounts the docs folder read-only and serves `/api/status`.
+- `docs/<project-slug>/dashboard.html` is the single hub UI. It renders registered projects, roadmap, active sprint lanes, blocked work, validation/commit evidence, current run, progress tail, and next work.
+- `docs/<project-slug>/dashboard.compose.yml`, `docs/<project-slug>/dashboard.env`, and `docs/<project-slug>/dashboard-server/` run Dockerized local services. The hub serves the single GUI and project registry stream. Each repo also runs a project API that mounts its docs folder read-only, serves `/api/status`, streams `/api/events`, and registers itself in the shared Docker volume `lambchop-dashboard-registry`.
 
-Install or repair the dashboard files during setup and upgrade. During every automation run, update the ledgers frequently enough for the status server to show current run progress. The dashboard is not a substitute for state/progress; it is a live visual projection of those sources.
+Install or repair the dashboard files during setup and upgrade. Use only one GUI port for the hub, default `8765`. Choose a free per-project API port, defaulting to `8766` only when unused, and record it in `dashboard.env`, state, and progress. During every automation run, update the ledgers frequently enough for the project API to push current run progress with server-sent events. The dashboard is not a substitute for state/progress; it is a live visual projection of those sources.
 
 ## Git Preflight
 Before claiming work, verify the run can:

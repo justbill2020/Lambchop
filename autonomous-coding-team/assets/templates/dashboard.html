@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
-  <title><PROJECT_NAME> Live Lambchop Dashboard</title>
+  <title>Lambchop Dashboard Hub</title>
   <style>
     :root {
       color-scheme: light;
@@ -20,20 +20,22 @@
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.45; }
-    header, main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    header, main { max-width: 1240px; margin: 0 auto; padding: 24px; }
     header { padding-top: 28px; }
     h1, h2, h3, p { margin: 0; }
-    h1 { font-size: clamp(28px, 5vw, 48px); letter-spacing: 0; }
+    h1 { font-size: clamp(28px, 5vw, 46px); letter-spacing: 0; }
     h2 { font-size: 20px; margin-bottom: 12px; }
     h3 { font-size: 15px; margin-bottom: 8px; }
+    select { min-height: 40px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); padding: 0 12px; font: inherit; }
     .subhead, .meta { color: var(--muted); }
-    .subhead { margin-top: 8px; max-width: 760px; }
+    .subhead { margin-top: 8px; max-width: 820px; }
+    .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 18px; }
     .grid { display: grid; gap: 16px; }
     .summary { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 24px; }
     .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(23, 32, 27, .04); }
     .metric { font-size: 30px; font-weight: 700; }
     .label, .meta { font-size: 13px; }
-    .cols { grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr); align-items: start; }
+    .cols { grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr); align-items: start; }
     .lane { border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin-top: 10px; background: #fbfcfa; }
     .status { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 8px; border-radius: 999px; background: #e9f3f4; color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; }
     .status.blocked { background: #fff4ed; color: var(--warn); }
@@ -44,14 +46,18 @@
     dd { margin: 0; overflow-wrap: anywhere; }
     ul { margin: 10px 0 0; padding-left: 20px; }
     pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; color: var(--muted); font: 13px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; }
-    @media (max-width: 820px) { header, main { padding: 18px; } .cols { grid-template-columns: 1fr; } dl { grid-template-columns: 1fr; } }
+    @media (max-width: 860px) { header, main { padding: 18px; } .cols { grid-template-columns: 1fr; } dl { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
   <header>
-    <h1 id="project-name">Loading Lambchop status...</h1>
-    <p class="subhead" id="project-purpose">Waiting for live workflow data.</p>
-    <p class="meta" id="refresh-status">Connecting to live status server...</p>
+    <h1 id="project-name">Lambchop Dashboard Hub</h1>
+    <p class="subhead" id="project-purpose">Select a registered project to view its current automation run.</p>
+    <div class="toolbar">
+      <label class="meta" for="project-select">Project</label>
+      <select id="project-select" aria-label="Registered project"></select>
+      <span class="meta" id="refresh-status">Connecting to dashboard hub...</span>
+    </div>
     <section class="grid summary" aria-label="Status summary">
       <div class="panel"><div class="metric" id="todo-count">0</div><div class="label">Todo</div></div>
       <div class="panel"><div class="metric" id="active-count">0</div><div class="label">In progress</div></div>
@@ -70,6 +76,10 @@
       <div id="latest-work"></div>
     </section>
     <aside class="grid">
+      <section class="panel">
+        <h2>Registered Projects</h2>
+        <div id="registered-projects"><p class="meta">Waiting for project registrations.</p></div>
+      </section>
       <section class="panel">
         <h2>Roadmap</h2>
         <p class="meta" id="milestone"></p>
@@ -93,6 +103,10 @@
     const byId = (id) => document.getElementById(id);
     const text = (id, value) => { byId(id).textContent = value ?? ""; };
     const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[ch]));
+    let projects = [];
+    let selectedSlug = localStorage.getItem("lambchop.selectedProject") || "";
+    let projectEvents = null;
+
     function renderItem(item) {
       const status = item.dispatch_status || item.status || "unknown";
       return `<article class="lane">
@@ -107,43 +121,89 @@
         </dl>
       </article>`;
     }
+
     function renderRun(run) {
       if (!run) return `<p class="meta">No run data yet.</p>`;
       return `<dl>
         <dt>Run id</dt><dd>${escapeHtml(run.run_id || "not recorded")}</dd>
         <dt>Started</dt><dd>${escapeHtml(run.started_at || run.timestamp || "not recorded")}</dd>
         <dt>Work item</dt><dd>${escapeHtml(run.work_item_key || run.active_work_item || "not recorded")}</dd>
-        <dt>Dashboard</dt><dd>${escapeHtml(run.dashboard_updated_at || "live")}</dd>
+        <dt>Dashboard</dt><dd>${escapeHtml(run.dashboard_updated_at || "streaming")}</dd>
       </dl>`;
     }
-    async function refresh() {
-      try {
-        const response = await fetch("/api/status", { cache: "no-store" });
-        if (!response.ok) throw new Error(`status ${response.status}`);
-        const data = await response.json();
-        const summary = data.summary || {};
-        text("project-name", data.project?.name || "Lambchop project");
-        text("project-purpose", data.project?.purpose || "");
-        text("refresh-status", `Live as of ${data.generated_at || new Date().toISOString()}`);
-        text("todo-count", summary.todo || 0);
-        text("active-count", summary.in_progress || 0);
-        text("blocked-count", summary.blocked || 0);
-        text("done-count", summary.done || 0);
-        text("lane-count", summary.active_parallel_lanes || 0);
-        text("milestone", data.roadmap?.current_milestone || data.project?.phase || "");
-        text("next-action", summary.next_action || "");
-        byId("current-run").innerHTML = renderRun(data.current_run);
-        byId("lanes").innerHTML = data.active_lanes?.length ? data.active_lanes.map(renderItem).join("") : `<p class="meta">No active lanes.</p>`;
-        byId("latest-work").innerHTML = data.latest_work_items?.length ? data.latest_work_items.map(renderItem).join("") : `<p class="meta">No work items yet.</p>`;
-        byId("blocked").innerHTML = data.blocked?.length ? data.blocked.map(renderItem).join("") : `<p class="meta">No blocked work.</p>`;
-        byId("backlog").innerHTML = (data.roadmap?.next_backlog_seeds || []).map((seed) => `<li>${escapeHtml(seed.replace(/^- /, ""))}</li>`).join("");
-        text("progress-tail", (data.progress_tail || []).join("\n"));
-      } catch (error) {
-        text("refresh-status", `Live status unavailable: ${error.message}`);
-      }
+
+    function renderProjectList() {
+      byId("registered-projects").innerHTML = projects.length
+        ? projects.map((project) => `<article class="lane"><h3>${escapeHtml(project.name || project.slug)}</h3><p class="meta">${escapeHtml(project.api_url || "")}</p></article>`).join("")
+        : `<p class="meta">No project APIs have registered yet.</p>`;
     }
-    refresh();
-    setInterval(refresh, 2000);
+
+    function renderProjectOptions() {
+      const select = byId("project-select");
+      const options = projects.map((project) => `<option value="${escapeHtml(project.slug)}">${escapeHtml(project.name || project.slug)}</option>`).join("");
+      select.innerHTML = options || `<option value="">No registered projects</option>`;
+      if (!projects.some((project) => project.slug === selectedSlug)) {
+        selectedSlug = projects[0]?.slug || "";
+      }
+      select.value = selectedSlug;
+      localStorage.setItem("lambchop.selectedProject", selectedSlug);
+    }
+
+    function renderStatus(data) {
+      const summary = data.summary || {};
+      text("project-name", data.project?.name || "Lambchop project");
+      text("project-purpose", data.project?.purpose || "");
+      text("refresh-status", `Streaming ${data.project?.slug || "project"} as of ${data.generated_at || new Date().toISOString()}`);
+      text("todo-count", summary.todo || 0);
+      text("active-count", summary.in_progress || 0);
+      text("blocked-count", summary.blocked || 0);
+      text("done-count", summary.done || 0);
+      text("lane-count", summary.active_parallel_lanes || 0);
+      text("milestone", data.roadmap?.current_milestone || data.project?.phase || "");
+      text("next-action", summary.next_action || "");
+      byId("current-run").innerHTML = renderRun(data.current_run);
+      byId("lanes").innerHTML = data.active_lanes?.length ? data.active_lanes.map(renderItem).join("") : `<p class="meta">No active lanes.</p>`;
+      byId("latest-work").innerHTML = data.latest_work_items?.length ? data.latest_work_items.map(renderItem).join("") : `<p class="meta">No work items yet.</p>`;
+      byId("blocked").innerHTML = data.blocked?.length ? data.blocked.map(renderItem).join("") : `<p class="meta">No blocked work.</p>`;
+      byId("backlog").innerHTML = (data.roadmap?.next_backlog_seeds || []).map((seed) => `<li>${escapeHtml(seed.replace(/^- /, ""))}</li>`).join("");
+      text("progress-tail", (data.progress_tail || []).join("\n"));
+    }
+
+    function connectProjectStream() {
+      if (projectEvents) projectEvents.close();
+      const project = projects.find((entry) => entry.slug === selectedSlug);
+      if (!project) {
+        text("refresh-status", "Waiting for a project API to register.");
+        return;
+      }
+      projectEvents = new EventSource(project.events_endpoint);
+      projectEvents.addEventListener("status", (event) => renderStatus(JSON.parse(event.data)));
+      projectEvents.onerror = () => {
+        text("refresh-status", `Project stream unavailable: ${project.events_endpoint}`);
+      };
+    }
+
+    function applyProjects(payload) {
+      projects = payload.projects || [];
+      renderProjectList();
+      renderProjectOptions();
+      connectProjectStream();
+    }
+
+    byId("project-select").addEventListener("change", (event) => {
+      selectedSlug = event.target.value;
+      localStorage.setItem("lambchop.selectedProject", selectedSlug);
+      connectProjectStream();
+    });
+
+    const hubEvents = new EventSource("/api/project-events");
+    hubEvents.addEventListener("projects", (event) => applyProjects(JSON.parse(event.data)));
+    hubEvents.onerror = () => text("refresh-status", "Dashboard hub stream unavailable.");
+
+    fetch("/api/projects", { cache: "no-store" })
+      .then((response) => response.json())
+      .then(applyProjects)
+      .catch((error) => text("refresh-status", `Project registry unavailable: ${error.message}`));
   </script>
 </body>
 </html>

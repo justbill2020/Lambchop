@@ -1,10 +1,37 @@
 services:
-  lambchop-status:
+  lambchop-project-api:
     build:
       context: ./dashboard-server
     ports:
-      - "8765:8765"
+      - "${LAMBCHOP_PROJECT_API_PORT:-8766}:8766"
     volumes:
       - .:/data:ro
+      - lambchop-dashboard-registry:/registry
     environment:
+      - LAMBCHOP_DASHBOARD_ROLE=project-api
       - LAMBCHOP_STATUS_ROOT=/data
+      - LAMBCHOP_REGISTRY_ROOT=/registry
+      - LAMBCHOP_PROJECT_SLUG=${LAMBCHOP_PROJECT_SLUG:-lambchop}
+      - LAMBCHOP_PROJECT_NAME=${LAMBCHOP_PROJECT_NAME:-Lambchop}
+      - LAMBCHOP_PROJECT_API_PUBLIC_URL=${LAMBCHOP_PROJECT_API_PUBLIC_URL:-http://127.0.0.1:8766}
+      - PORT=8766
+
+  lambchop-dashboard-hub:
+    profiles:
+      - hub
+    build:
+      context: ./dashboard-server
+    ports:
+      - "${LAMBCHOP_DASHBOARD_PORT:-8765}:8765"
+    volumes:
+      - .:/data:ro
+      - lambchop-dashboard-registry:/registry
+    environment:
+      - LAMBCHOP_DASHBOARD_ROLE=hub
+      - LAMBCHOP_STATUS_ROOT=/data
+      - LAMBCHOP_REGISTRY_ROOT=/registry
+      - PORT=8765
+
+volumes:
+  lambchop-dashboard-registry:
+    name: lambchop-dashboard-registry

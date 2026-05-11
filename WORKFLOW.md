@@ -13,7 +13,10 @@ automation:
   dashboard_data_file: docs/lambchop/dashboard-data.json
   dashboard_file: docs/lambchop/dashboard.html
   dashboard_compose_file: docs/lambchop/dashboard.compose.yml
+  dashboard_env_file: docs/lambchop/dashboard.env
   dashboard_server_dir: docs/lambchop/dashboard-server
+  dashboard_hub_port: 8765
+  project_api_default_port: 8766
   memory_file_primary: $CODEX_HOME/automations/lambchop-autonomous-coding-team/memory.md
   memory_file_fallback_windows: %USERPROFILE%\.codex\automations\lambchop-autonomous-coding-team\memory.md
   memory_file_fallback_unix: ~/.codex/automations/lambchop-autonomous-coding-team/memory.md
@@ -28,7 +31,7 @@ automation:
     max_subagents: 5
     orchestrator: main-automation-run
   lease_minutes: 120
-  integration_branch: master
+  integration_branch: main
   publish_default: local-branch
   repository_root: .
 ---
@@ -46,11 +49,23 @@ Use these sources in this order:
 2. `docs/lambchop/state.json` defines the local work queue and machine-readable status.
 3. `docs/lambchop/progress.md` records human-readable proof of work.
 4. `docs/lambchop/scheduled-work-plan.md` defines how future tasks are planned when the queue is empty.
-5. `docs/lambchop/dashboard-data.json`, `docs/lambchop/dashboard.html`, `docs/lambchop/dashboard.compose.yml`, and `docs/lambchop/dashboard-server/` provide the current visual operating picture.
+5. `docs/lambchop/dashboard-data.json`, `docs/lambchop/dashboard.html`, `docs/lambchop/dashboard.compose.yml`, `docs/lambchop/dashboard.env`, and `docs/lambchop/dashboard-server/` provide the current visual operating picture.
 6. `autonomous-coding-team/` contains the skill, references, and templates.
 7. Repository files and validation results are the source of truth for implemented behavior.
 
 If these sources disagree, preserve explicit user intent first, then implemented passing behavior, then safety and data integrity. Update state/progress to match reality and record the reconciliation.
+
+## Instruction Strength Glossary
+
+Use instruction words consistently:
+
+- `Must`, `need`, and `required` mean mandatory. If the run cannot comply, record the blocker and do not silently skip it.
+- `Must not` and `forbidden` mean prohibited unless Bill explicitly changes the safety policy.
+- `Should` means expected default. Follow it unless repo evidence shows a safer or more accurate path, then record the reason.
+- `Could` and `may` mean allowed option, not required work.
+- `Would` is explanatory or conditional and is not a command by itself.
+
+When instructions conflict, follow explicit user intent first, then safety, then verified behavior, then convenience.
 
 ## Allowed Actions
 Automation may inspect the repo, create worktrees, create local `codex/lambchop-{work_item_key}` branches, edit skill/docs/templates for the active item, run validation commands, commit locally, and update state/progress/schedule ledgers.
@@ -77,7 +92,7 @@ Every automation run must:
 14. Run relevant validation.
 15. Commit coherent completed changes locally with validation details.
 16. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan, add the next bounded source-backed work item when work remains, or record the no-work reason.
-17. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/lambchop/dashboard-data.json`; the Dockerized status server reads those files while it is running.
+17. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/lambchop/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
 18. Update state, progress, and the schedule/trigger ledger.
 19. Apply the completion trigger protocol: if the automation is ACTIVE, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
 
@@ -102,10 +117,10 @@ If multi-agent support or Superpowers is unavailable, record the blocker or `not
 Every setup and run must maintain:
 
 - `docs/lambchop/dashboard-data.json`: normalized machine-readable status from state, scheduled work plan, progress, backoff, leases, validation, blockers, commits, and next actions.
-- `docs/lambchop/dashboard.html`: the live browser UI that polls `/api/status` while the automation is flowing.
-- `docs/lambchop/dashboard.compose.yml` and `docs/lambchop/dashboard-server/`: a Dockerized local status server that mounts the docs folder read-only and serves `http://127.0.0.1:8765/dashboard.html`.
+- `docs/lambchop/dashboard.html`: the single hub browser UI. It subscribes to the hub project registry with `/api/project-events`, then subscribes to the selected project API with `/api/events`.
+- `docs/lambchop/dashboard.compose.yml`, `docs/lambchop/dashboard.env`, and `docs/lambchop/dashboard-server/`: Dockerized local services. `lambchop-dashboard-hub` owns the one GUI port, default `8765`. `lambchop-project-api` owns the per-project API port, default `8766`, and registers itself in the shared Docker volume `lambchop-dashboard-registry`.
 
-The dashboard must use real workflow data only. Do not hand-write decorative status that cannot be traced back to state, progress, scheduled work, validation, or git evidence. Use the Dockerized status server instead of opening the HTML with `file://`.
+The dashboard must use real workflow data only. Do not hand-write decorative status that cannot be traced back to state, progress, scheduled work, validation, or git evidence. Use the Dockerized status server instead of opening the HTML with `file://`. When installing or repairing Lambchop, keep one shared hub GUI port and choose a free per-project API port. Write `LAMBCHOP_PROJECT_API_PORT` and `LAMBCHOP_PROJECT_API_PUBLIC_URL` to `dashboard.env`, then verify the project appears in the hub registry. If the hub port is already occupied by a Lambchop hub, start only the project API for the current repo and tell the user to open the existing hub.
 
 ## Weekly Schedule And Completion Trigger
 Use a weekly cron automation as the persisted schedule anchor, not a minute-interval automation. The default RRULE is weekly with all seven days selected at the chosen wall-clock hour, matching Codex's weekly schedule representation.

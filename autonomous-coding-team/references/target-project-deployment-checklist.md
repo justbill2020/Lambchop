@@ -23,6 +23,7 @@ Use this checklist when deploying the autonomous coding team workflow into a new
   - `docs/<project-slug>/dashboard-data.json`
   - `docs/<project-slug>/dashboard.html`
   - `docs/<project-slug>/dashboard.compose.yml`
+  - `docs/<project-slug>/dashboard.env`
   - `docs/<project-slug>/dashboard-server/`
 - Stack/tooling markers and how to run checks (examples: `package.json` scripts, `Makefile`, CI config).
 - Existing automations (avoid creating duplicates).
@@ -44,8 +45,15 @@ Use this checklist when deploying the autonomous coding team workflow into a new
   - `docs/<project-slug>/backoff.json` (historical schedule/trigger ledger)
   - `docs/<project-slug>/scheduled-work-plan.md` (task-generation source)
   - `docs/<project-slug>/dashboard-data.json` (machine-readable visual status)
-  - `docs/<project-slug>/dashboard.html` (live visual dashboard UI)
-  - `docs/<project-slug>/dashboard.compose.yml` and `docs/<project-slug>/dashboard-server/` (Dockerized status server)
+  - `docs/<project-slug>/dashboard.html` (single hub visual dashboard UI)
+  - `docs/<project-slug>/dashboard.compose.yml`, `docs/<project-slug>/dashboard.env`, and `docs/<project-slug>/dashboard-server/` (Dockerized hub/project API services)
+- Configure the shared dashboard and per-project API:
+  - keep one shared hub GUI port in `LAMBCHOP_DASHBOARD_PORT`, default `8765`
+  - choose a free per-project API port in `LAMBCHOP_PROJECT_API_PORT`, default `8766` only if unused
+  - set `LAMBCHOP_PROJECT_SLUG`, `LAMBCHOP_PROJECT_NAME`, and `LAMBCHOP_PROJECT_API_PUBLIC_URL`
+  - record the selected hub URL, API status URL, API events URL, and registration result in state/progress
+  - if the hub GUI port is already occupied by a Lambchop hub, start only the project API and tell the user to open the existing hub
+  - if the project does not appear in the hub registry, report the exact blocker: API not running, wrong public URL, API port collision, Docker volume issue, or registry file missing
 - Enable adaptive parallel sprint orchestration:
   - main automation run is the orchestrator
   - dispatch 2-5 independent Superpowers subagent lanes when dependencies and `exclusive_scope` allow it
@@ -69,7 +77,10 @@ If any preflight step fails, record the blocker (exact command + error) and stop
 - `state.json` parses as JSON.
 - `backoff.json` parses as JSON.
 - `dashboard-data.json` parses as JSON.
-- Dockerized dashboard server responds at `http://127.0.0.1:8765/dashboard.html` and `/api/status`.
+- Dockerized project API responds at `http://127.0.0.1:<project-api-port>/api/status`.
+- Dockerized project API streams `http://127.0.0.1:<project-api-port>/api/events`.
+- Dashboard hub responds at `http://127.0.0.1:<dashboard-port>/dashboard.html`.
+- Dashboard hub `/api/projects` includes this project registration.
 - `WORKFLOW.md` has no unresolved placeholders.
 - `WORKFLOW.md` includes adaptive 2-5 parallel subagent orchestration and dashboard regeneration.
 - Repo checks relevant to the change are run (tests/build/lint/typecheck as applicable).

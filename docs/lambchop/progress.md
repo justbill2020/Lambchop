@@ -2,6 +2,32 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-05-11 15:45 - single hub reactive dashboard
+
+- Status: done
+- Run id: `manual-implementation-20260511-dashboard-hub`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Changes:
+  - Replaced per-project GUI ports with one shared dashboard hub and per-project status APIs.
+  - Added project registration through the shared Docker volume `lambchop-dashboard-registry`.
+  - Added server-sent events for reactive project registry updates and selected-project status updates.
+  - Updated README prompts to be short bootstrap prompts that require reviewing the GitHub README and `autonomous-coding-team/` skill before making changes.
+  - Added instruction-strength glossary for `must`, `need`, `should`, `could`, `may`, and `would`.
+- Validation:
+  - JSON ledgers and templates parse.
+  - Node syntax checks passed for dashboard server and template server.
+  - Docker Compose config passed with test ports `8795` hub and `8796` project API.
+  - Docker Compose build/run passed with hub profile on test ports.
+  - Project API `/api/status` returned Lambchop workflow data.
+  - Project API `/api/events` streamed a `status` event.
+  - Hub `/api/projects` included the Lambchop project registration.
+  - Hub `/api/project-events` streamed project registration updates.
+  - Hub dashboard HTML loaded and includes registry and selected-project stream wiring.
+- Notes:
+  - Port `8765` was already occupied locally by another dashboard container during validation, so verification used alternate ports without changing the generated defaults.
+  - Future target repos should start only their project API when a Lambchop hub is already running.
+
 ## 2026-05-11 14:25 - task-08-parallel-sprint-dashboard
 
 - Status: done

@@ -4,7 +4,7 @@
     "slug": "lambchop",
     "phase": "autonomous-skill-mvp",
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
-    "updated_at": "2026-05-11T15:10:00-05:00"
+    "updated_at": "2026-05-11T15:45:00-05:00"
   },
   "summary": {
     "todo": 0,
@@ -13,7 +13,7 @@
     "done": 10,
     "skipped": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Use the Dockerized live dashboard while future runs dispatch adaptive 2-5 subagent sprint packets when safe."
+    "next_action": "Use one shared dashboard hub for all Lambchop projects; start each repo's project API so it registers and streams status into the hub."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -149,21 +149,24 @@
     "state.json parses as JSON",
     "backoff.json parses as JSON",
     "dashboard-data.json parses as JSON",
-    "dashboard UI fetches /api/status",
-    "Dockerized dashboard server build and run passed",
-    "/api/status returns live workflow data",
-    "Codex browser loaded Lambchop Live Dashboard"
+    "dashboard server and template server passed node syntax checks",
+    "Dockerized dashboard hub and project API build and run passed on alternate test ports",
+    "project API /api/status returned live workflow data",
+    "project API /api/events streamed status updates",
+    "dashboard hub /api/projects included the Lambchop registration",
+    "dashboard hub /api/project-events streamed project registration updates",
+    "dashboard HTML includes registry and selected-project stream wiring"
   ],
   "commits": [
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "manual-implementation-20260511-parallel-dashboard",
-    "started_at": "2026-05-11T14:05:00-05:00",
+    "run_id": "manual-implementation-20260511-dashboard-hub",
+    "started_at": "2026-05-11T15:45:00-05:00",
     "work_item_key": "task-08-parallel-sprint-dashboard",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-11T15:10:00-05:00",
-    "next_action": "Use the Dockerized live dashboard while future runs dispatch adaptive 2-5 subagent sprint packets when safe."
+    "dashboard_updated_at": "2026-05-11T15:45:00-05:00",
+    "next_action": "Use one shared dashboard hub for all Lambchop projects; start each repo's project API so it registers and streams status into the hub."
   }
 }

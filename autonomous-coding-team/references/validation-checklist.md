@@ -8,8 +8,10 @@ Before claiming a setup is complete, confirm:
 - the generated progress file under `docs/` has an initial setup entry.
 - the generated scheduled work plan exists and can create the next source-backed task when the queue is empty.
 - the generated dashboard data file under `docs/` exists and parses as JSON.
-- the generated dashboard HTML, Docker compose file, and dashboard server files under `docs/` exist.
-- the Dockerized dashboard server responds locally and `/api/status` returns live workflow data.
+- the generated dashboard HTML, Docker compose/env files, and dashboard server files under `docs/` exist.
+- `dashboard.env` records one shared `LAMBCHOP_DASHBOARD_PORT`, a unique `LAMBCHOP_PROJECT_API_PORT`, `LAMBCHOP_PROJECT_SLUG`, `LAMBCHOP_PROJECT_NAME`, and `LAMBCHOP_PROJECT_API_PUBLIC_URL`.
+- setup does not allocate a new GUI port per repo; it allocates a project API port and registers the project with the shared dashboard hub.
+- the Dockerized project API responds locally, `/api/status` returns live workflow data, `/api/events` streams updates, and the hub `/api/projects` registry includes the project.
 - The workflow states local-only safety defaults.
 - Push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts are forbidden by default.
 - Worktree root and branch naming are present.
@@ -83,11 +85,14 @@ Use this as a step-by-step “pressure” checklist for a brand-new repo with no
    - `docs/<project-slug>/dashboard-data.json`
    - `docs/<project-slug>/dashboard.html`
    - `docs/<project-slug>/dashboard.compose.yml`
+   - `docs/<project-slug>/dashboard.env`
    - `docs/<project-slug>/dashboard-server/`
 5. Validate proof:
    - `state.json` and `backoff.json` parse as JSON.
    - `dashboard-data.json` parses as JSON.
-   - Dockerized dashboard server responds locally or records the exact blocker.
+   - Dockerized project API responds locally on the configured project API port or records the exact blocker.
+   - Dockerized project API streams `/api/events` or records the exact blocker.
+   - Dashboard hub `/api/projects` includes this project or records the exact blocker.
    - No unresolved `<PLACEHOLDER>` tokens exist outside reusable templates.
    - Workflow explicitly forbids push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts by default.
    - Workflow includes adaptive 2-5 parallel subagent orchestration with main-run integration.

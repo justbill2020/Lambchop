@@ -16,7 +16,7 @@
     "concurrency_mode": "cooperative",
     "max_concurrent_runs": 5,
     "lease_minutes": 120,
-    "main_branch": "master",
+    "main_branch": "main",
     "external_issue_tracking": false,
     "planning_policy": {
       "mode": "fully-autonomous-local",
@@ -48,6 +48,7 @@
     "updated_at": "2026-05-08T14:55:00-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
+    "dashboard_env_file": "docs/lambchop/dashboard.env",
     "parallel_execution": {
       "mode": "adaptive-subagents",
       "enabled": true,
@@ -59,15 +60,25 @@
       "fallback_when_unavailable": "single-item-local-workflow"
     },
     "dashboard_policy": {
-      "mode": "live-dockerized-repo-dashboard",
+      "mode": "single-hub-with-registered-project-apis",
       "data_file": "docs/lambchop/dashboard-data.json",
       "html_file": "docs/lambchop/dashboard.html",
+      "env_file": "docs/lambchop/dashboard.env",
       "regenerate_after_setup": true,
       "regenerate_after_each_run": true,
       "requires_real_workflow_data": true,
       "compose_file": "docs/lambchop/dashboard.compose.yml",
       "server_dir": "docs/lambchop/dashboard-server",
-      "status_endpoint": "http://127.0.0.1:8765/api/status"
+      "hub_port": 8765,
+      "project_api_port": 8766,
+      "hub_url": "http://127.0.0.1:8765/dashboard.html",
+      "status_endpoint": "http://127.0.0.1:8766/api/status",
+      "events_endpoint": "http://127.0.0.1:8766/api/events",
+      "registry_volume": "lambchop-dashboard-registry",
+      "requires_single_shared_gui_port": true,
+      "requires_free_project_api_port": true,
+      "registration_required": true,
+      "reactive_updates": "server-sent-events"
     },
     "dashboard_compose_file": "docs/lambchop/dashboard.compose.yml",
     "dashboard_server_dir": "docs/lambchop/dashboard-server"
@@ -741,12 +752,12 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-implementation-20260511-parallel-dashboard",
-    "started_at": "2026-05-11T14:05:00-05:00",
+    "run_id": "manual-implementation-20260511-dashboard-hub",
+    "started_at": "2026-05-11T15:45:00-05:00",
     "work_item_key": "task-08-parallel-sprint-dashboard",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-11T15:10:00-05:00",
-    "next_action": "Use the Dockerized live dashboard while future runs dispatch adaptive 2-5 subagent sprint packets when safe."
+    "dashboard_updated_at": "2026-05-11T15:45:00-05:00",
+    "next_action": "Use one shared dashboard hub for all Lambchop projects; start each repo's project API so it registers and streams status into the hub."
   }
 }
