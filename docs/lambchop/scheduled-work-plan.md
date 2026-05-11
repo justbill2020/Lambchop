@@ -15,7 +15,7 @@ Prove the reusable deployment flow with Lambchop itself, then validate the skill
 - `autonomous-coding-team/SKILL.md`
 - `autonomous-coding-team/references/`
 - `autonomous-coding-team/assets/templates/`
-- SeeItAI workflow lessons and proof records
+- prior autonomous workflow lessons and proof records
 - repository validation output and git history
 
 ## Planning Cadence
@@ -37,6 +37,8 @@ Default to one coherent local commit per work item. Split work when acceptance c
 Do not invent work when there is no source of truth. Stop and record a blocker when Bill's decision is required, a requested action would push/PR/deploy/mutate external trackers, source files conflict in a way that changes product intent, or the current milestone is complete.
 
 ## Backlog Seeds
+- Use adaptive parallel sprint orchestration for independent work packets and record proof.
+- Regenerate repo-local dashboard data and HTML after each autonomous run.
 - Pressure-test empty repo setup and record proof.
 - Pressure-test existing repo setup and record proof.
 - Install or link the skill into local Codex skills after validation.

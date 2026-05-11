@@ -1,6 +1,9 @@
 {
-  "current_interval_minutes": 20,
+  "schedule_mode": "weekly-anchor-with-completion-trigger",
+  "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+  "completion_trigger": "trigger_next_run_when_active",
   "last_work_found": null,
   "last_result": "initialized",
+  "last_trigger_result": null,
   "updated_at": "<ISO8601_TIMESTAMP>"
 }

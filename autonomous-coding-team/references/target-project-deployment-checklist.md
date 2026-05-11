@@ -10,7 +10,7 @@ Use this checklist when deploying the autonomous coding team workflow into a new
 - Target repo path (or clone target) and remote identity (if any).
 - Project slug used for docs paths (example: `docs/<project-slug>/`).
 - Integration branch name (`main` vs `master`) inferred from the repo.
-- Automation id and desired cadence (default: 20 minutes active + adaptive backoff when idle).
+- Automation id and desired cadence (default: weekly cron anchor plus end-of-run run-now trigger when ACTIVE).
 
 ## Discovery (Inspect Before Asking)
 - `git status`, current branch, remotes, local branches, and `git worktree list --porcelain`.
@@ -20,6 +20,8 @@ Use this checklist when deploying the autonomous coding team workflow into a new
   - `docs/<project-slug>/progress.md`
   - `docs/<project-slug>/backoff.json`
   - `docs/<project-slug>/scheduled-work-plan.md`
+  - `docs/<project-slug>/dashboard-data.json`
+  - `docs/<project-slug>/dashboard.html`
 - Stack/tooling markers and how to run checks (examples: `package.json` scripts, `Makefile`, CI config).
 - Existing automations (avoid creating duplicates).
 
@@ -37,8 +39,15 @@ Use this checklist when deploying the autonomous coding team workflow into a new
   - dependencies and acceptance criteria
 - Create or repair:
   - `docs/<project-slug>/progress.md` (append-only proof)
-  - `docs/<project-slug>/backoff.json` (adaptive schedule ledger)
+  - `docs/<project-slug>/backoff.json` (historical schedule/trigger ledger)
   - `docs/<project-slug>/scheduled-work-plan.md` (task-generation source)
+  - `docs/<project-slug>/dashboard-data.json` (machine-readable visual status)
+  - `docs/<project-slug>/dashboard.html` (local visual dashboard)
+- Enable adaptive parallel sprint orchestration:
+  - main automation run is the orchestrator
+  - dispatch 2-5 independent Superpowers subagent lanes when dependencies and `exclusive_scope` allow it
+  - fall back to one item and record why when fewer than 2 independent items are eligible
+  - keep scheduler triggering, integration, dashboard regeneration, validation, and commits in the main run
 
 ## Git Preflight (Before Claiming Work)
 Record evidence that the run can:
@@ -56,7 +65,10 @@ If any preflight step fails, record the blocker (exact command + error) and stop
 ## Validation (Before Marking “Done”)
 - `state.json` parses as JSON.
 - `backoff.json` parses as JSON.
+- `dashboard-data.json` parses as JSON.
+- `dashboard.html` opens locally without a hosted service.
 - `WORKFLOW.md` has no unresolved placeholders.
+- `WORKFLOW.md` includes adaptive 2-5 parallel subagent orchestration and dashboard regeneration.
 - Repo checks relevant to the change are run (tests/build/lint/typecheck as applicable).
 
 ## Proof Record (Progress Ledger Must Include)
@@ -64,6 +76,8 @@ If any preflight step fails, record the blocker (exact command + error) and stop
 - Files created or updated.
 - Automation id and desired cadence.
 - First queued work item key/title.
+- Dashboard artifact paths and whether they were regenerated from real workflow data.
+- Whether parallel subagent orchestration was used, not useful, or unavailable.
 - Validation results (including git preflight).
 - Any skipped checks with: reason, risk, and what to run later.
 

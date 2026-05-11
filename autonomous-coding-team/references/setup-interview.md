@@ -11,7 +11,7 @@ Collect repo facts before asking:
 - package manifests and stack markers such as `package.json`, `pyproject.toml`, `Cargo.toml`, `.sln`, `go.mod`, or `pom.xml`
 - test, build, lint, typecheck, and dev commands
 - config, environment, deployment, and CI files
-- existing project state, progress, and backoff ledgers under `docs/`
+- existing project state, progress, backoff, scheduled work, and dashboard files under `docs/`
 - existing Codex automations with overlapping name, workspace, or prompt
 - if the user supplied GitHub input, the resolved local checkout path and remote identity
 
@@ -19,7 +19,7 @@ Collect repo facts before asking:
 - Empty repo: no product files yet; create workflow from user brief.
 - Docs/spec-only repo: source work queue from plans/specs.
 - Existing app/library repo: source queue from docs, code gaps, tests, TODOs, and user goals.
-- Partially configured repo: repair missing or stale workflow/state/progress/backoff files.
+- Partially configured repo: repair missing or stale workflow/state/progress/backoff/scheduled-plan/dashboard files.
 - Already automated repo: update existing setup; do not duplicate automations.
 
 ## Existing App/Library Repo Expectations
@@ -46,7 +46,9 @@ Ask only what cannot be inferred safely:
 - Autonomy: local branches, worktrees, edits, tests, docs, and local commits only.
 - Publishing: disabled.
 - External trackers: disabled.
-- Initial cadence: 20 minutes when active; adaptive backoff handles idle periods.
+- Initial cadence: weekly cron anchor with an end-of-run scheduler-visible run-now trigger when ACTIVE; pausing the automation must prevent the next trigger.
 - Worktree root: `.worktrees`.
 - Branch prefix: `codex/`.
 - Integration branch: current main branch, preferring `main`, then `master`.
+- Parallel execution: adaptive 2-5 Superpowers subagent lanes when independent work exists; otherwise record why single-item execution is safer.
+- Visual status: static repo-local dashboard under `docs/<project-slug>/dashboard.html` backed by `dashboard-data.json`.

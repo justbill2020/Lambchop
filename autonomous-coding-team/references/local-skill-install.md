@@ -10,7 +10,7 @@ This repo contains a Codex skill at `autonomous-coding-team/`. To use it across 
 The skill folder is the `autonomous-coding-team/` directory itself (it contains `SKILL.md`, `agents/`, `references/`, and `assets/`).
 
 Codex typically loads local skills from:
-- Windows: `C:\Users\<YOU>\.codex\skills\`
+- Windows: `%USERPROFILE%\.codex\skills\`
 - macOS/Linux: `~/.codex/skills/`
 
 ## Recommended: Copy Install (No Admin)
@@ -35,7 +35,7 @@ Directory junctions work without admin in most setups.
 
 1. Decide paths:
    - Source: `<repo>\autonomous-coding-team`
-   - Destination: `C:\Users\<YOU>\.codex\skills\autonomous-coding-team`
+   - Destination: `%USERPROFILE%\.codex\skills\autonomous-coding-team`
 2. Create the junction:
    - If the destination folder already exists, delete it first.
 
@@ -46,15 +46,15 @@ pwsh -NoProfile -File autonomous-coding-team\\tools\\install-skill.ps1 -Mode jun
 
 Manual example:
 ```powershell
-$source = "C:\path\to\Lambchop\autonomous-coding-team"
-$dest = "C:\Users\<YOU>\.codex\skills\autonomous-coding-team"
+$source = "PATH_TO_LAMBCHOP_REPO\autonomous-coding-team"
+$dest = "$env:USERPROFILE\.codex\skills\autonomous-coding-team"
 
 New-Item -ItemType Junction -Path $dest -Target $source
 ```
 
 To uninstall:
 ```powershell
-Remove-Item "C:\Users\<YOU>\.codex\skills\autonomous-coding-team"
+Remove-Item "$env:USERPROFILE\.codex\skills\autonomous-coding-team"
 ```
 
 ### macOS/Linux — Symlink
@@ -71,6 +71,9 @@ rm ~/.codex/skills/autonomous-coding-team
 After linking/copying:
 - Restart Codex (or reload skills if supported).
 - Confirm the `autonomous-coding-team` skill is available and can be invoked by name.
+
+## Related Upstream Skills
+Lambchop intentionally embeds only its own `autonomous-coding-team` skill. Install general-purpose workflow packs such as Superpowers from their upstream GitHub source when available; see [`upstream-skills.md`](upstream-skills.md).
 
 ## Notes / Non-Goals
 - This is Codex-first installation. Cursor / Claude Code compatibility is explicitly out-of-scope for v1.

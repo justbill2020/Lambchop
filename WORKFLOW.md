@@ -2,7 +2,7 @@
 name: Lambchop Autonomous Workflow
 version: 1
 automation:
-  cadence: every 20 minutes when active, adaptive backoff when idle
+  cadence: weekly cron anchor plus scheduler-visible run-now trigger after each completed active run
   external_issue_tracking: false
   specs_source: autonomous-coding-team/
   workflow_file: WORKFLOW.md
@@ -10,14 +10,21 @@ automation:
   progress_file: docs/lambchop/progress.md
   backoff_file: docs/lambchop/backoff.json
   scheduled_work_plan_file: docs/lambchop/scheduled-work-plan.md
+  dashboard_data_file: docs/lambchop/dashboard-data.json
+  dashboard_file: docs/lambchop/dashboard.html
   memory_file_primary: $CODEX_HOME/automations/lambchop-autonomous-coding-team/memory.md
-  memory_file_fallback_windows: C:\Users\BillMartin\.codex\automations\lambchop-autonomous-coding-team\memory.md
+  memory_file_fallback_windows: %USERPROFILE%\.codex\automations\lambchop-autonomous-coding-team\memory.md
   memory_file_fallback_unix: ~/.codex/automations/lambchop-autonomous-coding-team/memory.md
   worktree_root: .worktrees
   branch_prefix: codex/
   branch_name_template: codex/lambchop-{work_item_key}
   concurrency_mode: cooperative
-  max_concurrent_runs: 3
+  max_concurrent_runs: 5
+  parallel_execution:
+    mode: adaptive-subagents
+    min_subagents: 2
+    max_subagents: 5
+    orchestrator: main-automation-run
   lease_minutes: 120
   integration_branch: master
   publish_default: local-branch
@@ -37,13 +44,14 @@ Use these sources in this order:
 2. `docs/lambchop/state.json` defines the local work queue and machine-readable status.
 3. `docs/lambchop/progress.md` records human-readable proof of work.
 4. `docs/lambchop/scheduled-work-plan.md` defines how future tasks are planned when the queue is empty.
-5. `autonomous-coding-team/` contains the skill, references, and templates.
-6. Repository files and validation results are the source of truth for implemented behavior.
+5. `docs/lambchop/dashboard-data.json` and `docs/lambchop/dashboard.html` provide the current visual operating picture.
+6. `autonomous-coding-team/` contains the skill, references, and templates.
+7. Repository files and validation results are the source of truth for implemented behavior.
 
 If these sources disagree, preserve explicit user intent first, then implemented passing behavior, then safety and data integrity. Update state/progress to match reality and record the reconciliation.
 
 ## Allowed Actions
-Automation may inspect the repo, create worktrees, create local `codex/lambchop-{work_item_key}` branches, edit skill/docs/templates for the active item, run validation commands, commit locally, and update state/progress/backoff.
+Automation may inspect the repo, create worktrees, create local `codex/lambchop-{work_item_key}` branches, edit skill/docs/templates for the active item, run validation commands, commit locally, and update state/progress/schedule ledgers.
 
 ## Forbidden Actions
 Automation must not publish branches, open pull requests, deploy, modify production configuration, use external trackers, delete or revert user work, do implementation work directly in the main checkout after setup, overwrite another live lease, or mark work done without validation evidence.
@@ -57,37 +65,72 @@ Every automation run must:
 4. Inspect repository structure, git status, branches, remotes, and worktrees.
 5. Run git write-access preflight before selecting work.
 6. Reconcile state/progress with repository reality.
-7. Select exactly one eligible work item using dependency and lease rules, or create the next source-backed work item from `docs/lambchop/scheduled-work-plan.md` when no queued item is eligible.
-8. Claim it with a lease.
-9. Work in `.worktrees/{work_item_key}` on `codex/lambchop-{work_item_key}`.
-10. Use TDD-style proof for skill behavior: write or identify a pressure scenario first, then update the skill/templates, then validate that the scenario is addressed.
-11. Run relevant validation.
-12. Commit coherent completed changes locally with validation details.
-13. After completing or blocking the active item, run the planner loop: reconcile state, inspect the scheduled work plan, add the next bounded source-backed work item when work remains, or record the no-work reason.
-14. Update state, progress, and backoff.
-15. Attempt actual automation schedule persistence when tooling is available; otherwise record the infrastructure gap.
+7. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, using dependency and lease rules plus non-overlapping `exclusive_scope`. If fewer than 2 independent items are available, select one eligible item and record why parallelism was not useful.
+8. Recheck blocked work and consolidate any review-ready work only after fresh validation evidence.
+9. Claim it with a lease.
+10. Work in `.worktrees/{work_item_key}` on `codex/lambchop-{work_item_key}`.
+11. When a sprint packet has 2 or more independent items and subagents are available, the main automation run orchestrates bounded parallel subagents. It dispatches one self-contained task per work item, requires Superpowers `dispatching-parallel-agents`, TDD, and verification guidance, and keeps ownership of integration, state, progress, dashboard regeneration, commits, and scheduler finalization.
+12. Use TDD-style proof for skill behavior: write or identify a pressure scenario first, then update the skill/templates, then validate that the scenario is addressed.
+13. Integrate subagent results one at a time, reconcile shared-scope risks, and mark each lane as completed, blocked, conflicted, failed_validation, or not_useful.
+14. Run relevant validation.
+15. Commit coherent completed changes locally with validation details.
+16. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan, add the next bounded source-backed work item when work remains, or record the no-work reason.
+17. Regenerate `docs/lambchop/dashboard-data.json` and `docs/lambchop/dashboard.html` from real state, roadmap, progress, validation, leases, blockers, commits, and next actions.
+18. Update state, progress, and the schedule/trigger ledger.
+19. Apply the completion trigger protocol: if the automation is ACTIVE, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
 
 ## Work Item Statuses
 Use only `todo`, `in_progress`, `blocked`, `done`, and `skipped`.
 
 ## Cooperative Concurrency
-A live `in_progress` item is not a global lock. Another run may select a different `todo` item only when dependencies are done, its `exclusive_scope` does not overlap any live leased item, and fewer than 3 live leases exist. Shared docs or root coordination files may appear in `shared_scope`; overlap there is an integration risk, not an automatic blocker.
+A live `in_progress` item is not a global lock. Another run or orchestrated subagent lane may select a different `todo` item only when dependencies are done, its `exclusive_scope` does not overlap any live leased item, and fewer than 5 live leases exist. Shared docs or root coordination files may appear in `shared_scope`; overlap there is an integration risk, not an automatic blocker.
 
 Default lease duration is 120 minutes.
 
-## Adaptive Backoff
-Use `docs/lambchop/backoff.json`.
+## Parallel Sprint Orchestration
+The main automation run is the orchestrator. It must prefer a parallel sprint packet whenever at least 2 independent eligible work items exist, up to a hard cap of 5 lanes.
 
-- Work found or continued: reset next interval to 20 minutes.
-- No eligible work: double the current interval up to 1440 minutes.
-- No-work includes all work complete, blocked dependencies, concurrency cap, overlapping exclusive scope, and git preflight failure.
-- Persist the ledger, append the decision to progress, and update the actual Codex automation schedule when tooling is available.
-- Record desired interval and actual scheduler persistence separately.
+Each parallel lane must have its own work item, branch, worktree, lease, acceptance criteria, validation expectation, and non-overlapping `exclusive_scope`. The orchestrator must give each subagent a self-contained prompt with source references, files in scope, TDD expectations, forbidden actions, and required output.
+
+Subagents may implement and validate their assigned lane only. They must not trigger scheduler runs, update automation schedule fields, publish, deploy, mutate external trackers, or overwrite another lane. The orchestrator reviews each result, runs integration validation, records outcomes, updates dashboard data, and commits coherent completed changes.
+
+If multi-agent support or Superpowers is unavailable, record the blocker or `not_useful` reason and continue with the safest single-item local workflow.
+
+## Visual Project Dashboard
+Every setup and run must maintain:
+
+- `docs/lambchop/dashboard-data.json`: normalized machine-readable status from state, scheduled work plan, progress, backoff, leases, validation, blockers, commits, and next actions.
+- `docs/lambchop/dashboard.html`: a self-contained local dashboard that renders roadmap status, current sprint lanes, blocked work, validation/commit evidence, and what is next.
+
+The dashboard must use real workflow data only. Do not hand-write decorative status that cannot be traced back to state, progress, scheduled work, validation, or git evidence.
+
+## Weekly Schedule And Completion Trigger
+Use a weekly cron automation as the persisted schedule anchor, not a minute-interval automation. The default RRULE is weekly with all seven days selected at the chosen wall-clock hour, matching Codex's weekly schedule representation.
+
+The automation should keep itself moving by triggering the next scheduler-visible run when a run completes:
+
+- Before triggering, inspect the automation row/config for the same automation id.
+- If status is `ACTIVE`, request a run-now trigger for the same automation.
+- If app-native run-now tooling is unavailable, use the `writing-automation` run-now path: back up the scheduler DB, set only `automations.next_run_at` to now or a few seconds ahead, preserve `status`, `rrule`, `prompt`, `cwds`, model, and reasoning fields, then verify a new automation run or thread appears.
+- If status is `PAUSED` or otherwise inactive, do not advance `next_run_at`; record that the next trigger was skipped because the automation is paused.
+- Never spawn a worker/subagent or write a local artifact as a substitute for a scheduler-visible trigger.
+- Preserve the weekly RRULE after any run-now trigger so the automation can still be manually nudged, paused, or resumed from the scheduler.
+- Record trigger result, pause status, scheduler evidence, and any blocker in progress and memory.
+
+Use `docs/lambchop/backoff.json` as a historical schedule/trigger ledger until templates are renamed. It records desired trigger behavior and actual scheduler persistence; it is not proof that the app-visible schedule changed.
 
 ## Scheduled Work Planning
 Use `docs/lambchop/scheduled-work-plan.md` as the roadmap and task-generation source.
 
-Before declaring no-work, inspect the scheduled work plan, skill files, validation gaps, and current source files. If source-backed work remains, create the next bounded work item in `docs/lambchop/state.json` with dependencies, acceptance criteria, source references, validation expectations, exclusive scope, shared scope, and next step. If no source-backed task can be created, append the inspected sources and no-work reason to progress before applying backoff.
+Before declaring no-work, inspect the scheduled work plan, skill files, validation gaps, and current source files. If source-backed work remains, create the next bounded work item in `docs/lambchop/state.json` with dependencies, acceptance criteria, source references, validation expectations, exclusive scope, shared scope, and next step. If no source-backed task can be created, append the inspected sources and no-work reason to progress before trigger finalization.
+
+## Field-Tested Patterns
+Lambchop should preserve reusable lessons from target projects without project-specific names or private content:
+
+- blocked tasks stay visible to context, validation, and no-work reasoning
+- review consolidation requires fresh evidence before marking done
+- private local inputs require ignored paths or environment-only configuration and bounded public logs
+- milestone packets are allowed only with distinct ownership, explicit shared scope, and combined validation
 
 ## Definition Of Done
 A work item is done only when acceptance criteria are satisfied, validation evidence is recorded, state and progress agree, code/docs changes are locally committed when appropriate, and the next step is clear.

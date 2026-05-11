@@ -11,9 +11,10 @@ These notes are informational only. The v1 workflow is Codex-first and does not 
 ### Tool-agnostic (portable)
 These artifacts are plain files and git conventions that any agent/tool can use:
 - `WORKFLOW.md` operating contract
-- `docs/<project>/state.json`, `progress.md`, `backoff.json`, `scheduled-work-plan.md`
+- `docs/<project>/state.json`, `progress.md`, `backoff.json`, `scheduled-work-plan.md`, `dashboard-data.json`, `dashboard.html`
 - Cooperative leases, work item statuses, and exclusive/shared scope conventions
 - `.worktrees/<work_item_key>` worktree naming convention and `codex/<...>` branch naming convention
+- Adaptive parallel sprint packets when the tool supports safe bounded subagents; otherwise the same single-item fallback is still valid.
 
 ### Codex-first (tool-specific)
 These elements are Codex-specific and may need equivalents in other tools:
@@ -26,13 +27,14 @@ These elements are Codex-specific and may need equivalents in other tools:
 - Store the prompt/operating contract as workspace docs (Cursor rules, README-style docs, or the repo’s own conventions).
 - Ensure the agent can still:
   - read/write the same `docs/<project>/` ledgers
+  - regenerate the static repo-local dashboard from real workflow data
   - create worktrees and local branches
   - run validation commands
 
 ## What Would Change For Claude Code
 - Replace Codex automation scheduling with the Claude Code equivalent (manual loop or external scheduler).
 - Replace Codex “memory.md” updates with a persistent note file the Claude Code workflow reliably maintains.
-- Ensure the agent still follows the same safety defaults and ledger updates.
+- Ensure the agent still follows the same safety defaults, parallel-lane ownership rules, dashboard regeneration, and ledger updates.
 
 ## Non-Goals (v1)
 - Do not require installing Cursor or Claude Code to use this skill.

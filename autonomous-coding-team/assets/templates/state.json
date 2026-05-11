@@ -10,11 +10,13 @@
     "progress_file": "docs/<PROJECT_SLUG>/progress.md",
     "backoff_file": "docs/<PROJECT_SLUG>/backoff.json",
     "scheduled_work_plan_file": "docs/<PROJECT_SLUG>/scheduled-work-plan.md",
+    "dashboard_data_file": "docs/<PROJECT_SLUG>/dashboard-data.json",
+    "dashboard_file": "docs/<PROJECT_SLUG>/dashboard.html",
     "worktree_root": ".worktrees",
     "branch_prefix": "codex/",
     "branch_name_template": "codex/<PROJECT_SLUG>-<work-item-key>",
     "concurrency_mode": "cooperative",
-    "max_concurrent_runs": 3,
+    "max_concurrent_runs": 5,
     "lease_minutes": 120,
     "main_branch": "<INTEGRATION_BRANCH>",
     "external_issue_tracking": false,
@@ -25,6 +27,32 @@
       "requires_source_backed_tasks": true,
       "default_task_size": "one coherent local commit",
       "no_work_requires_scheduled_plan_check": true
+    },
+    "parallel_execution": {
+      "mode": "adaptive-subagents",
+      "enabled": true,
+      "min_subagents": 2,
+      "max_subagents": 5,
+      "orchestrator": "main-automation-run",
+      "requires_independent_work_items": true,
+      "requires_non_overlapping_exclusive_scope": true,
+      "fallback_when_unavailable": "single-item-local-workflow"
+    },
+    "dashboard_policy": {
+      "mode": "static-repo-dashboard",
+      "data_file": "docs/<PROJECT_SLUG>/dashboard-data.json",
+      "html_file": "docs/<PROJECT_SLUG>/dashboard.html",
+      "regenerate_after_setup": true,
+      "regenerate_after_each_run": true,
+      "requires_real_workflow_data": true
+    },
+    "scheduling_policy": {
+      "mode": "weekly_anchor_with_completion_trigger",
+      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+      "trigger_after_completed_active_run": true,
+      "skip_trigger_when_paused_or_inactive": true,
+      "preserve_weekly_rrule_on_run_now": true,
+      "forbid_worker_or_local_artifact_trigger_substitute": true
     },
     "autonomy_policy": {
       "default_mode": "local-commit",
@@ -63,6 +91,16 @@
       "worktree": null,
       "commit": null,
       "blocker": null,
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Initial discovery starts as a single setup item until independent work is generated."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
       "exclusive_scope": [
         "WORKFLOW.md",
         "docs/<PROJECT_SLUG>/state.json",
@@ -94,6 +132,9 @@
     "timestamp": "<ISO8601_TIMESTAMP>",
     "summary": "Autonomous workflow initialized.",
     "active_work_item": null,
-    "next_action": "Run first-run discovery and normalize the work queue."
+    "parallel_group": null,
+    "subagent_lanes": [],
+    "dashboard_updated_at": null,
+    "next_action": "Run first-run discovery, normalize the work queue, and regenerate the dashboard."
   }
 }

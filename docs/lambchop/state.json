@@ -14,7 +14,7 @@
     "branch_prefix": "codex/",
     "branch_name_template": "codex/lambchop-{work_item_key}",
     "concurrency_mode": "cooperative",
-    "max_concurrent_runs": 3,
+    "max_concurrent_runs": 5,
     "lease_minutes": 120,
     "main_branch": "master",
     "external_issue_tracking": false,
@@ -25,6 +25,14 @@
       "requires_source_backed_tasks": true,
       "default_task_size": "one coherent local commit",
       "no_work_requires_scheduled_plan_check": true
+    },
+    "scheduling_policy": {
+      "mode": "weekly_anchor_with_completion_trigger",
+      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+      "trigger_after_completed_active_run": true,
+      "skip_trigger_when_paused_or_inactive": true,
+      "preserve_weekly_rrule_on_run_now": true,
+      "forbid_worker_or_local_artifact_trigger_substitute": true
     },
     "autonomy_policy": {
       "default_mode": "local-commit",
@@ -37,7 +45,27 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-05T12:03:12.834-05:00"
+    "updated_at": "2026-05-08T14:55:00-05:00",
+    "dashboard_data_file": "docs/lambchop/dashboard-data.json",
+    "dashboard_file": "docs/lambchop/dashboard.html",
+    "parallel_execution": {
+      "mode": "adaptive-subagents",
+      "enabled": true,
+      "min_subagents": 2,
+      "max_subagents": 5,
+      "orchestrator": "main-automation-run",
+      "requires_independent_work_items": true,
+      "requires_non_overlapping_exclusive_scope": true,
+      "fallback_when_unavailable": "single-item-local-workflow"
+    },
+    "dashboard_policy": {
+      "mode": "static-repo-dashboard",
+      "data_file": "docs/lambchop/dashboard-data.json",
+      "html_file": "docs/lambchop/dashboard.html",
+      "regenerate_after_setup": true,
+      "regenerate_after_each_run": true,
+      "requires_real_workflow_data": true
+    }
   },
   "work_items": [
     {
@@ -54,7 +82,7 @@
       ],
       "acceptance_criteria": [
         "Skill entrypoint exists with Codex skill frontmatter.",
-        "References cover setup interview, workflow architecture, work item model, automation prompt, SeeItAI lessons, proof of work, and validation.",
+        "References cover setup interview, workflow architecture, work item model, automation prompt, autonomous workflow lessons, proof of work, and validation.",
         "Templates exist for workflow, state, progress, backoff, and environment config.",
         "No user-facing Python setup flow is required."
       ],
@@ -69,7 +97,7 @@
         "git preflight branch/worktree create/delete passed"
       ],
       "branch": "master",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "worktree": "REPO_ROOT",
       "commit": "533fb36",
       "blocker": null,
       "exclusive_scope": [
@@ -95,7 +123,17 @@
         "merge_commit": null,
         "reconciled_at": "2026-05-05T09:11:11.5771114-05:00"
       },
-      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready"
     },
     {
       "key": "task-02-fully-autonomous-planner-loop",
@@ -128,7 +166,7 @@
         "automation registry audit ran and reported pre-existing run_thread_missing failures outside Lambchop"
       ],
       "branch": "master",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "worktree": "REPO_ROOT",
       "commit": "7281b2f",
       "blocker": null,
       "exclusive_scope": [
@@ -139,7 +177,7 @@
       "shared_scope": [
         "docs/lambchop/",
         "autonomous-coding-team/",
-        "C:\\Users\\BillMartin\\.codex\\automations\\lambchop-autonomous-coding-team\\automation.toml"
+        "CODEX_HOME\\automations\\lambchop-autonomous-coding-team\\automation.toml"
       ],
       "lease": {
         "run_id": null,
@@ -156,7 +194,17 @@
         "merge_commit": null,
         "reconciled_at": "2026-05-05T09:11:11.5771114-05:00"
       },
-      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready"
     },
     {
       "key": "task-02-pressure-test-empty-repo-setup",
@@ -188,7 +236,7 @@
         "Fixture path: C:\\tmp\\lambchop-fixture-empty-run-2026-05-05T143044099Z-b068e7"
       ],
       "branch": "codex/lambchop-task-02-pressure-test-empty-repo-setup",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-02-pressure-test-empty-repo-setup",
+      "worktree": ".worktrees\\task-02-pressure-test-empty-repo-setup",
       "commit": null,
       "blocker": null,
       "exclusive_scope": [
@@ -213,7 +261,17 @@
         "merge_commit": null,
         "reconciled_at": "2026-05-05T09:35:47.245-05:00"
       },
-      "updated_at": "2026-05-05T09:35:47.245-05:00"
+      "updated_at": "2026-05-05T09:35:47.245-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready"
     },
     {
       "key": "task-03-github-repo-deployment-method",
@@ -243,7 +301,7 @@
         "non-template files scanned clean for angle-bracket placeholders"
       ],
       "branch": "master",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "worktree": "REPO_ROOT",
       "commit": null,
       "blocker": null,
       "exclusive_scope": [
@@ -270,7 +328,17 @@
         "merge_commit": null,
         "reconciled_at": "2026-05-05T09:11:11.5771114-05:00"
       },
-      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready"
     },
     {
       "key": "task-03-pressure-test-existing-repo-setup",
@@ -296,7 +364,7 @@
       ],
       "validation": [],
       "branch": "codex/lambchop-task-03-pressure-test-existing-repo-setup",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-03-pressure-test-existing-repo-setup",
+      "worktree": ".worktrees\\task-03-pressure-test-existing-repo-setup",
       "commit": null,
       "blocker": null,
       "exclusive_scope": [
@@ -322,7 +390,17 @@
         "merge_commit": null,
         "reconciled_at": "2026-05-05T09:58:27.499-05:00"
       },
-      "updated_at": "2026-05-05T09:56:35.517-05:00"
+      "updated_at": "2026-05-05T09:56:35.517-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready"
     },
     {
       "key": "task-04-install-and-deploy-skill-locally",
@@ -335,7 +413,7 @@
       ],
       "source_refs": [
         "autonomous-coding-team/SKILL.md",
-        "C:\\Users\\BillMartin\\.codex\\skills"
+        "CODEX_HOME\\skills"
       ],
       "acceptance_criteria": [
         "The skill can be installed or linked into Codex skills for local use.",
@@ -352,7 +430,7 @@
         "git: merged codex/lambchop-task-04-install-and-deploy-skill-locally into master (c014f90)"
       ],
       "branch": "codex/lambchop-task-04-install-and-deploy-skill-locally",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-04-install-and-deploy-skill-locally",
+      "worktree": ".worktrees\\task-04-install-and-deploy-skill-locally",
       "commit": "c014f90",
       "blocker": null,
       "exclusive_scope": [
@@ -375,7 +453,17 @@
         "merge_commit": "c014f90",
         "reconciled_at": "2026-05-05T11:45:07.734-05:00"
       },
-      "updated_at": "2026-05-05T11:46:39.956-05:00"
+      "updated_at": "2026-05-05T11:46:39.956-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready"
     },
     {
       "key": "task-05-pressure-test-local-skill-install",
@@ -405,7 +493,7 @@
         "Verify C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543\\autonomous-coding-team\\SKILL.md exists"
       ],
       "branch": "codex/lambchop-task-05-pressure-test-local-skill-install",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-05-pressure-test-local-skill-install",
+      "worktree": ".worktrees\\task-05-pressure-test-local-skill-install",
       "commit": "edeb2ff",
       "blocker": null,
       "exclusive_scope": [
@@ -428,7 +516,17 @@
         "merge_commit": "edeb2ff",
         "reconciled_at": "2026-05-05T11:56:03-05:00"
       },
-      "updated_at": "2026-05-05T11:56:03-05:00"
+      "updated_at": "2026-05-05T11:56:03-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready"
     },
     {
       "key": "task-06-cursor-claude-compat-notes",
@@ -456,7 +554,7 @@
         "git: merged codex/lambchop-task-06-cursor-claude-compat-notes into master (1753bf1)"
       ],
       "branch": "master",
-      "worktree": "C:\\Users\\BillMartin\\dev\\Lambchop",
+      "worktree": "REPO_ROOT",
       "commit": "1753bf1",
       "blocker": null,
       "exclusive_scope": [
@@ -479,12 +577,172 @@
         "merge_commit": "1753bf1",
         "reconciled_at": "2026-05-05T12:03:12.834-05:00"
       },
-      "updated_at": "2026-05-05T12:03:12.834-05:00"
+      "updated_at": "2026-05-05T12:03:12.834-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready"
+    },
+    {
+      "key": "task-07-anonymize-target-project-lessons",
+      "title": "Anonymize target-project autonomous workflow lessons",
+      "type": "workflow-lessons",
+      "status": "done",
+      "priority": 20,
+      "dependencies": [
+        "task-06-cursor-claude-compat-notes"
+      ],
+      "source_refs": [
+        "TARGET_REPO\\AGENT_NOTES.md",
+        "TARGET_REPO\\kanban\\README.md",
+        "TARGET_REPO\\scripts\\workflow-tooling\\cli.mjs",
+        "TARGET_REPO\\tests\\blocked-work-discovery.test.mjs",
+        "autonomous-coding-team/references/kanban-workflow-lessons.md",
+        "autonomous-coding-team/references/autonomous-workflow-lessons.md"
+      ],
+      "acceptance_criteria": [
+        "Recent autonomous workflow improvements from the target project are reviewed without copying project-specific product details.",
+        "Reusable lessons are documented in Lambchop skill references and templates.",
+        "README explains how to apply Lambchop to a new project for autonomous local coding."
+      ],
+      "implementation_notes": [
+        "Anonymized lessons: blocked work remains visible, review consolidation needs fresh validation, private operator-owned inputs require ignored/local-only proof, and milestone packets need explicit ownership."
+      ],
+      "validation": [
+        "target project git history and workflow files inspected",
+        "Lambchop state/backoff/template JSON parsed",
+        "Non-template placeholder scan passed",
+        "Reference scan found no target project product name",
+        "Weekly anchor plus completion-trigger contract added after comparing target-project-automation and game-engine automation prompts"
+      ],
+      "branch": "master",
+      "worktree": "REPO_ROOT",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/",
+        "README.md",
+        "WORKFLOW.md",
+        "docs/lambchop/"
+      ],
+      "shared_scope": [],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Use the updated README prompt to install Lambchop into a fresh target project.",
+      "integration": {
+        "target_branch": "master",
+        "status": "ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": "2026-05-08T14:20:00-05:00"
+      },
+      "updated_at": "2026-05-08T14:55:00-05:00",
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": null,
+        "parallelism_reason": "Completed before adaptive parallel sprint orchestration was added."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready"
+    },
+    {
+      "key": "task-08-parallel-sprint-dashboard",
+      "title": "Add parallel sprint orchestration and repo dashboard",
+      "type": "workflow-automation",
+      "status": "done",
+      "priority": 30,
+      "dependencies": [
+        "task-07-anonymize-target-project-lessons"
+      ],
+      "source_refs": [
+        "README.md",
+        "WORKFLOW.md",
+        "autonomous-coding-team/assets/templates/WORKFLOW.md",
+        "autonomous-coding-team/assets/templates/state.json",
+        "autonomous-coding-team/references/automation-prompt.md"
+      ],
+      "acceptance_criteria": [
+        "Generated workflows use adaptive 2-5 Superpowers subagent orchestration when independent work exists.",
+        "Main automation run remains orchestrator for dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.",
+        "Generated repos include dashboard-data.json and dashboard.html visual status artifacts.",
+        "README explains how to upgrade a repo that already has Lambchop installed."
+      ],
+      "implementation_notes": [
+        "Implemented in response to Bill request for faster parallel development cycles and actionable visual roadmap/status reporting."
+      ],
+      "validation": [
+        "state/backoff/dashboard-data/template JSON parse checks passed",
+        "dashboard embedded JSON parse check passed",
+        "dashboard required element check passed",
+        "single-item wording and old concurrency cap scan passed",
+        "Codex browser opened dashboard through host.docker.internal local server and loaded the Lambchop Autonomous Dashboard page",
+        "inline favicon added to avoid static-browser favicon console noise"
+      ],
+      "branch": "codex/parallel-sprint-dashboard",
+      "worktree": "REPO_ROOT",
+      "commit": null,
+      "blocker": null,
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": "manual-implementation-20260511",
+        "parallelism_reason": "Implemented as a focused workflow/template migration in the main run; future generated workflows dispatch parallel subagent lanes when independent work exists."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_useful",
+      "integration_status": "ready",
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "README.md",
+        "autonomous-coding-team/assets/templates/",
+        "autonomous-coding-team/references/",
+        "docs/lambchop/"
+      ],
+      "shared_scope": [
+        "autonomous-coding-team/"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Use the README upgrade prompt to migrate previously configured target repos to the parallel dashboard workflow.",
+      "integration": {
+        "target_branch": "master",
+        "status": "ready",
+        "merged_at": null,
+        "merge_commit": null,
+        "reconciled_at": "2026-05-11T14:05:00-05:00"
+      },
+      "updated_at": "2026-05-11T14:05:00-05:00"
     }
   ],
   "last_run": {
-    "run_id": "run-20260505T170312Z-37a822",
-    "started_at": "2026-05-05T12:03:12.834-05:00",
-    "work_item_key": "task-06-cursor-claude-compat-notes"
+    "run_id": "manual-implementation-20260511-parallel-dashboard",
+    "started_at": "2026-05-11T14:05:00-05:00",
+    "work_item_key": "task-08-parallel-sprint-dashboard",
+    "parallel_group": null,
+    "subagent_lanes": [],
+    "dashboard_updated_at": "2026-05-11T14:25:00-05:00",
+    "next_action": "Use the README upgrade prompt to migrate existing Lambchop-installed repos and let future runs dispatch adaptive 2-5 subagent sprint packets when safe."
   }
 }
+
+

@@ -1,0 +1,170 @@
+{
+  "project": {
+    "name": "Lambchop",
+    "slug": "lambchop",
+    "phase": "autonomous-skill-mvp",
+    "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
+    "updated_at": "2026-05-11T14:25:00-05:00"
+  },
+  "summary": {
+    "todo": 0,
+    "in_progress": 0,
+    "blocked": 0,
+    "done": 10,
+    "skipped": 0,
+    "active_parallel_lanes": 0,
+    "next_action": "Use the README upgrade prompt to migrate existing Lambchop-installed repos and let future runs dispatch adaptive 2-5 subagent sprint packets when safe."
+  },
+  "parallel_execution": {
+    "mode": "adaptive-subagents",
+    "enabled": true,
+    "min_subagents": 2,
+    "max_subagents": 5,
+    "orchestrator": "main-automation-run",
+    "requires_independent_work_items": true,
+    "requires_non_overlapping_exclusive_scope": true,
+    "fallback_when_unavailable": "single-item-local-workflow"
+  },
+  "roadmap": {
+    "current_milestone": "Prove the reusable deployment flow with Lambchop itself, then validate the skill against empty-repo and existing-repo scenarios before local installation.",
+    "planning_sources": [
+      "WORKFLOW.md",
+      "docs/lambchop/state.json",
+      "docs/lambchop/scheduled-work-plan.md",
+      "autonomous-coding-team/SKILL.md",
+      "autonomous-coding-team/references/",
+      "autonomous-coding-team/assets/templates/"
+    ],
+    "next_backlog_seeds": [
+      "Use the README upgrade prompt to migrate a previously configured target repo.",
+      "Pressure-test a generated repo with 3 independent tasks to prove subagent lane selection.",
+      "Install or link the skill into local Codex skills after validation."
+    ]
+  },
+  "work_items": [
+    {
+      "key": "task-04-install-and-deploy-skill-locally",
+      "title": "Install and document local deployment of the skill",
+      "status": "done",
+      "priority": 40,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "branch": "codex/lambchop-task-04-install-and-deploy-skill-locally",
+      "worktree": ".worktrees\\task-04-install-and-deploy-skill-locally",
+      "validation": [
+        "git: preflight branch create/delete passed (codex/preflight-64eed8)",
+        "pwsh: install-skill.ps1 copy install to C:\\tmp\\codex-skills-sandbox (SKILL.md exists)",
+        "pwsh: install-skill.ps1 junction install to C:\\tmp\\codex-skills-sandbox-junction",
+        "git: merged codex/lambchop-task-04-install-and-deploy-skill-locally into master (c014f90)"
+      ],
+      "blocker": null,
+      "next_step": "Pressure-test the install helper in a sandbox destination and record proof."
+    },
+    {
+      "key": "task-05-pressure-test-local-skill-install",
+      "title": "Pressure-test local skill installation script",
+      "status": "done",
+      "priority": 35,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "branch": "codex/lambchop-task-05-pressure-test-local-skill-install",
+      "worktree": ".worktrees\\task-05-pressure-test-local-skill-install",
+      "validation": [
+        "pwsh -NoProfile -ExecutionPolicy Bypass -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543 -Force",
+        "Verify C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543\\autonomous-coding-team\\SKILL.md exists"
+      ],
+      "blocker": null,
+      "next_step": "Proceed to task-06-cursor-claude-compat-notes."
+    },
+    {
+      "key": "task-06-cursor-claude-compat-notes",
+      "title": "Add Cursor/Claude Code compatibility notes",
+      "status": "done",
+      "priority": 15,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "branch": "master",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "Manual read-through: notes are accurate and do not change the Codex-first flow",
+        "git: merged codex/lambchop-task-06-cursor-claude-compat-notes into master (1753bf1)"
+      ],
+      "blocker": null,
+      "next_step": "Draft a short compatibility note section and link from SKILL.md."
+    },
+    {
+      "key": "task-07-anonymize-target-project-lessons",
+      "title": "Anonymize target-project autonomous workflow lessons",
+      "status": "done",
+      "priority": 20,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "branch": "master",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "target project git history and workflow files inspected",
+        "Lambchop state/backoff/template JSON parsed",
+        "Non-template placeholder scan passed",
+        "Reference scan found no target project product name",
+        "Weekly anchor plus completion-trigger contract added after comparing target-project-automation and game-engine automation prompts"
+      ],
+      "blocker": null,
+      "next_step": "Use the updated README prompt to install Lambchop into a fresh target project."
+    },
+    {
+      "key": "task-08-parallel-sprint-dashboard",
+      "title": "Add parallel sprint orchestration and repo dashboard",
+      "status": "done",
+      "priority": 30,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_useful",
+      "integration_status": "ready",
+      "branch": "codex/parallel-sprint-dashboard",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "state/backoff/dashboard-data/template JSON parse checks passed",
+        "dashboard embedded JSON parse check passed",
+        "dashboard required element check passed",
+        "single-item wording and old concurrency cap scan passed",
+        "Codex browser opened dashboard through host.docker.internal local server and loaded the Lambchop Autonomous Dashboard page",
+        "inline favicon added to avoid static-browser favicon console noise"
+      ],
+      "blocker": null,
+      "next_step": "Use the README upgrade prompt to migrate previously configured target repos to the parallel dashboard workflow."
+    }
+  ],
+  "blocked": [],
+  "active_lanes": [],
+  "validation": [
+    "state.json parses as JSON",
+    "backoff.json parses as JSON",
+    "dashboard-data.json parses as JSON",
+    "dashboard embedded JSON parses",
+    "dashboard required elements are present",
+    "old single-item/concurrency wording scan passed",
+    "Codex browser loaded dashboard page through local server"
+  ],
+  "commits": [
+    "1753bf1"
+  ],
+  "last_run": {
+    "run_id": "manual-implementation-20260511-parallel-dashboard",
+    "started_at": "2026-05-11T14:05:00-05:00",
+    "work_item_key": "task-08-parallel-sprint-dashboard",
+    "parallel_group": null,
+    "subagent_lanes": [],
+    "dashboard_updated_at": "2026-05-11T14:05:00-05:00",
+    "next_action": "Use the README upgrade prompt to migrate existing Lambchop-installed repos and let future runs dispatch adaptive 2-5 subagent sprint packets when safe."
+  }
+}
+
+

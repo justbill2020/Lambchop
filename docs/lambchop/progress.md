@@ -2,15 +2,33 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-05-11 14:25 - task-08-parallel-sprint-dashboard
+
+- Status: done
+- Branch: `codex/parallel-sprint-dashboard`
+- Work item: `task-08-parallel-sprint-dashboard`
+- Changes:
+  - Added adaptive 2-5 Superpowers subagent sprint orchestration to Lambchop's workflow contract, generated templates, automation prompt, and validation references.
+  - Added repo-local dashboard artifacts: `docs/lambchop/dashboard-data.json`, `docs/lambchop/dashboard.html`, and reusable dashboard templates for target repos.
+  - Added README guidance for upgrading a repo that already has Lambchop installed without overwriting history.
+- Validation:
+  - State, backoff, dashboard-data, and template JSON parse checks passed.
+  - Dashboard embedded JSON parse check passed.
+  - Dashboard required element check passed.
+  - Scan for obsolete single-item-only wording and old concurrency cap passed.
+  - Codex browser loaded `Lambchop Autonomous Dashboard` through a local server at `host.docker.internal`.
+- Next step:
+  - Use the README upgrade prompt to migrate previously configured target repos to the new parallel dashboard workflow.
+
 ## 2026-05-05 09:11 - workflow-initialized
 
 - Status: initialized
 - Branch: `master`
-- Worktree: `C:\Users\BillMartin\dev\Lambchop`
+- Worktree: `REPO_ROOT`
 - Changes:
   - Created `autonomous-coding-team/` as the Codex skill project.
   - Added skill references and templates for deploying autonomous coding teams to other repos.
-  - Added SeeItAI lessons and proof-of-work guidance, including schedule persistence evidence when automation tooling is unavailable.
+  - Added autonomous workflow lessons and proof-of-work guidance, including schedule persistence evidence when automation tooling is unavailable.
   - Created `WORKFLOW.md`, `docs/lambchop/state.json`, `docs/lambchop/progress.md`, and `docs/lambchop/backoff.json` so Lambchop can run as its own autonomous coding team.
 - Validation:
   - `autonomous-coding-team/assets/templates/state.json` parses as JSON.
@@ -21,7 +39,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Acceptance criteria mapped:
   - Conversational Codex-first setup is encoded in `autonomous-coding-team/SKILL.md`.
   - Reusable deployment templates exist under `autonomous-coding-team/assets/templates/`.
-  - SeeItAI lessons are captured in `autonomous-coding-team/references/seeitai-lessons.md`.
+  - Autonomous workflow lessons are captured in `autonomous-coding-team/references/autonomous-workflow-lessons.md`.
   - Proof expectations are captured in `autonomous-coding-team/references/proof-of-work.md`.
 - Blockers:
   - None.
@@ -47,7 +65,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 
 - Status: done
 - Branch: `master`
-- Worktree: `C:\Users\BillMartin\dev\Lambchop`
+- Worktree: `REPO_ROOT`
 - Changes:
   - Added scheduled work planning as a first-class skill concept.
   - Added `autonomous-coding-team/references/scheduled-work-plan.md`.
@@ -87,7 +105,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 
 - Status: done
 - Branch: `master`
-- Worktree: `C:\Users\BillMartin\dev\Lambchop`
+- Worktree: `REPO_ROOT`
 - Changes:
   - Added `autonomous-coding-team/references/github-repo-deployment.md`.
   - Updated the skill entrypoint to load the GitHub/local repo deployment method when the user points to a target repo.
@@ -121,12 +139,12 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 
 - Automation id: `lambchop-autonomous-coding-team`
 - Kind: cron
-- Workspace: `C:\Users\BillMartin\dev\Lambchop`
+- Workspace: `REPO_ROOT`
 - Desired interval: 20 minutes
 - Scheduler persistence: created in Codex app
 - Safety: local commits only; no push, PR, deploy, production config, or external tracker actions enabled.
 
-### SeeItAI proof lessons imported
+### Autonomous workflow proof lessons imported
 
 - State/progress/backoff ledgers are the durable proof system.
 - Worktrees and local branches keep autonomous work isolated.
@@ -140,7 +158,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Status: done
 - Run id: `run-2026-05-05T143044099Z-b068e7`
 - Branch: `codex/lambchop-task-02-pressure-test-empty-repo-setup`
-- Worktree: `C:\Users\BillMartin\dev\Lambchop\.worktrees\task-02-pressure-test-empty-repo-setup`
+- Worktree: `.worktrees\task-02-pressure-test-empty-repo-setup`
 - Changes:
   - Expanded the concrete empty-repo pressure checklist in `autonomous-coding-team/references/validation-checklist.md`.
   - Generated an empty-repo fixture from templates to prove placeholder-free ledgers.
@@ -161,7 +179,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Status: done
 - Run id: `run-2026-05-05T145145269Z-98448c`
 - Branch: `codex/lambchop-task-03-pressure-test-existing-repo-setup`
-- Worktree: `C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-03-pressure-test-existing-repo-setup`
+- Worktree: `.worktrees\\task-03-pressure-test-existing-repo-setup`
 - Changes:
   - Added a concrete “Existing App/Library Repo Setup” pressure script to `autonomous-coding-team/references/validation-checklist.md`.
   - Expanded `autonomous-coding-team/references/setup-interview.md` to require stack/command inference and an automation overlap check before asking questions.
@@ -197,7 +215,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Status: done
 - Run id: `run-20260505T162553Z-abd495`
 - Branch: `codex/lambchop-task-04-install-and-deploy-skill-locally`
-- Worktree: `C:\Users\BillMartin\dev\Lambchop\.worktrees\task-04-install-and-deploy-skill-locally`
+- Worktree: `.worktrees\task-04-install-and-deploy-skill-locally`
 - Changes:
   - Added local skill installation guidance in `autonomous-coding-team/references/local-skill-install.md`.
   - Added installer helper `autonomous-coding-team/tools/install-skill.ps1` supporting copy and junction modes.
@@ -282,7 +300,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Status: done
 - Run id: `run-20260505T162913939Z-0ae543`
 - Branch: `codex/lambchop-task-05-pressure-test-local-skill-install`
-- Worktree: `C:\\Users\\BillMartin\\dev\\Lambchop\\.worktrees\\task-05-pressure-test-local-skill-install`
+- Worktree: `.worktrees\\task-05-pressure-test-local-skill-install`
 - Sandbox destination: `C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543`
 - Command:
   - `pwsh -NoProfile -ExecutionPolicy Bypass -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543 -Force`
@@ -359,3 +377,60 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Scheduler persistence:
   - Status: created_in_codex_app (no in-run update tooling)
   - Actual interval (last known): 20 minutes
+
+## 2026-05-08 14:20 - anonymized target-project workflow lessons
+
+- Status: done
+- Run id: `run-20260508T142000Z-target project-lessons`
+- Branch: `master`
+- Worktree: `REPO_ROOT`
+- Source review:
+  - Reviewed recent target-project git history, agent notes, Markdown Kanban guidance, blocked-task tooling tests, and local gate commands.
+  - Did not copy product-specific feature details, private content, or target-project identifiers into reusable workflow guidance.
+- Reusable lessons applied:
+  - Blocked work must remain visible to task discovery, validation, context lookup, and no-work/backoff decisions.
+  - Review consolidation is a separate state transition that requires fresh validation before done.
+  - Private operator-owned files, credentials, fixtures, and services require ignored local paths or environment-only configuration plus bounded public evidence.
+  - Related milestone packets can work when each task has distinct ownership, explicit shared scope, and combined validation.
+- Files updated:
+  - `README.md`
+  - `WORKFLOW.md`
+  - `autonomous-coding-team/SKILL.md`
+  - `autonomous-coding-team/assets/templates/WORKFLOW.md`
+  - `autonomous-coding-team/references/autonomous-workflow-lessons.md`
+  - `autonomous-coding-team/references/kanban-workflow-lessons.md`
+  - `autonomous-coding-team/references/proof-of-work.md`
+  - `autonomous-coding-team/references/validation-checklist.md`
+  - `autonomous-coding-team/references/work-item-model.md`
+  - `autonomous-coding-team/references/workflow-architecture.md`
+- Validation:
+  - `target project` history and workflow files inspected.
+  - `docs/lambchop/state.json`, `docs/lambchop/backoff.json`, `autonomous-coding-team/assets/templates/state.json`, and `autonomous-coding-team/assets/templates/backoff.json` parse as JSON.
+  - Non-template placeholder scan passed.
+  - Reference scan found no target-project product name in reusable guidance.
+- Next step:
+  - Apply Lambchop to a fresh target checkout using the README prompt and confirm the first queued local work item.
+
+## 2026-05-08 14:55 - weekly anchor and completion-trigger correction
+
+- Status: done
+- Run id: `run-20260508T145500Z-weekly-trigger`
+- Branch: `master`
+- Worktree: `REPO_ROOT`
+- Source review:
+  - Compared `target-project-automation`, `game-engine-autonomous-workflow`, and `lambchop-autonomous-coding-team` automation configs.
+  - Confirmed `target-project-automation` uses a weekly RRULE anchor plus an explicit end-of-run run-now trigger contract.
+  - Confirmed the game-engine automation had the weekly RRULE but lacked the completion-trigger and pause-skip instructions.
+  - Confirmed Lambchop reusable docs/templates still over-emphasized 20-minute adaptive schedule persistence.
+- Changes:
+  - Updated Lambchop workflow, templates, setup guidance, validation guidance, and automation prompt reference to make weekly cron anchor plus scheduler-visible completion trigger the default.
+  - Added pause/inactive skip rules: if the automation is not ACTIVE, do not advance `next_run_at`.
+  - Added the rule that worker/subagent fallback is forbidden as an automation trigger substitute.
+  - Updated Lambchop schedule ledger to record the new contract; Lambchop's own automation remains paused, so no run-now trigger was attempted.
+- Validation:
+  - Lambchop JSON ledgers/templates parse.
+  - Automation-store audit passed with warnings only for pre-existing orphan folders.
+- Next step:
+  - Keep target-project automations on weekly RRULE anchors and rely on the completion-trigger protocol for continuous runs while ACTIVE.
+
+

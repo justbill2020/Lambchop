@@ -1,13 +1,17 @@
 {
-  "current_interval_minutes": 40,
-  "last_work_found": false,
-  "last_result": "no_work",
-  "updated_at": "2026-05-05T12:07:58.468-05:00",
+  "schedule_mode": "weekly-anchor-with-completion-trigger",
+  "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+  "completion_trigger": "trigger_next_run_when_active",
+  "last_work_found": true,
+  "last_result": "updated_weekly_trigger_contract",
+  "last_trigger_result": "not_attempted_manual_repo_update",
+  "updated_at": "2026-05-08T14:55:00-05:00",
   "scheduler_persistence": {
-    "desired_interval_minutes": 40,
-    "actual_interval_minutes": 20,
-    "status": "created_in_codex_app",
+    "desired_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+    "actual_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+    "status": "automation_update_applied_paused",
     "automation_id": "lambchop-autonomous-coding-team",
-    "last_checked_at": "2026-05-05T12:07:58.468-05:00"
+    "last_checked_at": "2026-05-08T14:55:00-05:00",
+    "notes": "Lambchop reusable workflow now requires weekly anchor plus completion trigger. Lambchop automation was updated to the weekly RRULE but remains paused; do not trigger next_run_at while paused."
   }
 }

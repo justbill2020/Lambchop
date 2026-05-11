@@ -11,11 +11,18 @@ This file is the human-readable proof-of-work log for the `<PROJECT_NAME>` auton
   - Created `WORKFLOW.md` as the project operating contract.
   - Created `docs/<PROJECT_SLUG>/state.json` as the machine-readable work queue.
   - Created `docs/<PROJECT_SLUG>/backoff.json` as the adaptive schedule ledger.
+  - Created `docs/<PROJECT_SLUG>/dashboard-data.json` as the machine-readable visual status snapshot.
+  - Created `docs/<PROJECT_SLUG>/dashboard.html` as the local visual project dashboard.
   - Created this progress log.
 - Validation:
   - Workflow placeholder check: pending final customization.
   - State JSON parse: pending final customization.
   - Backoff JSON parse: pending final customization.
+  - Dashboard data JSON parse: pending final customization.
+  - Dashboard opens locally without external services: pending final customization.
+- Parallel orchestration:
+  - Default mode: adaptive 2-5 Superpowers subagent lanes when independent work exists.
+  - Main automation run remains orchestrator for dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.
 - Safety:
   - Default autonomy is local commits only.
   - Push, PR, deploy, production config mutation, external trackers, and user-work reverts are disabled by default.

@@ -6,8 +6,9 @@ Every configured repo should contain:
 - `WORKFLOW.md`: project-specific operating contract
 - the generated state file under `docs/`: machine-readable queue and run state
 - the generated progress file under `docs/`: human-readable proof log
-- the generated backoff file under `docs/`: adaptive schedule ledger
+- the generated backoff file under `docs/`: historical schedule/trigger ledger
 - the generated scheduled work plan under `docs/`: roadmap and task-generation source
+- the generated dashboard data and HTML files under `docs/`: visual operating picture
 - `.codex/environments/environment.toml`: optional local environment config when useful
 
 ## Operating Contract
@@ -21,8 +22,12 @@ Every configured repo should contain:
 - run loop and git preflight
 - worktree and branch conventions
 - work item schema and statuses
+- adaptive 2-5 parallel subagent orchestration policy
+- dashboard data and local visual dashboard paths
 - cooperative lease rules
-- adaptive backoff rules
+- review consolidation and blocked-work recheck rules
+- local-only operator input rules for ignored private files, credentials, or fixtures
+- weekly schedule anchor, completion trigger, and pause-skip rules
 - TDD, verification, commit, blocker, and reconciliation rules
 
 ## Run Loop
@@ -34,15 +39,35 @@ Every automation run:
 4. Inspect repo structure, git status, branches, remotes, and worktrees.
 5. Run git write-access preflight before selecting work.
 6. Reconcile state/progress with repository reality.
-7. Select one eligible work item, or create the next source-backed item from the scheduled work plan.
-8. Claim it with a lease.
-9. Work in an isolated worktree and local branch.
-10. Use TDD for production behavior.
-11. Run relevant checks.
-12. Commit coherent completed changes locally.
-13. After completion, plan or select the next item before applying backoff.
-14. Update state, progress, backoff, and automation schedule.
-15. Stop safely if blocked.
+7. Recheck blocked items whose next step is testable in the current environment.
+8. Consolidate review items only after fresh validation evidence.
+9. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, or create the next source-backed item from the scheduled work plan.
+10. Claim each selected item with a lease.
+11. Work in isolated worktrees and local branches.
+12. Dispatch bounded Superpowers subagents for independent parallel lanes when available; otherwise record why parallelism was not useful and work the single eligible item.
+13. Use TDD for production behavior.
+14. Integrate subagent results one at a time, resolve shared-scope risks, and run relevant checks.
+15. Commit coherent completed changes locally.
+16. After completion, plan or select the next item before schedule finalization.
+17. Regenerate dashboard data and dashboard HTML from real workflow evidence.
+18. Update state, progress, schedule/trigger ledger, and automation memory.
+19. If the automation is ACTIVE, trigger the next scheduler-visible run while preserving the weekly RRULE; if PAUSED or inactive, skip the trigger and record why.
+20. Stop safely if blocked.
+
+## Parallel Sprint Orchestration
+The main automation run is always the orchestrator. It should prefer parallel execution when 2 or more independent ready work items exist, up to a cap of 5 lanes.
+
+Each lane needs a separate work item, branch, worktree, lease, acceptance criteria, validation expectation, and non-overlapping `exclusive_scope`. The orchestrator creates self-contained subagent prompts, reviews returned changes, runs integration validation, records lane outcomes, commits completed work, and regenerates the dashboard.
+
+If Superpowers or multi-agent support is unavailable, record the blocker or `not_useful` reason and continue with the safest single-item local workflow.
+
+## Visual Dashboard
+The dashboard is static and repo-local:
+
+- `docs/<project-slug>/dashboard-data.json` contains normalized status from state, scheduled work, progress, backoff, validation, leases, blockers, commits, and next actions.
+- `docs/<project-slug>/dashboard.html` renders the roadmap, active sprint lanes, blocked work, validation/commit evidence, and next work.
+
+Regenerate both files during setup and after every automation run. They are not substitutes for state/progress; they are a visual projection of those sources.
 
 ## Git Preflight
 Before claiming work, verify the run can:
@@ -62,6 +87,15 @@ If preflight fails, record a blocked/no-work run with exact evidence and next st
 - deleting or reverting user work
 - editing implementation code in the main checkout
 - marking work done without validation evidence
+
+## Local-Only Operator Inputs
+When a work item depends on a user-owned local file, credential, service endpoint, or fixture:
+
+- require an ignored local path or environment-only configuration
+- prove tracked/ignored status before reading the input
+- log only bounded metadata, pass/fail labels, and validation outcomes
+- never quote, summarize, commit, or export private input content
+- keep the item blocked when the required input is missing
 ## Tool Compatibility
 These workflow files are designed to be mostly tool-agnostic, but the automation scheduler and memory conventions are Codex-specific.
 

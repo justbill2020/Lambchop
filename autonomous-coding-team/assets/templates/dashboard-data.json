@@ -1,0 +1,68 @@
+{
+  "project": {
+    "name": "<PROJECT_NAME>",
+    "slug": "<PROJECT_SLUG>",
+    "phase": "<CURRENT_MILESTONE>",
+    "purpose": "<PROJECT_PURPOSE>",
+    "updated_at": "<ISO8601_TIMESTAMP>"
+  },
+  "summary": {
+    "todo": 1,
+    "in_progress": 0,
+    "blocked": 0,
+    "done": 0,
+    "skipped": 0,
+    "active_parallel_lanes": 0,
+    "next_action": "Run first-run discovery and normalize the work queue."
+  },
+  "parallel_execution": {
+    "mode": "adaptive-subagents",
+    "enabled": true,
+    "min_subagents": 2,
+    "max_subagents": 5,
+    "last_parallelism_decision": "Initial setup starts with one discovery item until independent work is generated."
+  },
+  "roadmap": {
+    "current_milestone": "<CURRENT_MILESTONE>",
+    "planning_sources": [
+      "WORKFLOW.md",
+      "docs/<PROJECT_SLUG>/state.json",
+      "docs/<PROJECT_SLUG>/scheduled-work-plan.md",
+      "<SPECS_SOURCE>"
+    ],
+    "next_backlog_seeds": [
+      "<BACKLOG_SEED_1>",
+      "<BACKLOG_SEED_2>",
+      "<BACKLOG_SEED_3>"
+    ]
+  },
+  "work_items": [
+    {
+      "key": "task-01-initial-discovery",
+      "title": "Complete autonomous project discovery",
+      "status": "todo",
+      "priority": 10,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": null,
+      "worktree": null,
+      "validation": [],
+      "blocker": null,
+      "next_step": "Run first-run discovery and replace this setup item with project-specific work items."
+    }
+  ],
+  "blocked": [],
+  "active_lanes": [],
+  "validation": [],
+  "commits": [],
+  "last_run": {
+    "timestamp": "<ISO8601_TIMESTAMP>",
+    "summary": "Autonomous workflow initialized.",
+    "active_work_item": null,
+    "parallel_group": null,
+    "subagent_lanes": [],
+    "next_action": "Run first-run discovery and normalize the work queue."
+  }
+}

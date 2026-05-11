@@ -13,17 +13,32 @@ Every run appends a progress entry with:
 - validation commands and pass/fail results
 - skipped checks with reason, risk, and later command
 - local commit id when code changed
-- state/backoff updates
-- scheduler persistence result
+- state and schedule/trigger ledger updates
+- scheduler-visible trigger result, including whether pause/inactive status skipped the trigger
+- review consolidation evidence when moving review items to done
+- blocked-item recheck evidence before honoring or clearing a blocker
+- private/operator-owned input safety evidence when local ignored inputs are used
 - exact blocker and next step when blocked
 
 ## Schedule Proof
-Adaptive backoff has two separate facts:
+Weekly self-trigger scheduling has separate facts:
 
-- Ledger state: what `backoff.json` says the next interval should be.
-- Scheduler state: what the actual Codex automation schedule is set to.
+- Weekly anchor: the persisted automation RRULE.
+- Trigger ledger: what local progress/backoff files say should happen next.
+- Scheduler state: whether the actual automation row was ACTIVE or PAUSED and whether `next_run_at` or app-native run-now produced a new automation run.
 
-Record both. If Codex automation update tooling is unavailable in an automation run, mark schedule finalization as an infrastructure failure, keep the ledger correct, and include the needed manual or future-tooling repair step.
+Record all three. Local ledger updates alone do not prove the scheduler-visible trigger happened. If Codex app run-now tooling is unavailable, use the `writing-automation` local scheduler DB run-now path; if that cannot verify a new run, mark schedule finalization as blocked with evidence.
 
 ## Completion Rule
 Do not mark a work item done unless the progress entry includes validation evidence and state points to the same result. If validation could not run, the item is blocked or in progress, not done.
+
+## Private Input Proof
+For user-owned files, credentials, local services, or private fixtures, proof must show the boundary rather than the content:
+
+- where the input is expected
+- whether it exists
+- whether it is ignored or environment-only
+- which command consumed it
+- bounded public output from the check
+
+Do not include raw content, excerpts, secret values, source-only paths in public payloads, or generated artifacts derived from private content unless the user explicitly permits that output.
