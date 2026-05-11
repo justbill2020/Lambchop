@@ -8,7 +8,8 @@ Before claiming a setup is complete, confirm:
 - the generated progress file under `docs/` has an initial setup entry.
 - the generated scheduled work plan exists and can create the next source-backed task when the queue is empty.
 - the generated dashboard data file under `docs/` exists and parses as JSON.
-- the generated dashboard HTML file under `docs/` exists and opens locally without external services.
+- the generated dashboard HTML, Docker compose file, and dashboard server files under `docs/` exist.
+- the Dockerized dashboard server responds locally and `/api/status` returns live workflow data.
 - The workflow states local-only safety defaults.
 - Push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts are forbidden by default.
 - Worktree root and branch naming are present.
@@ -35,7 +36,7 @@ For this skill project:
 - The skill explains inspect-before-asking and local-only autonomy.
 - The README and skill references tell target repos to install Superpowers from upstream GitHub when available instead of copying cached local skill versions.
 - The setup flow records whether subagents were spawned, not useful, or unavailable.
-- The setup flow records dashboard files created and validates dashboard data.
+- The setup flow records dashboard files created and validates dashboard data plus the Dockerized live status endpoint.
 - Markdown Kanban guidance includes blocked and review folders in discovery, validation, task context, and no-work reasoning.
 - Workflow guidance explains review consolidation as a fresh-validation step before done.
 - Workflow guidance explains ignored local/private input checks without logging private content.
@@ -54,7 +55,7 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Parallel fallback: when fewer than 2 independent tasks are eligible, does the agent record why parallelism was not useful and proceed safely?
 - Parallel conflict: does exclusive-scope overlap prevent unsafe subagent dispatch while keeping non-overlapping work eligible?
 - Subagent integration: does the orchestrator review lane results, run validation, record completed/blocked/conflicted/failed_validation/not_useful outcomes, and commit only coherent validated work?
-- Dashboard accuracy: does the dashboard reflect state counts, active lanes, blockers, validation, commits, roadmap seeds, and next action from real workflow data?
+- Dashboard accuracy: does the live dashboard reflect state counts, active lanes, blockers, validation, commits, roadmap seeds, current run, progress tail, and next action from real workflow data?
 - Review consolidation: does the agent re-run evidence before moving review items to done?
 - Private local input: does the agent require ignored paths or environment-only configuration and log only bounded public evidence?
 - "Fully autonomous" pressure: does the agent keep push, PR, deploy, and external trackers disabled until explicitly enabled?
@@ -81,10 +82,12 @@ Use this as a step-by-step “pressure” checklist for a brand-new repo with no
    - `docs/<project-slug>/scheduled-work-plan.md`
    - `docs/<project-slug>/dashboard-data.json`
    - `docs/<project-slug>/dashboard.html`
+   - `docs/<project-slug>/dashboard.compose.yml`
+   - `docs/<project-slug>/dashboard-server/`
 5. Validate proof:
    - `state.json` and `backoff.json` parse as JSON.
    - `dashboard-data.json` parses as JSON.
-   - `dashboard.html` opens locally without external services or records the exact blocker.
+   - Dockerized dashboard server responds locally or records the exact blocker.
    - No unresolved `<PLACEHOLDER>` tokens exist outside reusable templates.
    - Workflow explicitly forbids push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts by default.
    - Workflow includes adaptive 2-5 parallel subagent orchestration with main-run integration.
@@ -94,7 +97,7 @@ Use this as a step-by-step “pressure” checklist for a brand-new repo with no
    - automation id + desired cadence
    - first queued work item
    - git write-access preflight result (or exact blocker if no initial commit yet)
-   - dashboard artifact paths and validation
+   - dashboard artifact paths, Docker status endpoint, and validation
    - whether parallel subagent orchestration was used, not useful, or unavailable
 
 ### Existing App/Library Repo Setup — Concrete Pressure Script
@@ -119,7 +122,7 @@ Use this as a step-by-step “pressure” checklist for a repo that already has 
    - selected source-of-truth files for the initial queue
    - automation overlap decision (reuse/update vs create)
    - git write-access preflight result
-   - dashboard artifact paths and validation
+   - dashboard artifact paths, Docker status endpoint, and validation
    - whether parallel subagent orchestration was used, not useful, or unavailable
 
 ### Local Skill Deployment — Concrete Pressure Script

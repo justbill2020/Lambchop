@@ -12,6 +12,8 @@ automation:
   scheduled_work_plan_file: docs/<PROJECT_SLUG>/scheduled-work-plan.md
   dashboard_data_file: docs/<PROJECT_SLUG>/dashboard-data.json
   dashboard_file: docs/<PROJECT_SLUG>/dashboard.html
+  dashboard_compose_file: docs/<PROJECT_SLUG>/dashboard.compose.yml
+  dashboard_server_dir: docs/<PROJECT_SLUG>/dashboard-server
   memory_file_primary: $CODEX_HOME/automations/<AUTOMATION_ID>/memory.md
   memory_file_fallback_windows: %USERPROFILE%\.codex\automations\<AUTOMATION_ID>\memory.md
   memory_file_fallback_unix: ~/.codex/automations/<AUTOMATION_ID>/memory.md
@@ -44,7 +46,7 @@ Use these sources in this order:
 2. `docs/<PROJECT_SLUG>/state.json` defines the local work queue and machine-readable status.
 3. `docs/<PROJECT_SLUG>/progress.md` records human-readable proof of work.
 4. `docs/<PROJECT_SLUG>/scheduled-work-plan.md` defines how future tasks are planned when the queue is empty.
-5. `docs/<PROJECT_SLUG>/dashboard-data.json` and `docs/<PROJECT_SLUG>/dashboard.html` provide the current visual operating picture.
+5. `docs/<PROJECT_SLUG>/dashboard-data.json`, `docs/<PROJECT_SLUG>/dashboard.html`, `docs/<PROJECT_SLUG>/dashboard.compose.yml`, and `docs/<PROJECT_SLUG>/dashboard-server/` provide the current visual operating picture.
 6. `<SPECS_SOURCE>` contains project requirements, plans, specs, TODOs, or user instructions.
 7. Repository code and tests are the source of truth for implemented behavior.
 8. Existing documentation explains expected operation and should be updated when behavior changes.
@@ -129,7 +131,7 @@ Every automation run must:
 18. Update documentation when behavior, setup, commands, architecture, or limitations change.
 19. Commit coherent completed changes locally with validation details in the commit body.
 20. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan, add the next bounded source-backed work item when work remains, or record the no-work reason.
-21. Regenerate `docs/<PROJECT_SLUG>/dashboard-data.json` and `docs/<PROJECT_SLUG>/dashboard.html` from real state, roadmap, progress, validation, leases, blockers, commits, and next actions.
+21. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/<PROJECT_SLUG>/dashboard-data.json`; the Dockerized status server reads those files while it is running.
 22. Update state, progress, and the schedule/trigger ledger.
 23. Apply the completion trigger protocol: if the automation is ACTIVE, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
 24. Append an operator summary for the user.
@@ -197,9 +199,10 @@ If multi-agent support or Superpowers is unavailable, record the blocker or `not
 Every setup and run must maintain:
 
 - `docs/<PROJECT_SLUG>/dashboard-data.json`: normalized machine-readable status from state, scheduled work plan, progress, backoff, leases, validation, blockers, commits, and next actions.
-- `docs/<PROJECT_SLUG>/dashboard.html`: a self-contained local dashboard that renders roadmap status, current sprint lanes, blocked work, validation/commit evidence, and what is next.
+- `docs/<PROJECT_SLUG>/dashboard.html`: the live browser UI that polls `/api/status` while the automation is flowing.
+- `docs/<PROJECT_SLUG>/dashboard.compose.yml` and `docs/<PROJECT_SLUG>/dashboard-server/`: a Dockerized local status server that mounts the docs folder read-only and serves `http://127.0.0.1:8765/dashboard.html`.
 
-The dashboard must use real workflow data only. Do not hand-write decorative status that cannot be traced back to state, progress, scheduled work, validation, or git evidence.
+The dashboard must use real workflow data only. Do not hand-write decorative status that cannot be traced back to state, progress, scheduled work, validation, or git evidence. Use the Dockerized status server instead of opening the HTML with `file://`.
 
 ## Review Consolidation
 If this repo uses a `review` queue or equivalent pending-review state, treat it as not done. Re-run the relevant checks, record fresh validation evidence, and only then move the work to `done`. If validation is missing, stale, or partial, leave the item in review and name the missing check.

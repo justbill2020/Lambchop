@@ -1,0 +1,10 @@
+services:
+  lambchop-status:
+    build:
+      context: ./dashboard-server
+    ports:
+      - "8765:8765"
+    volumes:
+      - .:/data:ro
+    environment:
+      - LAMBCHOP_STATUS_ROOT=/data

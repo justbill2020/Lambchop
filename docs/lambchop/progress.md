@@ -20,6 +20,23 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Next step:
   - Use the README upgrade prompt to migrate previously configured target repos to the new parallel dashboard workflow.
 
+## 2026-05-11 15:05 - dashboard-live-dockerized
+
+- Status: updated
+- Branch: `main`
+- Work item: `task-08-parallel-sprint-dashboard`
+- Changes:
+  - Replaced the file-open/static-dashboard approach with a Dockerized live status server.
+  - Added `dashboard.compose.yml` and `dashboard-server/` artifacts that mount the generated docs folder read-only.
+  - Updated dashboard UI to poll `/api/status` every 2 seconds for current run, active lanes, blockers, latest work, roadmap seeds, and progress tail.
+- Validation planned:
+  - JSON ledgers parsed.
+  - Dashboard container built and ran through Docker Compose from `docs/lambchop`.
+  - `/api/status` returned live Lambchop workflow data from the mounted docs folder.
+  - Codex browser loaded `Lambchop Live Dashboard` through the Dockerized status server.
+- Next step:
+  - Use Docker Compose from the generated docs folder to monitor automation runs in real time.
+
 ## 2026-05-05 09:11 - workflow-initialized
 
 - Status: initialized

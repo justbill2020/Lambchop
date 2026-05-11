@@ -59,13 +59,18 @@
       "fallback_when_unavailable": "single-item-local-workflow"
     },
     "dashboard_policy": {
-      "mode": "static-repo-dashboard",
+      "mode": "live-dockerized-repo-dashboard",
       "data_file": "docs/lambchop/dashboard-data.json",
       "html_file": "docs/lambchop/dashboard.html",
       "regenerate_after_setup": true,
       "regenerate_after_each_run": true,
-      "requires_real_workflow_data": true
-    }
+      "requires_real_workflow_data": true,
+      "compose_file": "docs/lambchop/dashboard.compose.yml",
+      "server_dir": "docs/lambchop/dashboard-server",
+      "status_endpoint": "http://127.0.0.1:8765/api/status"
+    },
+    "dashboard_compose_file": "docs/lambchop/dashboard.compose.yml",
+    "dashboard_server_dir": "docs/lambchop/dashboard-server"
   },
   "work_items": [
     {
@@ -677,8 +682,8 @@
       ],
       "acceptance_criteria": [
         "Generated workflows use adaptive 2-5 Superpowers subagent orchestration when independent work exists.",
-        "Main automation run remains orchestrator for dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.",
-        "Generated repos include dashboard-data.json and dashboard.html visual status artifacts.",
+        "Main automation run remains orchestrator for dispatch, integration, validation, dashboard updates, commits, and scheduler finalization.",
+        "Generated repos include dashboard-data.json, dashboard.html, dashboard.compose.yml, and dashboard-server/ live status artifacts.",
         "README explains how to upgrade a repo that already has Lambchop installed."
       ],
       "implementation_notes": [
@@ -686,11 +691,12 @@
       ],
       "validation": [
         "state/backoff/dashboard-data/template JSON parse checks passed",
-        "dashboard embedded JSON parse check passed",
-        "dashboard required element check passed",
-        "single-item wording and old concurrency cap scan passed",
-        "Codex browser opened dashboard through host.docker.internal local server and loaded the Lambchop Autonomous Dashboard page",
-        "inline favicon added to avoid static-browser favicon console noise"
+        "dashboard UI fetches live status from /api/status instead of reading file:// URLs",
+        "dashboard server is Dockerized and mounts docs folder read-only",
+        "docker compose build and run passed from docs/lambchop",
+        "/api/status returned live Lambchop workflow data",
+        "Codex browser loaded Lambchop Live Dashboard through the Dockerized status server",
+        "single-item wording and old concurrency cap scan passed"
       ],
       "branch": "codex/parallel-sprint-dashboard",
       "worktree": "REPO_ROOT",
@@ -723,7 +729,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "next_step": "Use the README upgrade prompt to migrate previously configured target repos to the parallel dashboard workflow.",
+      "next_step": "Run docker compose from docs/lambchop to view live automation status while the workflow updates state/progress/backoff files.",
       "integration": {
         "target_branch": "master",
         "status": "ready",
@@ -740,9 +746,7 @@
     "work_item_key": "task-08-parallel-sprint-dashboard",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-11T14:25:00-05:00",
-    "next_action": "Use the README upgrade prompt to migrate existing Lambchop-installed repos and let future runs dispatch adaptive 2-5 subagent sprint packets when safe."
+    "dashboard_updated_at": "2026-05-11T15:10:00-05:00",
+    "next_action": "Use the Dockerized live dashboard while future runs dispatch adaptive 2-5 subagent sprint packets when safe."
   }
 }
-
-

@@ -11,7 +11,7 @@ These notes are informational only. The v1 workflow is Codex-first and does not 
 ### Tool-agnostic (portable)
 These artifacts are plain files and git conventions that any agent/tool can use:
 - `WORKFLOW.md` operating contract
-- `docs/<project>/state.json`, `progress.md`, `backoff.json`, `scheduled-work-plan.md`, `dashboard-data.json`, `dashboard.html`
+- `docs/<project>/state.json`, `progress.md`, `backoff.json`, `scheduled-work-plan.md`, `dashboard-data.json`, `dashboard.html`, `dashboard.compose.yml`, and `dashboard-server/`
 - Cooperative leases, work item statuses, and exclusive/shared scope conventions
 - `.worktrees/<work_item_key>` worktree naming convention and `codex/<...>` branch naming convention
 - Adaptive parallel sprint packets when the tool supports safe bounded subagents; otherwise the same single-item fallback is still valid.
@@ -27,7 +27,7 @@ These elements are Codex-specific and may need equivalents in other tools:
 - Store the prompt/operating contract as workspace docs (Cursor rules, README-style docs, or the repo’s own conventions).
 - Ensure the agent can still:
   - read/write the same `docs/<project>/` ledgers
-  - regenerate the static repo-local dashboard from real workflow data
+  - keep the live dashboard inputs current from real workflow data
   - create worktrees and local branches
   - run validation commands
 

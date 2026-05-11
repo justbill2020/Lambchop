@@ -22,6 +22,8 @@ Use this checklist when deploying the autonomous coding team workflow into a new
   - `docs/<project-slug>/scheduled-work-plan.md`
   - `docs/<project-slug>/dashboard-data.json`
   - `docs/<project-slug>/dashboard.html`
+  - `docs/<project-slug>/dashboard.compose.yml`
+  - `docs/<project-slug>/dashboard-server/`
 - Stack/tooling markers and how to run checks (examples: `package.json` scripts, `Makefile`, CI config).
 - Existing automations (avoid creating duplicates).
 
@@ -42,7 +44,8 @@ Use this checklist when deploying the autonomous coding team workflow into a new
   - `docs/<project-slug>/backoff.json` (historical schedule/trigger ledger)
   - `docs/<project-slug>/scheduled-work-plan.md` (task-generation source)
   - `docs/<project-slug>/dashboard-data.json` (machine-readable visual status)
-  - `docs/<project-slug>/dashboard.html` (local visual dashboard)
+  - `docs/<project-slug>/dashboard.html` (live visual dashboard UI)
+  - `docs/<project-slug>/dashboard.compose.yml` and `docs/<project-slug>/dashboard-server/` (Dockerized status server)
 - Enable adaptive parallel sprint orchestration:
   - main automation run is the orchestrator
   - dispatch 2-5 independent Superpowers subagent lanes when dependencies and `exclusive_scope` allow it
@@ -66,7 +69,7 @@ If any preflight step fails, record the blocker (exact command + error) and stop
 - `state.json` parses as JSON.
 - `backoff.json` parses as JSON.
 - `dashboard-data.json` parses as JSON.
-- `dashboard.html` opens locally without a hosted service.
+- Dockerized dashboard server responds at `http://127.0.0.1:8765/dashboard.html` and `/api/status`.
 - `WORKFLOW.md` has no unresolved placeholders.
 - `WORKFLOW.md` includes adaptive 2-5 parallel subagent orchestration and dashboard regeneration.
 - Repo checks relevant to the change are run (tests/build/lint/typecheck as applicable).
@@ -76,7 +79,7 @@ If any preflight step fails, record the blocker (exact command + error) and stop
 - Files created or updated.
 - Automation id and desired cadence.
 - First queued work item key/title.
-- Dashboard artifact paths and whether they were regenerated from real workflow data.
+- Dashboard artifact paths and whether the live status server reads real workflow data.
 - Whether parallel subagent orchestration was used, not useful, or unavailable.
 - Validation results (including git preflight).
 - Any skipped checks with: reason, risk, and what to run later.

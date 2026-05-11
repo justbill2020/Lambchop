@@ -19,7 +19,7 @@ This file is the human-readable proof-of-work log for the `<PROJECT_NAME>` auton
   - State JSON parse: pending final customization.
   - Backoff JSON parse: pending final customization.
   - Dashboard data JSON parse: pending final customization.
-  - Dashboard opens locally without external services: pending final customization.
+  - Dockerized dashboard server responds at `/api/status`: pending final customization.
 - Parallel orchestration:
   - Default mode: adaptive 2-5 Superpowers subagent lanes when independent work exists.
   - Main automation run remains orchestrator for dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.

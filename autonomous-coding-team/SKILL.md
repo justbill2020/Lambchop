@@ -58,7 +58,7 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Use TDD for production behavior and record RED/GREEN evidence.
 - Use Superpowers `dispatching-parallel-agents` for bounded non-overlapping subagent lanes when available and useful.
 - Fall back to single-item local work when fewer than 2 independent tasks exist or multi-agent support is unavailable, and record why.
-- Regenerate `docs/<project-slug>/dashboard-data.json` and `docs/<project-slug>/dashboard.html` from real workflow data after setup and every run.
+- Install `docs/<project-slug>/dashboard.html`, `dashboard.compose.yml`, and `dashboard-server/`; keep dashboard data current from real workflow files during setup and every run.
 - Keep blocked work visible to discovery, validation, context lookup, and backoff decisions.
 - Treat review/pending-review work as unfinished until fresh validation evidence promotes it.
 - Keep private operator-owned files, credentials, fixtures, and service config in ignored local paths or environment-only settings; log bounded public evidence only.

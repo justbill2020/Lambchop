@@ -12,6 +12,8 @@
     "scheduled_work_plan_file": "docs/<PROJECT_SLUG>/scheduled-work-plan.md",
     "dashboard_data_file": "docs/<PROJECT_SLUG>/dashboard-data.json",
     "dashboard_file": "docs/<PROJECT_SLUG>/dashboard.html",
+    "dashboard_compose_file": "docs/<PROJECT_SLUG>/dashboard.compose.yml",
+    "dashboard_server_dir": "docs/<PROJECT_SLUG>/dashboard-server",
     "worktree_root": ".worktrees",
     "branch_prefix": "codex/",
     "branch_name_template": "codex/<PROJECT_SLUG>-<work-item-key>",
@@ -39,9 +41,12 @@
       "fallback_when_unavailable": "single-item-local-workflow"
     },
     "dashboard_policy": {
-      "mode": "static-repo-dashboard",
+      "mode": "live-dockerized-repo-dashboard",
       "data_file": "docs/<PROJECT_SLUG>/dashboard-data.json",
       "html_file": "docs/<PROJECT_SLUG>/dashboard.html",
+      "compose_file": "docs/<PROJECT_SLUG>/dashboard.compose.yml",
+      "server_dir": "docs/<PROJECT_SLUG>/dashboard-server",
+      "status_endpoint": "http://127.0.0.1:8765/api/status",
       "regenerate_after_setup": true,
       "regenerate_after_each_run": true,
       "requires_real_workflow_data": true

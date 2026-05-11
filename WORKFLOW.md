@@ -12,6 +12,8 @@ automation:
   scheduled_work_plan_file: docs/lambchop/scheduled-work-plan.md
   dashboard_data_file: docs/lambchop/dashboard-data.json
   dashboard_file: docs/lambchop/dashboard.html
+  dashboard_compose_file: docs/lambchop/dashboard.compose.yml
+  dashboard_server_dir: docs/lambchop/dashboard-server
   memory_file_primary: $CODEX_HOME/automations/lambchop-autonomous-coding-team/memory.md
   memory_file_fallback_windows: %USERPROFILE%\.codex\automations\lambchop-autonomous-coding-team\memory.md
   memory_file_fallback_unix: ~/.codex/automations/lambchop-autonomous-coding-team/memory.md
@@ -44,7 +46,7 @@ Use these sources in this order:
 2. `docs/lambchop/state.json` defines the local work queue and machine-readable status.
 3. `docs/lambchop/progress.md` records human-readable proof of work.
 4. `docs/lambchop/scheduled-work-plan.md` defines how future tasks are planned when the queue is empty.
-5. `docs/lambchop/dashboard-data.json` and `docs/lambchop/dashboard.html` provide the current visual operating picture.
+5. `docs/lambchop/dashboard-data.json`, `docs/lambchop/dashboard.html`, `docs/lambchop/dashboard.compose.yml`, and `docs/lambchop/dashboard-server/` provide the current visual operating picture.
 6. `autonomous-coding-team/` contains the skill, references, and templates.
 7. Repository files and validation results are the source of truth for implemented behavior.
 
@@ -75,7 +77,7 @@ Every automation run must:
 14. Run relevant validation.
 15. Commit coherent completed changes locally with validation details.
 16. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan, add the next bounded source-backed work item when work remains, or record the no-work reason.
-17. Regenerate `docs/lambchop/dashboard-data.json` and `docs/lambchop/dashboard.html` from real state, roadmap, progress, validation, leases, blockers, commits, and next actions.
+17. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/lambchop/dashboard-data.json`; the Dockerized status server reads those files while it is running.
 18. Update state, progress, and the schedule/trigger ledger.
 19. Apply the completion trigger protocol: if the automation is ACTIVE, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
 
@@ -100,9 +102,10 @@ If multi-agent support or Superpowers is unavailable, record the blocker or `not
 Every setup and run must maintain:
 
 - `docs/lambchop/dashboard-data.json`: normalized machine-readable status from state, scheduled work plan, progress, backoff, leases, validation, blockers, commits, and next actions.
-- `docs/lambchop/dashboard.html`: a self-contained local dashboard that renders roadmap status, current sprint lanes, blocked work, validation/commit evidence, and what is next.
+- `docs/lambchop/dashboard.html`: the live browser UI that polls `/api/status` while the automation is flowing.
+- `docs/lambchop/dashboard.compose.yml` and `docs/lambchop/dashboard-server/`: a Dockerized local status server that mounts the docs folder read-only and serves `http://127.0.0.1:8765/dashboard.html`.
 
-The dashboard must use real workflow data only. Do not hand-write decorative status that cannot be traced back to state, progress, scheduled work, validation, or git evidence.
+The dashboard must use real workflow data only. Do not hand-write decorative status that cannot be traced back to state, progress, scheduled work, validation, or git evidence. Use the Dockerized status server instead of opening the HTML with `file://`.
 
 ## Weekly Schedule And Completion Trigger
 Use a weekly cron automation as the persisted schedule anchor, not a minute-interval automation. The default RRULE is weekly with all seven days selected at the chosen wall-clock hour, matching Codex's weekly schedule representation.

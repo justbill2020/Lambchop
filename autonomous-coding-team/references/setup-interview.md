@@ -51,4 +51,4 @@ Ask only what cannot be inferred safely:
 - Branch prefix: `codex/`.
 - Integration branch: current main branch, preferring `main`, then `master`.
 - Parallel execution: adaptive 2-5 Superpowers subagent lanes when independent work exists; otherwise record why single-item execution is safer.
-- Visual status: static repo-local dashboard under `docs/<project-slug>/dashboard.html` backed by `dashboard-data.json`.
+- Visual status: live Dockerized repo dashboard under `docs/<project-slug>/dashboard.html`, backed by `dashboard-data.json` and `/api/status` from the mounted docs folder.

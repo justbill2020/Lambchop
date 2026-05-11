@@ -36,7 +36,7 @@ The user can point Codex at a GitHub repository URL, remote name, or local repo 
    - whether local commits remain the default safety boundary
 5. Install project-specific autonomous files:
    - `WORKFLOW.md`
-   - generated state, progress, backoff, scheduled work plan, dashboard data, and dashboard HTML under the target project's `docs/` folder
+   - generated state, progress, backoff, scheduled work plan, dashboard data, dashboard HTML, Docker compose file, and dashboard server under the target project's `docs/` folder
    - optional local Codex environment config when needed
 6. Create or update the Codex cron automation:
    - Use one automation per target repo.
@@ -44,7 +44,7 @@ The user can point Codex at a GitHub repository URL, remote name, or local repo 
    - Keep schedule, workspace, model, reasoning, and execution environment in automation fields.
 7. Validate and record proof:
    - JSON ledgers parse.
-   - Dashboard data parses and dashboard HTML opens locally without a hosted service.
+   - Dashboard data parses and the Dockerized dashboard server serves live status locally.
    - No unresolved placeholders remain outside reusable templates.
    - Workflow includes adaptive 2-5 parallel Superpowers subagent orchestration with main-run integration.
    - Workflow forbids push, PR, deploy, production config changes, external trackers, and user-work reverts by default.
@@ -71,8 +71,8 @@ Use this checklist when deploying the autonomous team into a target repo (see al
 - Confirm the target path is correct and writable (avoid cloning into the wrong folder).
 - Inspect before asking: git status/branch/remotes/worktrees, docs/specs/TODOs, stack markers, and scripts/commands.
 - Reuse/update an existing overlapping Codex automation instead of creating duplicates.
-- Generate or repair: `WORKFLOW.md`, plus `docs/<slug>/{state.json,progress.md,backoff.json,scheduled-work-plan.md,dashboard-data.json,dashboard.html}`.
+- Generate or repair: `WORKFLOW.md`, plus `docs/<slug>/{state.json,progress.md,backoff.json,scheduled-work-plan.md,dashboard-data.json,dashboard.html,dashboard.compose.yml,dashboard-server/}`.
 - Run git write-access preflight (temp branch + temp worktree) before claiming work.
-- Validate: JSON ledgers parse; dashboard opens locally; no unresolved placeholders outside templates; local-only safety defaults are explicit.
+- Validate: JSON ledgers parse; Dockerized dashboard status endpoint responds; no unresolved placeholders outside templates; local-only safety defaults are explicit.
 - Record proof: target repo path + remote, created/updated files, automation id + cadence, first queued item, validation evidence, blockers/next step.
 - Keep pushes/PRs/deploys/external trackers disabled unless the user explicitly enables them.

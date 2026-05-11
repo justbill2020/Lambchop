@@ -4,7 +4,7 @@
     "slug": "lambchop",
     "phase": "autonomous-skill-mvp",
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
-    "updated_at": "2026-05-11T14:25:00-05:00"
+    "updated_at": "2026-05-11T15:10:00-05:00"
   },
   "summary": {
     "todo": 0,
@@ -13,7 +13,7 @@
     "done": 10,
     "skipped": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Use the README upgrade prompt to migrate existing Lambchop-installed repos and let future runs dispatch adaptive 2-5 subagent sprint packets when safe."
+    "next_action": "Use the Dockerized live dashboard while future runs dispatch adaptive 2-5 subagent sprint packets when safe."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -132,14 +132,15 @@
       "worktree": "REPO_ROOT",
       "validation": [
         "state/backoff/dashboard-data/template JSON parse checks passed",
-        "dashboard embedded JSON parse check passed",
-        "dashboard required element check passed",
-        "single-item wording and old concurrency cap scan passed",
-        "Codex browser opened dashboard through host.docker.internal local server and loaded the Lambchop Autonomous Dashboard page",
-        "inline favicon added to avoid static-browser favicon console noise"
+        "dashboard UI fetches live status from /api/status instead of reading file:// URLs",
+        "dashboard server is Dockerized and mounts docs folder read-only",
+        "docker compose build and run passed from docs/lambchop",
+        "/api/status returned live Lambchop workflow data",
+        "Codex browser loaded Lambchop Live Dashboard through the Dockerized status server",
+        "single-item wording and old concurrency cap scan passed"
       ],
       "blocker": null,
-      "next_step": "Use the README upgrade prompt to migrate previously configured target repos to the parallel dashboard workflow."
+      "next_step": "Run docker compose from docs/lambchop to view live automation status while the workflow updates state/progress/backoff files."
     }
   ],
   "blocked": [],
@@ -148,10 +149,10 @@
     "state.json parses as JSON",
     "backoff.json parses as JSON",
     "dashboard-data.json parses as JSON",
-    "dashboard embedded JSON parses",
-    "dashboard required elements are present",
-    "old single-item/concurrency wording scan passed",
-    "Codex browser loaded dashboard page through local server"
+    "dashboard UI fetches /api/status",
+    "Dockerized dashboard server build and run passed",
+    "/api/status returns live workflow data",
+    "Codex browser loaded Lambchop Live Dashboard"
   ],
   "commits": [
     "1753bf1"
@@ -162,9 +163,7 @@
     "work_item_key": "task-08-parallel-sprint-dashboard",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-11T14:05:00-05:00",
-    "next_action": "Use the README upgrade prompt to migrate existing Lambchop-installed repos and let future runs dispatch adaptive 2-5 subagent sprint packets when safe."
+    "dashboard_updated_at": "2026-05-11T15:10:00-05:00",
+    "next_action": "Use the Dockerized live dashboard while future runs dispatch adaptive 2-5 subagent sprint packets when safe."
   }
 }
-
-

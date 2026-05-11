@@ -8,7 +8,7 @@ Every configured repo should contain:
 - the generated progress file under `docs/`: human-readable proof log
 - the generated backoff file under `docs/`: historical schedule/trigger ledger
 - the generated scheduled work plan under `docs/`: roadmap and task-generation source
-- the generated dashboard data and HTML files under `docs/`: visual operating picture
+- the generated dashboard data, HTML, compose file, and server files under `docs/`: live visual operating picture
 - `.codex/environments/environment.toml`: optional local environment config when useful
 
 ## Operating Contract
@@ -49,7 +49,7 @@ Every automation run:
 14. Integrate subagent results one at a time, resolve shared-scope risks, and run relevant checks.
 15. Commit coherent completed changes locally.
 16. After completion, plan or select the next item before schedule finalization.
-17. Regenerate dashboard data and dashboard HTML from real workflow evidence.
+17. Keep dashboard data current from real workflow evidence so the Dockerized dashboard server shows live status.
 18. Update state, progress, schedule/trigger ledger, and automation memory.
 19. If the automation is ACTIVE, trigger the next scheduler-visible run while preserving the weekly RRULE; if PAUSED or inactive, skip the trigger and record why.
 20. Stop safely if blocked.
@@ -62,12 +62,13 @@ Each lane needs a separate work item, branch, worktree, lease, acceptance criter
 If Superpowers or multi-agent support is unavailable, record the blocker or `not_useful` reason and continue with the safest single-item local workflow.
 
 ## Visual Dashboard
-The dashboard is static and repo-local:
+The dashboard is live, repo-local, and Dockerized:
 
 - `docs/<project-slug>/dashboard-data.json` contains normalized status from state, scheduled work, progress, backoff, validation, leases, blockers, commits, and next actions.
-- `docs/<project-slug>/dashboard.html` renders the roadmap, active sprint lanes, blocked work, validation/commit evidence, and next work.
+- `docs/<project-slug>/dashboard.html` renders the roadmap, active sprint lanes, blocked work, validation/commit evidence, current run, progress tail, and next work.
+- `docs/<project-slug>/dashboard.compose.yml` and `docs/<project-slug>/dashboard-server/` run a local container that mounts the docs folder read-only and serves `/api/status`.
 
-Regenerate both files during setup and after every automation run. They are not substitutes for state/progress; they are a visual projection of those sources.
+Install or repair the dashboard files during setup and upgrade. During every automation run, update the ledgers frequently enough for the status server to show current run progress. The dashboard is not a substitute for state/progress; it is a live visual projection of those sources.
 
 ## Git Preflight
 Before claiming work, verify the run can:
