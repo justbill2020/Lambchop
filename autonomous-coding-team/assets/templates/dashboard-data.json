@@ -12,6 +12,7 @@
     "blocked": 0,
     "done": 0,
     "skipped": 0,
+    "proposals_need_review": 0,
     "active_parallel_lanes": 0,
     "next_action": "Run first-run discovery and normalize the work queue."
   },
@@ -53,6 +54,7 @@
       "next_step": "Run first-run discovery and replace this setup item with project-specific work items."
     }
   ],
+  "proposal_backlog": [],
   "blocked": [],
   "active_lanes": [],
   "validation": [],

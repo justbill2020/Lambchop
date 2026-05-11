@@ -41,14 +41,14 @@ Every automation run:
 6. Reconcile state/progress with repository reality.
 7. Recheck blocked items whose next step is testable in the current environment.
 8. Consolidate review items only after fresh validation evidence.
-9. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, or create the next source-backed item from the scheduled work plan.
+9. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, create the next source-backed item from the scheduled work plan, or generate proposal backlog entries for user review when PRD/spec evidence suggests possible next advances.
 10. Claim each selected item with a lease.
 11. Work in isolated worktrees and local branches.
 12. Dispatch bounded Superpowers subagents for independent parallel lanes when available; otherwise record why parallelism was not useful and work the single eligible item.
 13. Use TDD for production behavior.
 14. Integrate subagent results one at a time, resolve shared-scope risks, and run relevant checks.
 15. Commit coherent completed changes locally.
-16. After completion, plan or select the next item before schedule finalization.
+16. After completion, plan or select the next item before schedule finalization; if the queue is exhausted, create PRD/spec-backed proposals with `needs_user_review` instead of merely reporting all tasks complete.
 17. Keep dashboard data current from real workflow evidence so the Dockerized dashboard server shows live status.
 18. Update state, progress, schedule/trigger ledger, and automation memory.
 19. If the automation is ACTIVE, trigger the next scheduler-visible run while preserving the weekly RRULE; if PAUSED or inactive, skip the trigger and record why.

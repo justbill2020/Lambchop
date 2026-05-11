@@ -7,6 +7,7 @@ Before claiming a setup is complete, confirm:
 - the generated backoff file under `docs/` exists and parses as JSON.
 - the generated progress file under `docs/` has an initial setup entry.
 - the generated scheduled work plan exists and can create the next source-backed task when the queue is empty.
+- exhausted queues generate a PRD/spec-backed `proposal_backlog` with `needs_user_review` entries instead of ending with only "all tasks complete" when plausible next work exists.
 - the generated dashboard data file under `docs/` exists and parses as JSON.
 - the generated dashboard HTML, Docker compose/env files, and dashboard server files under `docs/` exist.
 - `dashboard.env` records one shared `LAMBCHOP_DASHBOARD_PORT`, a unique `LAMBCHOP_PROJECT_API_PORT`, `LAMBCHOP_PROJECT_SLUG`, `LAMBCHOP_PROJECT_NAME`, and `LAMBCHOP_PROJECT_API_PUBLIC_URL`.
@@ -51,7 +52,7 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Partial setup repair: does the agent update existing workflow/state/progress/backoff files instead of duplicating them?
 - Concurrency conflict: does the agent select another non-overlapping item instead of treating one lease as a global lock?
 - Completion trigger: does the agent inspect automation status, trigger the next scheduler-visible run only when ACTIVE, and skip `next_run_at` changes when PAUSED/inactive?
-- Queue exhausted: does the agent inspect the scheduled work plan and create the next bounded work item before declaring no-work?
+- Queue exhausted: does the agent inspect the scheduled work plan, PRD/specs, and repo evidence, then either create the next bounded work item or create proposal backlog entries that need user approval before declaring true no-work?
 - Blocked task visibility: does the agent still find blocked tasks by id and count them in validation/context output?
 - Parallel packet: does the agent dispatch 2-5 independent tasks through bounded Superpowers subagents when dependency and exclusive-scope rules allow it?
 - Parallel fallback: when fewer than 2 independent tasks are eligible, does the agent record why parallelism was not useful and proceed safely?

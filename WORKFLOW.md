@@ -91,7 +91,7 @@ Every automation run must:
 13. Integrate subagent results one at a time, reconcile shared-scope risks, and mark each lane as completed, blocked, conflicted, failed_validation, or not_useful.
 14. Run relevant validation.
 15. Commit coherent completed changes locally with validation details.
-16. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan, add the next bounded source-backed work item when work remains, or record the no-work reason.
+16. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review.
 17. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/lambchop/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
 18. Update state, progress, and the schedule/trigger ledger.
 19. Apply the completion trigger protocol: if the automation is ACTIVE, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
@@ -140,7 +140,11 @@ Use `docs/lambchop/backoff.json` as a historical schedule/trigger ledger until t
 ## Scheduled Work Planning
 Use `docs/lambchop/scheduled-work-plan.md` as the roadmap and task-generation source.
 
-Before declaring no-work, inspect the scheduled work plan, skill files, validation gaps, and current source files. If source-backed work remains, create the next bounded work item in `docs/lambchop/state.json` with dependencies, acceptance criteria, source references, validation expectations, exclusive scope, shared scope, and next step. If no source-backed task can be created, append the inspected sources and no-work reason to progress before trigger finalization.
+Before declaring no-work, inspect the scheduled work plan, PRD/spec sources, skill files, validation gaps, and current source files. If source-backed work remains, create the next bounded work item in `docs/lambchop/state.json` with dependencies, acceptance criteria, source references, validation expectations, exclusive scope, shared scope, and next step.
+
+If no ready task can be created safely but the PRD/specs/repo evidence suggest possible next product advances, do not report that all tasks are complete as the final status. Create or refresh `proposal_backlog` in state with 3 to 7 candidate next feature sets or advancement sprints. Each proposal must include `key`, `title`, `status: "needs_user_review"`, `rationale`, `source_refs`, `suggested_acceptance_criteria`, `risk_notes`, and `parallelization_notes`. Set `last_run.next_action` to tell the user that proposed next work needs review/approval, update dashboard data, and append the proposal summary to progress. Only convert a proposal into `work_items` after the user approves or edits it.
+
+Only record true no-work when no source-backed task can be created and no meaningful PRD/spec-backed proposal can be made. The true no-work entry must list the sources inspected and the exact missing source of truth.
 
 ## Field-Tested Patterns
 Lambchop should preserve reusable lessons from target projects without project-specific names or private content:

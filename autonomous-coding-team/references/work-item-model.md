@@ -7,6 +7,7 @@ The generated state file under `docs/` includes:
 - `project.parallel_execution`: adaptive 2-5 subagent policy and fallback
 - `project.dashboard_policy`: dashboard data and HTML regeneration policy
 - `work_items`: ordered queue
+- `proposal_backlog`: optional candidate next work that needs user review before becoming work items
 - `last_run`: latest summary, active item, and next action
 
 ## Statuses
@@ -19,6 +20,22 @@ Use only:
 - `skipped`
 
 If Markdown Kanban folders are used instead of JSON state, include every status folder in task discovery and validation, including blocked and review. Blocked and review items are active workflow states, not archive folders.
+
+`needs_user_review` is not a work item status. Use it only on entries in `proposal_backlog`, where the user must approve, reject, or edit suggested next feature sets before Lambchop converts them into `todo` work items.
+
+## Proposal Backlog Shape
+```json
+{
+  "key": "proposal-01-next-feature-set",
+  "title": "Candidate next feature set",
+  "status": "needs_user_review",
+  "rationale": "Why this follows from the PRD, roadmap, or repo evidence.",
+  "source_refs": ["PRD.md#section"],
+  "suggested_acceptance_criteria": ["Observable result the user could approve."],
+  "risk_notes": "Known unknowns or decisions the user should consider.",
+  "parallelization_notes": "Whether this can split into independent work items."
+}
+```
 
 ## Required Work Item Fields
 Each item includes:

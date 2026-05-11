@@ -46,6 +46,7 @@ async function statusPayload() {
   const progressTail = await readLines("progress.md", 50);
   const planLines = await readLines("scheduled-work-plan.md", 200);
   const items = Array.isArray(state?.work_items) ? state.work_items : Array.isArray(dashboard?.work_items) ? dashboard.work_items : [];
+  const proposals = Array.isArray(state?.proposal_backlog) ? state.proposal_backlog : Array.isArray(dashboard?.proposal_backlog) ? dashboard.proposal_backlog : [];
   const active = items.filter((item) => item.status === "in_progress");
   const blocked = items.filter((item) => item.status === "blocked");
   const planSeeds = planLines.filter((line) => line.trim().startsWith("- ")).slice(-8);
@@ -63,12 +64,14 @@ async function statusPayload() {
       blocked: count(items, "blocked"),
       done: count(items, "done"),
       skipped: count(items, "skipped"),
+      proposals_need_review: proposals.filter((proposal) => proposal.status === "needs_user_review").length,
       active_parallel_lanes: active.length,
       next_action: state?.last_run?.next_action || dashboard?.summary?.next_action || "Waiting for the next automation update."
     },
     current_run: state?.last_run || null,
     active_lanes: active,
     blocked,
+    proposal_backlog: proposals,
     latest_work_items: items.slice(-8),
     roadmap: {
       current_milestone: state?.project?.phase || dashboard?.roadmap?.current_milestone || "",

@@ -63,6 +63,7 @@
       <div class="panel"><div class="metric" id="active-count">0</div><div class="label">In progress</div></div>
       <div class="panel"><div class="metric" id="blocked-count">0</div><div class="label">Blocked</div></div>
       <div class="panel"><div class="metric" id="done-count">0</div><div class="label">Done</div></div>
+      <div class="panel"><div class="metric" id="proposal-count">0</div><div class="label">Needs review</div></div>
       <div class="panel"><div class="metric" id="lane-count">0</div><div class="label">Active lanes</div></div>
     </section>
   </header>
@@ -84,6 +85,10 @@
         <h2>Roadmap</h2>
         <p class="meta" id="milestone"></p>
         <ul id="backlog"></ul>
+      </section>
+      <section class="panel">
+        <h2>Proposal Backlog</h2>
+        <div id="proposal-backlog"><p class="meta">No proposals need review.</p></div>
       </section>
       <section class="panel">
         <h2>Blocked</h2>
@@ -132,6 +137,20 @@
       </dl>`;
     }
 
+    function renderProposal(proposal) {
+      return `<article class="lane">
+        <h3>${escapeHtml(proposal.key || "proposal")}: ${escapeHtml(proposal.title || "")}</h3>
+        <span class="status blocked">${escapeHtml(proposal.status || "needs_user_review")}</span>
+        <dl>
+          <dt>Rationale</dt><dd>${escapeHtml(proposal.rationale || "")}</dd>
+          <dt>Sources</dt><dd>${escapeHtml((proposal.source_refs || []).join("; ") || "not recorded")}</dd>
+          <dt>Acceptance</dt><dd>${escapeHtml((proposal.suggested_acceptance_criteria || []).join("; ") || "not drafted")}</dd>
+          <dt>Risk</dt><dd>${escapeHtml(proposal.risk_notes || "")}</dd>
+          <dt>Parallel</dt><dd>${escapeHtml(proposal.parallelization_notes || "")}</dd>
+        </dl>
+      </article>`;
+    }
+
     function renderProjectList() {
       byId("registered-projects").innerHTML = projects.length
         ? projects.map((project) => `<article class="lane"><h3>${escapeHtml(project.name || project.slug)}</h3><p class="meta">${escapeHtml(project.api_url || "")}</p></article>`).join("")
@@ -158,12 +177,14 @@
       text("active-count", summary.in_progress || 0);
       text("blocked-count", summary.blocked || 0);
       text("done-count", summary.done || 0);
+      text("proposal-count", summary.proposals_need_review || 0);
       text("lane-count", summary.active_parallel_lanes || 0);
       text("milestone", data.roadmap?.current_milestone || data.project?.phase || "");
       text("next-action", summary.next_action || "");
       byId("current-run").innerHTML = renderRun(data.current_run);
       byId("lanes").innerHTML = data.active_lanes?.length ? data.active_lanes.map(renderItem).join("") : `<p class="meta">No active lanes.</p>`;
       byId("latest-work").innerHTML = data.latest_work_items?.length ? data.latest_work_items.map(renderItem).join("") : `<p class="meta">No work items yet.</p>`;
+      byId("proposal-backlog").innerHTML = data.proposal_backlog?.length ? data.proposal_backlog.map(renderProposal).join("") : `<p class="meta">No proposals need review.</p>`;
       byId("blocked").innerHTML = data.blocked?.length ? data.blocked.map(renderItem).join("") : `<p class="meta">No blocked work.</p>`;
       byId("backlog").innerHTML = (data.roadmap?.next_backlog_seeds || []).map((seed) => `<li>${escapeHtml(seed.replace(/^- /, ""))}</li>`).join("");
       text("progress-tail", (data.progress_tail || []).join("\n"));

@@ -59,6 +59,11 @@ Use this checklist when deploying the autonomous coding team workflow into a new
   - dispatch 2-5 independent Superpowers subagent lanes when dependencies and `exclusive_scope` allow it
   - fall back to one item and record why when fewer than 2 independent items are eligible
   - keep scheduler triggering, integration, dashboard regeneration, validation, and commits in the main run
+- Enable queue-exhaustion proposal planning:
+  - when no ready work remains, inspect PRD/specs/roadmap before declaring no-work
+  - create 3-7 `proposal_backlog` entries with `needs_user_review` when plausible next feature sets exist
+  - show proposals in state, progress, and dashboard status
+  - convert proposals to `todo` work items only after user approval or edits
 
 ## Git Preflight (Before Claiming Work)
 Record evidence that the run can:
@@ -91,6 +96,7 @@ If any preflight step fails, record the blocker (exact command + error) and stop
 - Automation id and desired cadence.
 - First queued work item key/title.
 - Dashboard artifact paths and whether the live status server reads real workflow data.
+- Proposal backlog entries created, approved, or true no-work reason.
 - Whether parallel subagent orchestration was used, not useful, or unavailable.
 - Validation results (including git preflight).
 - Any skipped checks with: reason, risk, and what to run later.

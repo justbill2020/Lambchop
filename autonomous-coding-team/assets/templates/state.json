@@ -30,6 +30,9 @@
       "planner_runs_after_each_item": true,
       "create_next_task_when_queue_empty": true,
       "requires_source_backed_tasks": true,
+      "queue_empty_behavior": "generate_proposal_backlog_for_user_review",
+      "proposal_count_range": "3-7",
+      "proposal_status": "needs_user_review",
       "default_task_size": "one coherent local commit",
       "no_work_requires_scheduled_plan_check": true
     },
@@ -146,6 +149,7 @@
       "updated_at": "<ISO8601_TIMESTAMP>"
     }
   ],
+  "proposal_backlog": [],
   "last_run": {
     "timestamp": "<ISO8601_TIMESTAMP>",
     "summary": "Autonomous workflow initialized.",

@@ -23,6 +23,9 @@
       "planner_runs_after_each_item": true,
       "create_next_task_when_queue_empty": true,
       "requires_source_backed_tasks": true,
+      "queue_empty_behavior": "generate_proposal_backlog_for_user_review",
+      "proposal_count_range": "3-7",
+      "proposal_status": "needs_user_review",
       "default_task_size": "one coherent local commit",
       "no_work_requires_scheduled_plan_check": true
     },
@@ -751,6 +754,59 @@
       "updated_at": "2026-05-11T14:05:00-05:00"
     }
   ],
+  "proposal_backlog": [
+    {
+      "key": "proposal-01-public-release-readiness",
+      "title": "Public release readiness pass",
+      "status": "needs_user_review",
+      "rationale": "The repo is intended to become public, so Lambchop should verify public-facing docs, privacy scans, install instructions, and dashboard onboarding before wider use.",
+      "source_refs": [
+        "README.md",
+        "autonomous-coding-team/references/validation-checklist.md"
+      ],
+      "suggested_acceptance_criteria": [
+        "README gives a concise public install path.",
+        "Privacy and secret scans are documented as a release gate.",
+        "Dashboard hub/API setup is understandable from a fresh checkout."
+      ],
+      "risk_notes": "Requires user approval because public release scope and acceptable history-scrubbing depth are product decisions.",
+      "parallelization_notes": "Can split into docs polish, validation gate, and dashboard onboarding tasks."
+    },
+    {
+      "key": "proposal-02-target-repo-upgrade-fixture",
+      "title": "Target repo upgrade fixture and proof",
+      "status": "needs_user_review",
+      "rationale": "Lambchop now supports upgrading existing installs; a reusable fixture would prove the migration path without touching private projects.",
+      "source_refs": [
+        "README.md#updating-a-repo-that-already-has-lambchop",
+        "autonomous-coding-team/references/target-project-deployment-checklist.md"
+      ],
+      "suggested_acceptance_criteria": [
+        "A fixture simulates an older Lambchop install.",
+        "Upgrade steps preserve history while adding proposal backlog and dashboard API fields.",
+        "Validation evidence is recorded in progress."
+      ],
+      "risk_notes": "Fixture design should avoid embedding any private repo details.",
+      "parallelization_notes": "Can split into fixture creation, migration validation, and docs update."
+    },
+    {
+      "key": "proposal-03-dashboard-proposal-review-ui",
+      "title": "Dashboard proposal review visibility",
+      "status": "needs_user_review",
+      "rationale": "Proposal backlog entries should be visible where the user monitors automation status, so review-needed work does not hide in JSON.",
+      "source_refs": [
+        "docs/lambchop/dashboard.html",
+        "docs/lambchop/dashboard-server/server.mjs"
+      ],
+      "suggested_acceptance_criteria": [
+        "Dashboard shows proposal title, rationale, status, and review need.",
+        "Status API returns proposal_backlog from state or dashboard data.",
+        "Empty proposal state is clearly rendered."
+      ],
+      "risk_notes": "Approval actions should remain manual for now; the dashboard should not mutate project state.",
+      "parallelization_notes": "Small UI/API task, likely single-lane unless paired with docs."
+    }
+  ],
   "last_run": {
     "run_id": "manual-implementation-20260511-dashboard-hub",
     "started_at": "2026-05-11T15:45:00-05:00",
@@ -758,6 +814,6 @@
     "parallel_group": null,
     "subagent_lanes": [],
     "dashboard_updated_at": "2026-05-11T15:45:00-05:00",
-    "next_action": "Use one shared dashboard hub for all Lambchop projects; start each repo's project API so it registers and streams status into the hub."
+    "next_action": "Review the proposal backlog and approve, edit, or reject candidate next Lambchop work before automation converts proposals into todo items."
   }
 }

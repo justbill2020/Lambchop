@@ -2,6 +2,23 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-05-11 16:10 - queue exhaustion proposal backlog
+
+- Status: done
+- Run id: `manual-implementation-20260511-proposal-backlog`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Changes:
+  - Added core queue-exhaustion behavior: when no ready task remains, Lambchop must inspect PRD/spec/roadmap evidence and create candidate next-work proposals instead of only saying all tasks are complete.
+  - Added `proposal_backlog` with `needs_user_review` entries to state and dashboard data.
+  - Updated workflow, templates, automation prompt, scheduled-plan guidance, work-item model, validation checklist, and dashboard API/UI to surface proposals.
+  - Seeded Lambchop's own proposal backlog with candidate next work for user review.
+- Validation:
+  - Pre-change assertion failed because proposal backlog behavior was absent.
+  - Post-change checks must confirm workflow/template/state/dashboard files include `proposal_backlog`, `needs_user_review`, and `Proposal Backlog`.
+- Next step:
+  - User reviews proposal backlog entries and approves, edits, or rejects the next Lambchop feature set before automation converts one into `todo` work.
+
 ## 2026-05-11 15:45 - single hub reactive dashboard
 
 - Status: done

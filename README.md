@@ -4,6 +4,8 @@ Lambchop is a reusable Codex skill package for setting up a repository as an aut
 
 Use it when you want Codex to inspect a greenfield or brownfield repo, create the durable workflow files, install a local work queue, schedule recurring runs, and keep advancing implementation without relying on chat history.
 
+When the active queue runs out, Lambchop should not stop at "all tasks complete" if the PRD, roadmap, specs, or repository evidence still imply possible next advances. It creates a proposal backlog with candidate next feature sets, marks them as needing user review, shows them in the dashboard, and waits for approval before converting them into executable work items.
+
 ## Why “Lambchop”?
 
 The name comes from *Lamb Chop’s Play-Along*, where the closing bit was “The Song That Never Ends.” That idea matched the way this Codex team is meant to work: when a run finishes, it checks whether the automation is paused. If it is still active, it triggers the next scheduler-visible run and keeps going.
@@ -128,6 +130,7 @@ Expected result:
 - existing history remains intact
 - old work items gain the new orchestration/dashboard fields
 - future runs can dispatch parallel subagents when safe
+- exhausted queues generate user-review proposal backlog entries when PRD/spec evidence suggests more possible work
 - the repo has a current project API that registers with the shared visual dashboard
 - the first project can start the shared GUI with `docker compose --env-file docs/{project-slug}/dashboard.env -f docs/{project-slug}/dashboard.compose.yml --profile hub up --build`
 - later projects can join the same dashboard with `docker compose --env-file docs/{project-slug}/dashboard.env -f docs/{project-slug}/dashboard.compose.yml up --build`

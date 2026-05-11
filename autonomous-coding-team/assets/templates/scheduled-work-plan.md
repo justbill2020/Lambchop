@@ -16,7 +16,7 @@ This file is the task-generation source for the `<PROJECT_NAME>` autonomous work
 - repository code, tests, docs, TODOs, and validation failures
 
 ## Planning Cadence
-After each run completes, blocks, or skips one active work item, the automation must reconcile state and then either select the next eligible queued item or create the next source-backed item from this plan.
+After each run completes, blocks, or skips one active work item, the automation must reconcile state and then either select the next eligible queued item, create the next source-backed item from this plan, or generate proposal backlog entries for user review when the PRD/specs imply possible next advances but the user must choose.
 
 ## Task Sizing
 Default to one coherent local commit per work item. Split work when acceptance criteria require unrelated files, unrelated behavior, or different validation commands.
@@ -31,9 +31,14 @@ Default to one coherent local commit per work item. Split work when acceptance c
 7. Polish only when the milestone is otherwise complete.
 
 ## Stop Conditions
-Do not invent work when there is no source of truth. Stop and record a blocker when a user decision is required, a requested action is unsafe, source files conflict in a way that changes product intent, or the current milestone is complete.
+Do not invent work when there is no source of truth. When a user decision is required but PRD/spec/repo evidence suggests plausible next advances, create proposal backlog entries with `needs_user_review` status instead of ending with "all tasks complete." Stop and record a blocker only when a requested action is unsafe, source files conflict in a way that changes product intent, or no meaningful source-backed proposal can be made.
 
 ## Backlog Seeds
 - <BACKLOG_SEED_1>
 - <BACKLOG_SEED_2>
 - <BACKLOG_SEED_3>
+
+## Proposal Backlog
+Proposals here need user review before Lambchop converts them into `todo` work items.
+
+- Status: none yet

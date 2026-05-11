@@ -51,5 +51,6 @@ Ask only what cannot be inferred safely:
 - Branch prefix: `codex/`.
 - Integration branch: current main branch, preferring `main`, then `master`.
 - Parallel execution: adaptive 2-5 Superpowers subagent lanes when independent work exists; otherwise record why single-item execution is safer.
+- Queue exhaustion: when no ready task remains, use the PRD/specs/roadmap to propose 3-7 next feature sets with `needs_user_review` instead of reporting only that all tasks are complete.
 - Visual status: one shared Dockerized Lambchop dashboard hub, backed by registered per-project APIs. Each project API reads `dashboard-data.json`, state, progress, backoff, and scheduled work from its mounted docs folder.
 - Dashboard ports: keep one shared hub GUI port, default `8765`; choose a free per-project API port, default `8766` only when unused. Write `LAMBCHOP_DASHBOARD_PORT`, `LAMBCHOP_PROJECT_API_PORT`, `LAMBCHOP_PROJECT_SLUG`, `LAMBCHOP_PROJECT_NAME`, and `LAMBCHOP_PROJECT_API_PUBLIC_URL` to `docs/<project-slug>/dashboard.env`.
