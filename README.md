@@ -15,7 +15,7 @@ So Lambchop is the little autonomous workflow that keeps moving the project forw
 Paste this into Codex from the target repository:
 
 ```text
-Use the latest Lambchop autonomous coding team skill from `{LAMBCHOP_GITHUB_REPO_URL}`, using the skill at `autonomous-coding-team/`.
+Use the latest Lambchop autonomous coding team skill from `git@github.com:justbill2020/Lambchop.git`, using the skill at `autonomous-coding-team/`.
 
 Set up this repository as a local-only autonomous Codex coding team.
 
@@ -61,8 +61,6 @@ If a task needs a private local file, credential, service, or operator-owned fix
 
 Finish by reporting files created or updated, the automation id and cadence, the first queued work item, validation evidence, and exact blockers.
 ```
-
-Replace `{LAMBCHOP_GITHUB_REPO_URL}` with the GitHub URL for the Lambchop repository you want Codex to use.
 
 ## What Lambchop Installs
 
@@ -144,7 +142,7 @@ If you previously ran Lambchop in a target repo, do not delete the existing work
 Paste this from the already-configured target repo:
 
 ```text
-Use the latest Lambchop autonomous coding team skill from `{LAMBCHOP_GITHUB_REPO_URL}`, using the skill at `autonomous-coding-team/`.
+Use the latest Lambchop autonomous coding team skill from `git@github.com:justbill2020/Lambchop.git`, using the skill at `autonomous-coding-team/`.
 
 This repository already has Lambchop workflow files. Upgrade the existing setup in place instead of overwriting history.
 
@@ -162,8 +160,6 @@ Migrate the installed workflow to the latest Lambchop contract:
 
 Validate the upgraded setup by parsing JSON ledgers, checking for unresolved placeholders outside templates, confirming the Dockerized live dashboard serves `/api/status`, and recording the upgrade evidence in progress.md.
 ```
-
-Replace `{LAMBCHOP_GITHUB_REPO_URL}` with the GitHub URL for the Lambchop repository you want Codex to use.
 
 Expected result:
 
