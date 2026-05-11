@@ -4,6 +4,12 @@ Lambchop is a reusable Codex skill package for setting up a repository as an aut
 
 Use it when you want Codex to inspect a greenfield or brownfield repo, create the durable workflow files, install a local work queue, schedule recurring runs, and keep advancing implementation without relying on chat history.
 
+## Why “Lambchop”?
+
+The name comes from *Lamb Chop’s Play-Along*, where the closing bit was “The Song That Never Ends.” That idea matched the way this Codex team is meant to work: when a run finishes, it checks whether the automation is paused. If it is still active, it triggers the next scheduler-visible run and keeps going.
+
+So Lambchop is the little autonomous workflow that keeps moving the project forward, one verified local step after another, until you tell it to stop.
+
 ## Quick Use From Another Repo
 
 Paste this into Codex from the target repository:
