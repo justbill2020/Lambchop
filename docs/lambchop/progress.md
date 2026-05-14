@@ -637,5 +637,27 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - `lambchop-autonomous-coding-team` was paused through Codex app automation tooling before these automation-maintenance edits.
   - JSON parse checks passed for live and template state/backoff files plus dashboard data.
   - Text scan confirms maintenance pause language exists across workflow, template, skill guidance, automation prompt, proof rules, validation checklist, and workflow architecture.
+  - Final app-visible scheduler row after maintenance: `status=ACTIVE`, `rrule=RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE`, `next_run_at=2026-05-20T12:00:00-05:00`.
+  - No run-now trigger was requested after unpausing.
 - Next work:
-  - Unpause `lambchop-autonomous-coding-team` after final verification, keeping the parked weekly anchor on yesterday at noon and not triggering run-now.
+  - Let existing in-flight automation processes finish naturally; future maintenance should pause the scheduler first, then unpause without run-now unless Bill explicitly asks.
+
+## 2026-05-14 12:19 - task-10 scheduler guardrails
+
+- Status: done
+- Run id: `manual-20260514-task-10-scheduler-guardrails`
+- Branch: `codex/lambchop-task-10-scheduler-guardrails`
+- Worktree: `.worktrees/task-10-scheduler-guardrails`
+- Work item: `task-10-scheduler-guardrails` (done)
+- Changes:
+  - Committed `task-10-scheduler-guardrails` to `codex/lambchop-task-10-scheduler-guardrails`.
+  - Updated `WORKFLOW.md` and reusable workflow template with the parked weekly anchor policy (yesterday at noon) and the automation maintenance pause protocol.
+  - Updated skill guidance and references so schedule/trigger proof explicitly includes parked-anchor evidence and maintenance pause/unpause evidence.
+  - Reconciled state, backoff, and dashboard data to record the guardrail update and keep the proposal backlog as the next user decision point.
+- Validation:
+  - JSON parse checks passed for `docs/lambchop/state.json`, `docs/lambchop/backoff.json`, `docs/lambchop/dashboard-data.json`, and matching templates.
+  - `node --check` passed for `docs/lambchop/dashboard-server/server.mjs` and the template server.
+  - Placeholder scan passed: no `<PLACEHOLDER_...>` tokens exist outside templates.
+  - Scheduler DB check: `status=ACTIVE`, `rrule=RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE`, `next_run_at=2026-05-20T12:00:00-05:00`.
+- Next work:
+  - Review proposals: `proposal-01-public-release-readiness`, `proposal-02-target-repo-upgrade-fixture`, `proposal-03-dashboard-proposal-review-ui`.

@@ -46,7 +46,7 @@ Ask only what cannot be inferred safely:
 - Autonomy: local branches, worktrees, edits, tests, docs, and local commits only.
 - Publishing: disabled.
 - External trackers: disabled.
-- Initial cadence: weekly cron anchor with an end-of-run scheduler-visible run-now trigger when ACTIVE; pausing the automation must prevent the next trigger.
+- Initial cadence: parked weekly cron anchor on yesterday at noon with an end-of-run scheduler-visible run-now trigger when ACTIVE; pausing the automation must prevent the next trigger.
 - Worktree root: `.worktrees`.
 - Branch prefix: `codex/`.
 - Integration branch: current main branch, preferring `main`, then `master`.

@@ -23,7 +23,8 @@ Before claiming a setup is complete, confirm:
 - Parallel execution policy uses adaptive Superpowers subagent orchestration with minimum 2 lanes, maximum 5 lanes, and single-item fallback when fewer than 2 independent items are eligible.
 - The workflow makes the main automation run the orchestrator for dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.
 - Subagents are forbidden from triggering scheduler runs, publishing, deploying, mutating external trackers, or overwriting another lane.
-- Weekly automation rules include a weekly RRULE anchor, scheduler-visible run-now trigger after completed ACTIVE runs, pause/inactive skip behavior, trigger evidence in progress/memory, and no worker/subagent trigger substitute.
+- Weekly automation rules include a parked weekly RRULE anchor set to yesterday at noon before automation updates or run-now triggers, scheduler-visible run-now trigger after completed ACTIVE runs, pause/inactive skip behavior, trigger evidence in progress/memory, and no worker/subagent trigger substitute.
+- Automation-maintenance rules require pausing before workflow/prompt/schedule/status edits, leaving already-running processes alone, unpausing after successful validation unless the user asks to stay paused or a blocker makes unpausing unsafe, and not triggering run-now after maintenance unpause unless the user asks.
 - Automation prompt tells Codex to read `WORKFLOW.md` first and does not hide schedule/workspace/model fields in prose.
 - No user-facing Python setup requirement exists.
 - Progress entries distinguish desired trigger behavior from actual scheduler-visible trigger or pause-skip evidence.
@@ -52,7 +53,8 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Existing app repo: does the agent infer stack and commands before asking?
 - Partial setup repair: does the agent update existing workflow/state/progress/backoff files instead of duplicating them?
 - Concurrency conflict: does the agent select another non-overlapping item instead of treating one lease as a global lock?
-- Completion trigger: does the agent inspect automation status, trigger the next scheduler-visible run only when ACTIVE, and skip `next_run_at` changes when PAUSED/inactive?
+- Completion trigger: does the agent inspect automation status, repair the parked weekly anchor to yesterday at noon, trigger the next scheduler-visible run only when ACTIVE, and skip `next_run_at` changes when PAUSED/inactive?
+- Maintenance pause: before editing workflow or automation settings, does the agent pause the automation without stopping current runs, make the update, verify, and then unpause without run-now or record a leave-paused blocker?
 - Queue exhausted: does the agent inspect the scheduled work plan, PRD/specs, and repo evidence, then either create the next bounded work item or create proposal backlog entries that need user approval before declaring true no-work?
 - Blocked task visibility: does the agent still find blocked tasks by id and count them in validation/context output?
 - Parallel packet: does the agent dispatch 2-5 independent tasks through bounded Superpowers subagents when dependency and exclusive-scope rules allow it?

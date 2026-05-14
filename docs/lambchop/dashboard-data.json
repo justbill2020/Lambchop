@@ -6,17 +6,17 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-14",
-    "updated_at": "2026-05-14T12:02:37.4491456-05:00"
+    "updated_at": "2026-05-14T12:19:02.021-05:00"
   },
   "summary": {
     "todo": 0,
     "in_progress": 0,
     "blocked": 0,
-    "done": 11,
+    "done": 12,
     "skipped": 0,
     "proposals_need_review": 3,
     "active_parallel_lanes": 0,
-    "next_action": "Run-now trigger queued a new automation run; review proposal backlog entries to choose the next work packet."
+    "next_action": "Review proposal backlog entries (3 need review) before converting them into executable work items."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -164,6 +164,26 @@
       ],
       "blocker": null,
       "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items."
+    },
+    {
+      "key": "task-10-scheduler-guardrails",
+      "title": "Parked weekly anchor + automation maintenance pause protocol",
+      "status": "done",
+      "priority": 30,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_useful",
+      "integration_status": "ready",
+      "branch": "codex/lambchop-task-10-scheduler-guardrails",
+      "worktree": ".worktrees/task-10-scheduler-guardrails",
+      "validation": [
+        "docs and template JSON parse checks passed (state/backoff/dashboard-data)",
+        "node --check passed for docs and template dashboard-server/server.mjs",
+        "placeholder scan passed: no <PLACEHOLDER_*> tokens outside templates",
+        "scheduler DB check: status ACTIVE, rrule BYDAY=WE, next normal run 2026-05-20 12:00 America/Chicago"
+      ],
+      "blocker": null,
+      "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items."
     }
   ],
   "proposal_backlog": [
@@ -241,19 +261,20 @@
     "running DM4Me hub and NOPE project API refreshed with generated dashboard assets",
     "parked weekly anchor policy added: automation updates and run-now triggers must set the normal RRULE to yesterday at noon, currently BYDAY=WE for 2026-05-14",
     "app automation parked: lambchop-autonomous-coding-team is ACTIVE with BYDAY=WE; next normal run is expected to be about one week out",
-    "maintenance pause policy added: pause the scheduler before workflow/automation edits, leave already-running processes alone, unpause after successful validation, and do not run-now after unpause unless Bill asks"
+    "maintenance pause policy added: pause the scheduler before workflow/automation edits, leave already-running processes alone, unpause after successful validation, and do not run-now after unpause unless Bill asks",
+    "maintenance unpause verified: lambchop-autonomous-coding-team ACTIVE, BYDAY=WE, next normal run 2026-05-20 12:00 America/Chicago"
   ],
   "commits": [
     "1753bf1",
     "7ce826a"
   ],
   "last_run": {
-    "run_id": "run-2026-05-14T164622Z-a917c1",
-    "started_at": "2026-05-14T11:46:22-05:00",
-    "work_item_key": "task-09-dashboard-usability-pass",
+    "run_id": "manual-20260514-task-10-scheduler-guardrails",
+    "started_at": "2026-05-14T12:19:02.021-05:00",
+    "work_item_key": "task-10-scheduler-guardrails",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-14T12:02:37.4491456-05:00",
-    "next_action": "Run-now trigger queued a new automation run; review proposal backlog entries to choose the next work packet."
+    "dashboard_updated_at": "2026-05-14T12:19:02.021-05:00",
+    "next_action": "Review proposal backlog entries; do not trigger run-now after maintenance unless Bill explicitly asks."
   }
 }

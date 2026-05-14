@@ -10,7 +10,7 @@ Use this checklist when deploying the autonomous coding team workflow into a new
 - Target repo path (or clone target) and remote identity (if any).
 - Project slug used for docs paths (example: `docs/<project-slug>/`).
 - Integration branch name (`main` vs `master`) inferred from the repo.
-- Automation id and desired cadence (default: weekly cron anchor plus end-of-run run-now trigger when ACTIVE).
+- Automation id and desired cadence (default: parked weekly cron anchor on yesterday at noon plus end-of-run run-now trigger when ACTIVE).
 
 ## Discovery (Inspect Before Asking)
 - `git status`, current branch, remotes, local branches, and `git worktree list --porcelain`.
@@ -76,6 +76,8 @@ If any preflight step fails, record the blocker (exact command + error) and stop
 ## Automation Setup
 - Create or update exactly one Codex automation for the target repo/workspace.
 - Keep schedule/workspace/model/reasoning/execution-environment in automation fields (not in prose).
+- Before editing workflow files, automation prompts, schedule fields, or status fields for an existing autonomous project, pause that project's automation first; do not stop already-running processes, then unpause after successful validation without triggering run-now unless the user asks.
+- Set the normal cron RRULE to yesterday's weekday at noon in the operator's timezone before saving or triggering the automation.
 - Store the automation id in the progress ledger.
 
 ## Validation (Before Marking “Done”)
@@ -94,6 +96,8 @@ If any preflight step fails, record the blocker (exact command + error) and stop
 - Target repo path and remote identity.
 - Files created or updated.
 - Automation id and desired cadence.
+- Parked weekly anchor RRULE and evidence it was set to yesterday at noon.
+- Maintenance pause evidence when workflow or automation settings were changed: pause-before result, unpause-after result, and confirmation that no run-now was triggered after unpause unless explicitly requested.
 - First queued work item key/title.
 - Dashboard artifact paths and whether the live status server reads real workflow data.
 - Proposal backlog entries created, approved, or true no-work reason.

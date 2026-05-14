@@ -2,7 +2,7 @@
 name: <PROJECT_NAME> Autonomous Workflow
 version: 1
 automation:
-  cadence: weekly cron anchor plus scheduler-visible run-now trigger after each completed active run
+  cadence: parked weekly cron anchor plus scheduler-visible run-now trigger after each completed active run
   external_issue_tracking: false
   specs_source: <SPECS_SOURCE>
   workflow_file: WORKFLOW.md
@@ -77,8 +77,8 @@ When instructions conflict, follow explicit user intent first, then safety, then
 
 ## Operational Glossary
 
-- `scheduler-visible run-now trigger`: an app-native trigger or verified scheduler database update that causes the same Codex automation to run again while preserving its weekly RRULE.
-- `weekly anchor`: the persisted cron RRULE that lets the operator pause, resume, or manually nudge the automation even when completion triggers are used for continuous active work.
+- `scheduler-visible run-now trigger`: an app-native trigger or verified scheduler database update that causes the same Codex automation to run again while preserving or repairing its parked weekly RRULE.
+- `parked weekly anchor`: the persisted cron RRULE set to the previous calendar day at noon in the operator's timezone. For example, on Thursday the anchor must be weekly Wednesday at 12:00. This keeps a valid weekly schedule for pause/resume/manual visibility without a same-day normal schedule colliding with active automation work.
 - `main automation run`: the orchestrator that selects work, owns scheduler updates, integrates lane results, validates, updates ledgers/dashboard data, and commits coherent completed changes.
 - `parallel lane`: one bounded work item assigned to a local worker or subagent with its own branch, worktree, lease, validation, and non-overlapping `exclusive_scope`.
 - `exclusive_scope`: files, folders, or behavior a lane owns exclusively; overlapping live exclusive scopes block unsafe parallel dispatch.
@@ -255,17 +255,25 @@ If a task requires a private file, credential, local service, or other operator-
 - keep the task blocked with the exact missing condition when the input is unavailable
 
 ## Weekly Schedule And Completion Trigger
-Use a weekly cron automation as the persisted schedule anchor, not a minute-interval automation. The default RRULE is weekly with all seven days selected at the chosen wall-clock hour, matching Codex's weekly schedule representation.
+Use a parked weekly cron automation as the persisted schedule anchor, not a minute-interval automation. Before any automation update or scheduler-visible run-now trigger, compute yesterday in the operator's timezone and persist the automation RRULE as weekly on that weekday at 12:00. For example, on Thursday, May 14, 2026, set the anchor to Wednesday at noon: `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE`. A future normal run about one week out is expected; the safety goal is to avoid a same-day normal schedule colliding with currently running automations.
+
+## Automation Maintenance Pause Protocol
+Before any chat, automation run, or repair session edits this workflow, updates the automation prompt, changes automation schedule/status fields, or performs other Lambchop automation-maintenance work, it must pause the project automation through Codex app automation tooling first. This creates a quiet maintenance window so the scheduler cannot start another run while the operating contract is being changed. Do not stop or interfere with automation runs that are already in progress; the pause only prevents additional scheduler starts during maintenance.
+
+During the maintenance window, make the requested workflow or automation updates, update state/progress/backoff/dashboard evidence, and verify the parked weekly anchor. When the maintenance work is complete, unpause the automation unless the user explicitly asked to leave it paused or validation found a blocker that would make unpausing unsafe. After unpausing from maintenance, do not trigger run-now unless the user explicitly asks to start another automation run.
+
+Record all three facts in progress, backoff, dashboard data, and automation memory: pause result before maintenance, parked-anchor RRULE/scheduler evidence, and final unpause or leave-paused reason.
 
 The automation should keep itself moving by triggering the next scheduler-visible run when a run completes:
 
 - Before triggering, inspect the automation row/config for the same automation id.
+- Before triggering or editing the automation, verify the parked weekly anchor. If the current RRULE is not weekly on yesterday's weekday at 12:00, update it through Codex app automation tooling while preserving status, prompt, `cwds`, model, reasoning, and execution environment.
 - If status is `ACTIVE`, request a run-now trigger for the same automation.
-- If app-native run-now tooling is unavailable, use the `writing-automation` run-now path: back up the scheduler DB, set only `automations.next_run_at` to now or a few seconds ahead, preserve `status`, `rrule`, `prompt`, `cwds`, model, and reasoning fields, then verify a new automation run or thread appears.
+- If app-native run-now tooling is unavailable, use the `writing-automation` run-now path: back up the scheduler DB, set `automations.next_run_at` to now or a few seconds ahead, set the normal RRULE to yesterday-at-noon weekly if it is stale, preserve `status`, `prompt`, `cwds`, model, and reasoning fields, then verify a new automation run or thread appears.
 - If status is `PAUSED` or otherwise inactive, do not advance `next_run_at`; record that the next trigger was skipped because the automation is paused.
 - Never spawn a worker/subagent or write a local artifact as a substitute for a scheduler-visible trigger.
-- Preserve the weekly RRULE after any run-now trigger so the automation can still be manually nudged, paused, or resumed from the scheduler.
-- Record trigger result, pause status, scheduler evidence, and any blocker in progress and memory.
+- After any run-now trigger, verify the parked weekly anchor still points to yesterday's weekday at noon. Do not leave a daily, all-days, today, or tomorrow scheduled anchor behind.
+- Record trigger result, pause status, parked-anchor RRULE, scheduler evidence, and any blocker in progress and memory.
 
 Use `docs/<PROJECT_SLUG>/backoff.json` as a historical schedule/trigger ledger until templates are renamed. It records desired trigger behavior and actual scheduler persistence; it is not proof that the app-visible schedule changed.
 
@@ -291,7 +299,7 @@ For every run, update `docs/<PROJECT_SLUG>/backoff.json` with:
 - `pause_recommended`: `true` once the counter reaches `3`
 - `pause_after_consecutive_no_progress_runs`: `3`
 
-When `consecutive_no_progress_runs >= 3`, attempt to pause this automation through Codex app automation tooling by setting status to `PAUSED` while preserving the weekly RRULE and all unrelated fields. If the pause succeeds, record the app-visible paused status in progress, backoff, dashboard data, and memory. If pause persistence is unavailable or fails, do not trigger run-now; record that pause persistence is blocked, leave the weekly anchor untouched, and tell the user manual scheduler repair is needed.
+When `consecutive_no_progress_runs >= 3`, attempt to pause this automation through Codex app automation tooling by setting status to `PAUSED` while preserving or repairing the parked weekly anchor and all unrelated fields. If the pause succeeds, record the app-visible paused status in progress, backoff, dashboard data, and memory. If pause persistence is unavailable or fails, do not trigger run-now; record that pause persistence is blocked, leave the parked weekly anchor unchanged unless it was safely repaired through automation tooling, and tell the user manual scheduler repair is needed.
 
 ## Scheduled Work Planning
 Use `docs/<PROJECT_SLUG>/scheduled-work-plan.md` as the roadmap and task-generation source.

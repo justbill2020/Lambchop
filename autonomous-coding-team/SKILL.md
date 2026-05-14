@@ -66,9 +66,10 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Advance related milestone packets only when ownership, shared scope, and combined validation are explicit.
 - Commit coherent completed changes locally with validation in the commit body.
 - Update state, progress, and schedule/trigger ledgers after every run.
+- Before workflow, prompt, schedule, status, or other automation-maintenance edits, pause the target automation without stopping already-running processes; after the update and validation are complete, unpause it unless the user requested otherwise or a blocker makes unpausing unsafe, and do not trigger run-now after unpausing unless the user asks.
 - Pause the automation after 3 consecutive runs with no real progress before requesting another scheduler-visible run.
 - After completing one item, plan or select the next eligible item from the scheduled work plan before trigger finalization; if the queue is exhausted, generate PRD/spec-backed proposal backlog entries for user review instead of reporting only that all tasks are complete.
-- Use a weekly cron RRULE as the persisted schedule anchor.
+- Use a parked weekly cron RRULE as the persisted schedule anchor: before any automation update or run-now trigger, set the normal schedule to yesterday's weekday at noon in the operator's timezone.
 - Trigger the next scheduler-visible run after a completed ACTIVE run; skip the trigger when the automation is PAUSED or inactive.
 - Never use a worker/subagent or local artifact as a substitute for a scheduler-visible run-now trigger.
 - Never publish, deploy, or mutate external trackers unless explicitly enabled by the user.
@@ -77,9 +78,11 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Asking setup questions before inspecting the repo.
 - Writing a large automation prompt instead of making `WORKFLOW.md` the operating contract.
 - Skipping state, progress, or backoff ledgers.
-- Using a minute-interval automation as the default instead of a weekly anchor plus completion trigger.
+- Using a minute-interval automation as the default instead of a parked weekly anchor plus completion trigger.
+- Leaving the weekly anchor on today, tomorrow, all days, or any future normal schedule that could create an extra run outside explicit triggering.
 - Triggering the next run while the automation is paused.
 - Doing implementation work in the main checkout.
+- Editing workflow or automation settings without first creating a pause-protected maintenance window.
 - Letting an ordinary project chat fix a feature request or bug instead of creating documented work items for the recurring automation.
 - Treating one live lease as a global lock.
 - Serializing independent sprint work when 2 to 5 safe subagent lanes are available.

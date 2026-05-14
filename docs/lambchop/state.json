@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-14T12:02:37.4491456-05:00",
+    "updated_at": "2026-05-14T12:19:02.021-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -842,6 +842,55 @@
         "reconciled_at": "2026-05-14T12:02:37.4491456-05:00"
       },
       "updated_at": "2026-05-14T12:02:37.4491456-05:00"
+    },
+    {
+      "key": "task-10-scheduler-guardrails",
+      "title": "Parked weekly anchor + automation maintenance pause protocol",
+      "type": "automation-guardrails",
+      "status": "done",
+      "priority": 30,
+      "dependencies": [
+        "task-09-dashboard-usability-pass"
+      ],
+      "source_refs": [
+        "WORKFLOW.md",
+        "autonomous-coding-team/assets/templates/WORKFLOW.md",
+        "autonomous-coding-team/references/automation-prompt.md",
+        "autonomous-coding-team/references/proof-of-work.md",
+        "autonomous-coding-team/references/validation-checklist.md",
+        "docs/lambchop/backoff.json"
+      ],
+      "acceptance_criteria": [
+        "Workflow parks the normal RRULE on yesterday at noon before automation updates or run-now triggers.",
+        "Workflow requires a pause-protected maintenance window before workflow/prompt/schedule/status edits.",
+        "Skill references and templates reflect the parked anchor and maintenance pause evidence requirements."
+      ],
+      "branch": "codex/lambchop-task-10-scheduler-guardrails",
+      "worktree": ".worktrees/task-10-scheduler-guardrails",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "autonomous-coding-team/SKILL.md",
+        "autonomous-coding-team/assets/templates/WORKFLOW.md",
+        "autonomous-coding-team/references/",
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/backoff.json",
+        "docs/lambchop/dashboard-data.json"
+      ],
+      "shared_scope": [
+        "docs/lambchop/"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items.",
+      "updated_at": "2026-05-14T12:19:02.021-05:00"
     }
   ],
   "proposal_backlog": [
@@ -898,12 +947,12 @@
     }
   ],
   "last_run": {
-    "run_id": "run-2026-05-14T164622Z-a917c1",
-    "started_at": "2026-05-14T11:46:22-05:00",
-    "work_item_key": "task-09-dashboard-usability-pass",
+    "run_id": "manual-20260514-task-10-scheduler-guardrails",
+    "started_at": "2026-05-14T12:19:02.021-05:00",
+    "work_item_key": "task-10-scheduler-guardrails",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-14T12:02:37.4491456-05:00",
-    "next_action": "Run-now trigger queued a new automation run (thread_id 019e2770-266c-7a80-af5f-ab4898a9e0cf); review proposal backlog entries to choose the next work packet."
+    "dashboard_updated_at": "2026-05-14T12:19:02.021-05:00",
+    "next_action": "Review proposal backlog entries; do not trigger run-now after maintenance unless Bill explicitly asks."
   }
 }

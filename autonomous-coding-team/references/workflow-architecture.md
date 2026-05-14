@@ -28,7 +28,8 @@ Every configured repo should contain:
 - cooperative lease rules
 - review consolidation and blocked-work recheck rules
 - local-only operator input rules for ignored private files, credentials, or fixtures
-- weekly schedule anchor, no-progress pause guard, completion trigger, and pause-skip rules
+- parked weekly schedule anchor, no-progress pause guard, completion trigger, and pause-skip rules
+- automation-maintenance pause/update/unpause rules for workflow, prompt, schedule, and status changes, including no run-now after maintenance unpause unless the user asks
 - TDD, verification, commit, blocker, and reconciliation rules
 
 ## Run Loop
@@ -53,7 +54,7 @@ Every automation run:
 17. Keep dashboard data current from real workflow evidence so the Dockerized dashboard server shows live status.
 18. Update state, progress, schedule/trigger ledger, and automation memory.
 19. Apply the no-progress pause guard before triggering: reset the counter after real work, increment it after no-progress, and pause the automation after 3 consecutive no-progress runs.
-20. If the automation is ACTIVE and the no-progress guard did not pause or block triggering, trigger the next scheduler-visible run while preserving the weekly RRULE; if PAUSED or inactive, skip the trigger and record why.
+20. If the automation is ACTIVE and the no-progress guard did not pause or block triggering, first repair the parked weekly anchor to yesterday's weekday at noon, then trigger the next scheduler-visible run; if PAUSED or inactive, skip the trigger and record why.
 21. Stop safely if blocked.
 
 ## Project Chat Intake
@@ -65,7 +66,7 @@ An intake chat may inspect files, run diagnostic or reproduction checks, and ide
 
 No-progress runs are runs that only repeat an existing blocker, fail to claim or advance eligible work, leave validation/tooling failures unchanged, or restate true no-work without creating new source-backed tasks or actionable proposals. Real work resets the counter only when state, progress, and dashboard evidence show a validated completion, a blocked/review item advanced with fresh evidence, a new source-backed item, a materially refreshed proposal backlog, or an app-visible scheduler repair.
 
-Persist `consecutive_no_progress_runs`, `last_no_progress_reason`, `pause_recommended`, and `pause_after_consecutive_no_progress_runs` in the backoff ledger. When the counter reaches 3, pause the automation through Codex app automation tooling and skip any run-now trigger. If the app-visible pause cannot be persisted, leave the weekly anchor untouched, skip run-now anyway, and report manual scheduler repair as the next step.
+Persist `consecutive_no_progress_runs`, `last_no_progress_reason`, `pause_recommended`, and `pause_after_consecutive_no_progress_runs` in the backoff ledger. When the counter reaches 3, pause the automation through Codex app automation tooling and skip any run-now trigger. If the app-visible pause cannot be persisted, leave the parked weekly anchor untouched unless it was safely repaired through automation tooling, skip run-now anyway, and report manual scheduler repair as the next step.
 
 ## Parallel Sprint Orchestration
 The main automation run is always the orchestrator. It should prefer parallel execution when 2 or more independent ready work items exist, up to a cap of 5 lanes.

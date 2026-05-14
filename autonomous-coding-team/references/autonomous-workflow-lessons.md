@@ -4,7 +4,9 @@ Preserve these field-tested patterns from prior autonomous workflow runs:
 
 - Make `WORKFLOW.md` the operating contract; keep the automation prompt focused on reading and following it.
 - State and progress files make the project resumable across runs and tools.
-- The default continuous-work pattern is a weekly cron anchor plus a scheduler-visible run-now trigger after each completed ACTIVE run.
+- The default continuous-work pattern is a parked weekly cron anchor plus a scheduler-visible run-now trigger after each completed ACTIVE run.
+- The parked weekly anchor must be recalculated before every automation update or run-now trigger: set the normal RRULE to yesterday's weekday at noon in the operator's timezone so the normal schedule does not collide with active same-day automation work.
+- Workflow, prompt, schedule, status, and other automation-maintenance edits need a quiet scheduler window: pause first without stopping already-running processes, update and validate, then unpause without run-now unless the user asks.
 - Pause/inactive status must prevent the next trigger by leaving `next_run_at` untouched.
 - Local schedule ledgers are not scheduler proof; verify app-native run-now or a new scheduler DB automation run/thread.
 - Git write-access preflight is required before claiming work.
