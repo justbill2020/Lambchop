@@ -4,7 +4,9 @@
     "slug": "lambchop",
     "phase": "autonomous-skill-mvp",
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
-    "updated_at": "2026-05-11T15:45:00-05:00"
+    "automation_id": "lambchop-autonomous-coding-team",
+    "contract_version": "lambchop-current-2026-05-14",
+    "updated_at": "2026-05-14T11:44:14.9481931-05:00"
   },
   "summary": {
     "todo": 0,
@@ -14,7 +16,7 @@
     "skipped": 0,
     "proposals_need_review": 3,
     "active_parallel_lanes": 0,
-    "next_action": "Review the proposal backlog and approve, edit, or reject candidate next Lambchop work before automation converts proposals into todo items."
+    "next_action": "Dashboard usability pass is installed; review proposal backlog entries before converting any to executable work."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -209,18 +211,25 @@
     "project API /api/events streamed status updates",
     "dashboard hub /api/projects included the Lambchop registration",
     "dashboard hub /api/project-events streamed project registration updates",
-    "dashboard HTML includes registry and selected-project stream wiring"
+    "dashboard HTML includes registry and selected-project stream wiring",
+    "no-progress pause guard added to workflow, templates, backoff ledger, and automation prompts",
+    "Lambchop and DM4Me automations re-read after update with PAUSED status and weekly RRULE preserved",
+    "automation-store audit passed with warnings only for pre-existing orphan folders",
+    "operational glossary added to workflow and reusable workflow template",
+    "automation prompt upgraded from single-item language to adaptive 2-5 lane orchestration",
+    "dashboard usability pass validated: live-only project picker, status tooltips, summary filters, work-item evidence modal, clearer roadmap, recent proof highlights",
+    "running DM4Me hub and NOPE project API refreshed with generated dashboard assets"
   ],
   "commits": [
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "manual-implementation-20260511-dashboard-hub",
-    "started_at": "2026-05-11T15:45:00-05:00",
-    "work_item_key": "task-08-parallel-sprint-dashboard",
+    "run_id": "manual-20260514-dashboard-usability",
+    "started_at": "2026-05-14T11:44:14.9481931-05:00",
+    "work_item_key": "dashboard-usability-pass",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-11T15:45:00-05:00",
-    "next_action": "Review the proposal backlog and approve, edit, or reject candidate next Lambchop work before automation converts proposals into todo items."
+    "dashboard_updated_at": "2026-05-14T11:44:14.9481931-05:00",
+    "next_action": "Dashboard usability pass is installed; review proposal backlog entries before converting any to executable work."
   }
 }

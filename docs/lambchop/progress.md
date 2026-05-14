@@ -493,4 +493,81 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Next step:
   - Keep target-project automations on weekly RRULE anchors and rely on the completion-trigger protocol for continuous runs while ACTIVE.
 
+## 2026-05-14 00:00 - no-progress pause guard
 
+- Status: done
+- Run id: `manual-20260514-no-progress-pause-guard`
+- Branch: `master`
+- Worktree: `REPO_ROOT`
+- Source review:
+  - Reviewed Lambchop workflow, prompt reference, backoff ledger, state scheduling policy, and DM4Me automation prompt as the motivating example.
+  - Confirmed the existing contract skipped triggers when already paused but did not require self-pausing after repeated blocked/no-op active runs.
+- Changes:
+  - Added a reusable no-progress pause guard: after 3 consecutive runs with no real work, pause the automation before any run-now trigger.
+  - Defined real work as validated completion, blocked/review advancement with fresh evidence, new source-backed work item, materially refreshed proposal backlog, or app-visible scheduler repair.
+  - Added backoff ledger fields for `consecutive_no_progress_runs`, `last_no_progress_reason`, `pause_recommended`, and `pause_after_consecutive_no_progress_runs`.
+  - Updated the live Lambchop workflow plus reusable templates and references so future target projects inherit the guard.
+- Validation:
+  - Lambchop state/backoff/dashboard-data JSON and reusable template JSON parse checks passed.
+  - Lambchop and DM4Me automation configs were re-read after update; both remain `PAUSED` with the weekly RRULE preserved.
+  - Automation-store audit passed with warnings only for pre-existing orphan folders.
+- Next step:
+  - Apply the guard to other active Lambchop-generated project automations as they are reviewed or upgraded.
+
+## 2026-05-14 11:29 - current contract upgrade pass
+
+- Status: done
+- Run id: `manual-20260514-current-contract-upgrade`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Source review:
+  - Read the latest upstream Lambchop README and `autonomous-coding-team/SKILL.md` from GitHub before editing.
+  - Reviewed local README, skill references, workflow architecture, work item model, scheduled plan, proof-of-work rules, validation checklist, state, dashboard data, and the existing `lambchop-autonomous-coding-team` automation.
+  - Preserved existing work items, progress history, proposal backlog, blockers, validation evidence, leases, commits, dashboard files, and automation id.
+- Changes:
+  - Added an operational glossary to the live workflow and reusable workflow template for scheduler-visible triggers, weekly anchors, orchestrator, parallel lanes, scopes, proposal backlog, and reactive status streams.
+  - Added automation identity/current-contract fields to state and dashboard templates.
+  - Reconciled Lambchop state/dashboard next action to the existing proposal backlog instead of creating duplicate work items.
+  - Updated the existing Codex automation prompt in place so future runs use adaptive 2-5 lane orchestration instead of the older single-item instruction.
+- Validation:
+  - `docs/lambchop/state.json`, `docs/lambchop/backoff.json`, `docs/lambchop/dashboard-data.json`, `autonomous-coding-team/assets/templates/state.json`, `autonomous-coding-team/assets/templates/backoff.json`, and `autonomous-coding-team/assets/templates/dashboard-data.json` parse as JSON.
+  - Workflow/template scan confirms glossary, adaptive parallel orchestration, dashboard registration, `/api/events`, proposal backlog, and no-progress pause guard language are present.
+  - Dashboard server and template server passed Node syntax checks.
+  - Existing automation id `lambchop-autonomous-coding-team` was preserved with PAUSED status and weekly RRULE.
+- Dashboard status:
+  - Hub port: `8765`; project API port: `8766`; project API public URL: `http://127.0.0.1:8766`.
+  - Dashboard files remain installed under `docs/lambchop/`; Docker live endpoint validation was not rerun in this pass.
+- Next work:
+  - Review proposal backlog entries `proposal-01-public-release-readiness`, `proposal-02-target-repo-upgrade-fixture`, and `proposal-03-dashboard-proposal-review-ui` before converting any to executable work.
+
+## 2026-05-14 11:44 - dashboard usability pass from browser annotations
+
+- Status: done
+- Run id: `manual-20260514-dashboard-usability`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Source review:
+  - Reviewed browser annotations on the shared dashboard hub at `http://localhost:8765/`.
+  - Confirmed the running hub is mounted from `C:\Users\BillMartin\dev\dm4me\docs\dm4me`; the selected NOPE project API is mounted from `C:\Users\BillMartin\dev\Nope\docs\nope`.
+  - Kept Lambchop as the reusable source of truth and propagated only generated dashboard assets to the running hub/API folders for immediate usability.
+- Changes:
+  - Replaced confusing dispatch chips such as `NOT_DISPATCHED` with plain labels such as `Main run`, with tooltip explanations for statuses and dispatch states.
+  - Made summary status tiles clickable filters for the work lists.
+  - Added work-card click handling that opens an evidence modal backed by `/api/work-item/<key>` and matching `progress.md` sections.
+  - Reworked the roadmap panel into a "where we are / queue / next decision / upcoming seeds" readout.
+  - Replaced raw progress tail display with recent proof highlights.
+  - Filtered the project dropdown and registered-project list to APIs seen in the last 20 seconds, with live indicators.
+- Live dashboard refresh:
+  - Updated Lambchop live dashboard files and reusable templates.
+  - Copied generated dashboard assets to the running DM4Me hub and NOPE project API, then rebuilt/restarted those dashboard containers.
+- Validation:
+  - Dashboard server syntax checks passed for Lambchop live/template, DM4Me live hub, and NOPE project API server files.
+  - JSON ledgers/templates parse checks passed for Lambchop state/backoff/dashboard data and reusable template JSON.
+  - Docker smoke on alternate ports passed: `/api/status`, `/api/events`, `/api/work-item/task-08-parallel-sprint-dashboard`, and hub `/api/projects`.
+  - Running hub check passed: `http://127.0.0.1:8765/api/projects` returns only live DM4Me and NOPE registrations after server-side live filtering.
+  - Running NOPE API check passed: `/api/work-item/maintenance-health-check-20260514` returns item detail and matching progress evidence.
+  - Browser screenshot through MCP Docker confirmed the refreshed hub UI shows live-only projects, status help markers, and the clearer roadmap layout.
+- Blockers:
+  - Chrome browser-harness direct verification was blocked by the local remote-debugging "Allow" prompt, so browser verification used MCP Docker plus direct HTTP checks.
+- Next work:
+  - If desired, propagate the generated dashboard asset refresh to non-running Lambchop projects when their APIs come online.

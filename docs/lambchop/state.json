@@ -13,6 +13,9 @@
     "worktree_root": ".worktrees",
     "branch_prefix": "codex/",
     "branch_name_template": "codex/lambchop-{work_item_key}",
+    "automation_id": "lambchop-autonomous-coding-team",
+    "automation_status": "PAUSED",
+    "contract_version": "lambchop-current-2026-05-14",
     "concurrency_mode": "cooperative",
     "max_concurrent_runs": 5,
     "lease_minutes": 120,
@@ -35,7 +38,9 @@
       "trigger_after_completed_active_run": true,
       "skip_trigger_when_paused_or_inactive": true,
       "preserve_weekly_rrule_on_run_now": true,
-      "forbid_worker_or_local_artifact_trigger_substitute": true
+      "forbid_worker_or_local_artifact_trigger_substitute": true,
+      "pause_after_consecutive_no_progress_runs": 3,
+      "skip_run_now_when_pause_recommended": true
     },
     "autonomy_policy": {
       "default_mode": "local-commit",
@@ -48,7 +53,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-08T14:55:00-05:00",
+    "updated_at": "2026-05-14T11:44:14.9481931-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -808,12 +813,12 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-implementation-20260511-dashboard-hub",
-    "started_at": "2026-05-11T15:45:00-05:00",
-    "work_item_key": "task-08-parallel-sprint-dashboard",
+    "run_id": "manual-20260514-dashboard-usability",
+    "started_at": "2026-05-14T11:44:14.9481931-05:00",
+    "work_item_key": "dashboard-usability-pass",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-11T15:45:00-05:00",
-    "next_action": "Review the proposal backlog and approve, edit, or reject candidate next Lambchop work before automation converts proposals into todo items."
+    "dashboard_updated_at": "2026-05-14T11:44:14.9481931-05:00",
+    "next_action": "Dashboard usability pass is installed; review proposal backlog entries before converting any to executable work."
   }
 }

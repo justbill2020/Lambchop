@@ -28,7 +28,7 @@ Every configured repo should contain:
 - cooperative lease rules
 - review consolidation and blocked-work recheck rules
 - local-only operator input rules for ignored private files, credentials, or fixtures
-- weekly schedule anchor, completion trigger, and pause-skip rules
+- weekly schedule anchor, no-progress pause guard, completion trigger, and pause-skip rules
 - TDD, verification, commit, blocker, and reconciliation rules
 
 ## Run Loop
@@ -52,13 +52,20 @@ Every automation run:
 16. After completion, plan or select the next item before schedule finalization; if the queue is exhausted, create PRD/spec-backed proposals with `needs_user_review` instead of merely reporting all tasks complete.
 17. Keep dashboard data current from real workflow evidence so the Dockerized dashboard server shows live status.
 18. Update state, progress, schedule/trigger ledger, and automation memory.
-19. If the automation is ACTIVE, trigger the next scheduler-visible run while preserving the weekly RRULE; if PAUSED or inactive, skip the trigger and record why.
-20. Stop safely if blocked.
+19. Apply the no-progress pause guard before triggering: reset the counter after real work, increment it after no-progress, and pause the automation after 3 consecutive no-progress runs.
+20. If the automation is ACTIVE and the no-progress guard did not pause or block triggering, trigger the next scheduler-visible run while preserving the weekly RRULE; if PAUSED or inactive, skip the trigger and record why.
+21. Stop safely if blocked.
 
 ## Project Chat Intake
 Interactive project chats are intake sessions by default when the user says they need something, reports a bug, or says something is broken. They investigate and document; they do not implement.
 
 An intake chat may inspect files, run diagnostic or reproduction checks, and identify likely ownership. It must then create or update bounded work items in the generated state file, append an intake note to progress, refresh dashboard data when applicable, and leave the item `todo` or `blocked`. Production code changes, bug fixes, feature implementation, refactors, and done-state promotion are reserved for the recurring coding automation unless the user explicitly overrides the intake-only rule for that chat.
+
+## No-Progress Pause Guard
+
+No-progress runs are runs that only repeat an existing blocker, fail to claim or advance eligible work, leave validation/tooling failures unchanged, or restate true no-work without creating new source-backed tasks or actionable proposals. Real work resets the counter only when state, progress, and dashboard evidence show a validated completion, a blocked/review item advanced with fresh evidence, a new source-backed item, a materially refreshed proposal backlog, or an app-visible scheduler repair.
+
+Persist `consecutive_no_progress_runs`, `last_no_progress_reason`, `pause_recommended`, and `pause_after_consecutive_no_progress_runs` in the backoff ledger. When the counter reaches 3, pause the automation through Codex app automation tooling and skip any run-now trigger. If the app-visible pause cannot be persisted, leave the weekly anchor untouched, skip run-now anyway, and report manual scheduler repair as the next step.
 
 ## Parallel Sprint Orchestration
 The main automation run is always the orchestrator. It should prefer parallel execution when 2 or more independent ready work items exist, up to a cap of 5 lanes.

@@ -3,6 +3,10 @@
   "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
   "completion_trigger": "trigger_next_run_when_active",
   "last_work_found": null,
+  "consecutive_no_progress_runs": 0,
+  "last_no_progress_reason": null,
+  "pause_recommended": false,
+  "pause_after_consecutive_no_progress_runs": 3,
   "last_result": "initialized",
   "last_trigger_result": null,
   "updated_at": "<ISO8601_TIMESTAMP>"

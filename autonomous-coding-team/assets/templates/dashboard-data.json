@@ -4,6 +4,8 @@
     "slug": "<PROJECT_SLUG>",
     "phase": "<CURRENT_MILESTONE>",
     "purpose": "<PROJECT_PURPOSE>",
+    "automation_id": "<AUTOMATION_ID>",
+    "contract_version": "lambchop-current-2026-05-14",
     "updated_at": "<ISO8601_TIMESTAMP>"
   },
   "summary": {

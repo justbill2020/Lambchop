@@ -31,6 +31,7 @@ automation:
     max_subagents: 5
     orchestrator: main-automation-run
   lease_minutes: 120
+  no_progress_pause_threshold: 3
   integration_branch: <INTEGRATION_BRANCH>
   publish_default: local-branch
   repository_root: .
@@ -73,6 +74,18 @@ Use instruction words consistently:
 - `Would` is explanatory or conditional and is not a command by itself.
 
 When instructions conflict, follow explicit user intent first, then safety, then verified behavior, then convenience.
+
+## Operational Glossary
+
+- `scheduler-visible run-now trigger`: an app-native trigger or verified scheduler database update that causes the same Codex automation to run again while preserving its weekly RRULE.
+- `weekly anchor`: the persisted cron RRULE that lets the operator pause, resume, or manually nudge the automation even when completion triggers are used for continuous active work.
+- `main automation run`: the orchestrator that selects work, owns scheduler updates, integrates lane results, validates, updates ledgers/dashboard data, and commits coherent completed changes.
+- `parallel lane`: one bounded work item assigned to a local worker or subagent with its own branch, worktree, lease, validation, and non-overlapping `exclusive_scope`.
+- `exclusive_scope`: files, folders, or behavior a lane owns exclusively; overlapping live exclusive scopes block unsafe parallel dispatch.
+- `shared_scope`: coordination files that may be touched by multiple lanes only when the orchestrator reconciles conflicts and records the integration risk.
+- `project chat intake`: a normal interactive Codex chat in this repository where the user reports a feature request, bug, regression, rough need, or "this is broken" style issue outside a scheduled automation run.
+- `proposal_backlog`: candidate next work with `needs_user_review`; proposals are visible in the dashboard but are not executable work items until the user approves or edits them.
+- `reactive status stream`: the project API `/api/events` server-sent event stream and hub `/api/project-events` registry stream that publish real state/progress/backoff/dashboard changes.
 
 ## Allowed Actions
 By default, automation may:
@@ -157,8 +170,9 @@ Every automation run must:
 20. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review.
 21. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/<PROJECT_SLUG>/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
 22. Update state, progress, and the schedule/trigger ledger.
-23. Apply the completion trigger protocol: if the automation is ACTIVE, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
-24. Append an operator summary for the user.
+23. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.
+24. Apply the completion trigger protocol: if the automation is ACTIVE and the no-progress guard did not pause or block triggering, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
+25. Append an operator summary for the user.
 
 If the active item cannot be finished in one run, leave it `in_progress` or `blocked` with an exact next step.
 
@@ -254,6 +268,30 @@ The automation should keep itself moving by triggering the next scheduler-visibl
 - Record trigger result, pause status, scheduler evidence, and any blocker in progress and memory.
 
 Use `docs/<PROJECT_SLUG>/backoff.json` as a historical schedule/trigger ledger until templates are renamed. It records desired trigger behavior and actual scheduler persistence; it is not proof that the app-visible schedule changed.
+
+## No-Progress Pause Guard
+
+The automation must pause itself after 3 consecutive runs that accomplish no real work. This guard runs before the completion trigger and takes precedence over continuing the loop.
+
+Real work means at least one of these happened and was recorded in state, progress, and dashboard data:
+
+- a work item was completed with validation evidence
+- a blocked or review item changed state because fresh evidence cleared or advanced it
+- a new source-backed work item was created from the scheduled work plan or repo evidence
+- a proposal backlog was newly created or materially refreshed with actionable choices for the user
+- a scheduler/tooling repair changed app-visible automation behavior
+
+No-progress runs include repeated reports of the same blocker, inability to claim or work any eligible item, validation/tooling failures that leave the same next step, skipped triggers caused by missing automation tooling, and true no-work findings that only restate previously recorded evidence.
+
+For every run, update `docs/<PROJECT_SLUG>/backoff.json` with:
+
+- `last_work_found`: whether real work was accomplished
+- `consecutive_no_progress_runs`: reset to `0` after real work, otherwise increment by `1`
+- `last_no_progress_reason`: the exact blocker or no-op reason when no real work happened
+- `pause_recommended`: `true` once the counter reaches `3`
+- `pause_after_consecutive_no_progress_runs`: `3`
+
+When `consecutive_no_progress_runs >= 3`, attempt to pause this automation through Codex app automation tooling by setting status to `PAUSED` while preserving the weekly RRULE and all unrelated fields. If the pause succeeds, record the app-visible paused status in progress, backoff, dashboard data, and memory. If pause persistence is unavailable or fails, do not trigger run-now; record that pause persistence is blocked, leave the weekly anchor untouched, and tell the user manual scheduler repair is needed.
 
 ## Scheduled Work Planning
 Use `docs/<PROJECT_SLUG>/scheduled-work-plan.md` as the roadmap and task-generation source.

@@ -14,6 +14,7 @@ Every run appends a progress entry with:
 - skipped checks with reason, risk, and later command
 - local commit id when code changed
 - state and schedule/trigger ledger updates
+- no-progress counter update, including whether the run reset the counter or incremented it
 - scheduler-visible trigger result, including whether pause/inactive status skipped the trigger
 - review consolidation evidence when moving review items to done
 - blocked-item recheck evidence before honoring or clearing a blocker
@@ -28,6 +29,12 @@ Weekly self-trigger scheduling has separate facts:
 - Scheduler state: whether the actual automation row was ACTIVE or PAUSED and whether `next_run_at` or app-native run-now produced a new automation run.
 
 Record all three. Local ledger updates alone do not prove the scheduler-visible trigger happened. If Codex app run-now tooling is unavailable, use the `writing-automation` local scheduler DB run-now path; if that cannot verify a new run, mark schedule finalization as blocked with evidence.
+
+## No-Progress Pause Proof
+
+Before any run-now trigger, prove whether the run accomplished real work. Real work is a validated completion, fresh evidence that advances a blocked/review item, creation of a new source-backed item, material proposal-backlog refresh, or an app-visible scheduler repair. If none of those happened, record the no-progress reason and increment the backoff ledger's `consecutive_no_progress_runs`.
+
+At 3 consecutive no-progress runs, the proof entry must show the attempted app-visible pause, the preserved weekly RRULE, the final automation status when it can be verified, and that no run-now trigger was requested. If pause persistence is blocked, record the app/runtime evidence and the manual scheduler repair needed.
 
 ## Completion Rule
 Do not mark a work item done unless the progress entry includes validation evidence and state points to the same result. If validation could not run, the item is blocked or in progress, not done.

@@ -66,6 +66,7 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Advance related milestone packets only when ownership, shared scope, and combined validation are explicit.
 - Commit coherent completed changes locally with validation in the commit body.
 - Update state, progress, and schedule/trigger ledgers after every run.
+- Pause the automation after 3 consecutive runs with no real progress before requesting another scheduler-visible run.
 - After completing one item, plan or select the next eligible item from the scheduled work plan before trigger finalization; if the queue is exhausted, generate PRD/spec-backed proposal backlog entries for user review instead of reporting only that all tasks are complete.
 - Use a weekly cron RRULE as the persisted schedule anchor.
 - Trigger the next scheduler-visible run after a completed ACTIVE run; skip the trigger when the automation is PAUSED or inactive.
@@ -90,3 +91,4 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Bundling related tasks without distinct ownership and shared-scope reconciliation.
 - Marking work done without validation evidence.
 - Hiding adaptive schedule logic in prose instead of updating the actual automation schedule.
+- Letting a blocked/no-op automation self-trigger forever after repeated runs accomplish no real work.

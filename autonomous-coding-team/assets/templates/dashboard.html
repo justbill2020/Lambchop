@@ -33,14 +33,33 @@
     .grid { display: grid; gap: 16px; }
     .summary { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 24px; }
     .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(23, 32, 27, .04); }
+    .panel.button { text-align: left; cursor: pointer; transition: border-color .15s ease, transform .15s ease; }
+    .panel.button:hover, .panel.button.active { border-color: var(--accent); transform: translateY(-1px); }
     .metric { font-size: 30px; font-weight: 700; }
     .label, .meta { font-size: 13px; }
     .cols { grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr); align-items: start; }
     .lane { border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin-top: 10px; background: #fbfcfa; }
+    .lane.clickable { cursor: pointer; }
+    .lane.clickable:hover { border-color: var(--accent); }
     .status { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 8px; border-radius: 999px; background: #e9f3f4; color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    .status.todo { background: #eef4ff; color: #175cd3; }
+    .status.in_progress, .status.dispatched { background: #fff8db; color: #854a0e; }
     .status.blocked { background: #fff4ed; color: var(--warn); }
     .status.done { background: #ecfdf3; color: var(--good); }
+    .status.skipped, .status.not_useful, .status.not_dispatched { background: #f2f4f7; color: #475467; }
     .status.failed_validation, .status.conflicted { background: #fef3f2; color: var(--bad); }
+    .hint { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 5px; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--good); margin-right: 6px; }
+    .filter-bar { display: none; align-items: center; justify-content: space-between; gap: 12px; margin: 12px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #f2f7f7; }
+    .filter-bar.active { display: flex; }
+    button.link { border: 0; background: transparent; color: var(--accent); cursor: pointer; font: inherit; padding: 0; }
+    .readout { display: grid; gap: 10px; }
+    .readout strong { display: block; }
+    .modal-backdrop { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(15, 23, 42, .44); z-index: 10; }
+    .modal-backdrop.open { display: flex; }
+    .modal { width: min(900px, 100%); max-height: min(820px, 92vh); overflow: auto; background: var(--panel); border-radius: 8px; border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(15, 23, 42, .22); padding: 20px; }
+    .modal-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+    .modal pre { background: #f8faf9; border: 1px solid var(--line); border-radius: 8px; padding: 12px; color: var(--ink); }
     dl { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 6px 10px; margin: 10px 0 0; }
     dt { color: var(--muted); font-size: 13px; }
     dd { margin: 0; overflow-wrap: anywhere; }
@@ -59,18 +78,19 @@
       <span class="meta" id="refresh-status">Connecting to dashboard hub...</span>
     </div>
     <section class="grid summary" aria-label="Status summary">
-      <div class="panel"><div class="metric" id="todo-count">0</div><div class="label">Todo</div></div>
-      <div class="panel"><div class="metric" id="active-count">0</div><div class="label">In progress</div></div>
-      <div class="panel"><div class="metric" id="blocked-count">0</div><div class="label">Blocked</div></div>
-      <div class="panel"><div class="metric" id="done-count">0</div><div class="label">Done</div></div>
-      <div class="panel"><div class="metric" id="proposal-count">0</div><div class="label">Needs review</div></div>
-      <div class="panel"><div class="metric" id="lane-count">0</div><div class="label">Active lanes</div></div>
+      <button class="panel button" data-filter="todo" title="Work ready to claim."><div class="metric" id="todo-count">0</div><div class="label">Todo <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="in_progress" title="Work currently claimed by a run or lane."><div class="metric" id="active-count">0</div><div class="label">In progress <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="blocked" title="Work that cannot continue until a named issue is cleared."><div class="metric" id="blocked-count">0</div><div class="label">Blocked <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="done" title="Work completed with recorded validation evidence."><div class="metric" id="done-count">0</div><div class="label">Done <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="proposal" title="Ideas waiting for approval before they become executable work."><div class="metric" id="proposal-count">0</div><div class="label">Needs review <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="in_progress" title="Parallel work lanes currently active."><div class="metric" id="lane-count">0</div><div class="label">Active lanes <span class="hint">?</span></div></button>
     </section>
   </header>
   <main class="grid cols">
     <section class="panel">
       <h2>Current Run</h2>
       <div id="current-run" class="lane"><p class="meta">Waiting for run data.</p></div>
+      <div id="filter-bar" class="filter-bar"><span id="filter-label"></span><button class="link" id="clear-filter" type="button">Clear filter</button></div>
       <h2 style="margin-top: 18px;">Active Lanes</h2>
       <div id="lanes"><p class="meta">No active lanes.</p></div>
       <h2 style="margin-top: 18px;">Latest Work</h2>
@@ -83,8 +103,7 @@
       </section>
       <section class="panel">
         <h2>Roadmap</h2>
-        <p class="meta" id="milestone"></p>
-        <ul id="backlog"></ul>
+        <div id="roadmap-summary" class="readout"></div>
       </section>
       <section class="panel">
         <h2>Proposal Backlog</h2>
@@ -99,11 +118,23 @@
         <p id="next-action"></p>
       </section>
       <section class="panel">
-        <h2>Progress Tail</h2>
-        <pre id="progress-tail"></pre>
+        <h2>Recent Proof</h2>
+        <div id="progress-highlights" class="readout"></div>
       </section>
     </aside>
   </main>
+  <div class="modal-backdrop" id="work-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2 id="modal-title">Work evidence</h2>
+          <p class="meta" id="modal-subtitle"></p>
+        </div>
+        <button class="link" id="modal-close" type="button">Close</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
   <script>
     const byId = (id) => document.getElementById(id);
     const text = (id, value) => { byId(id).textContent = value ?? ""; };
@@ -111,17 +142,67 @@
     let projects = [];
     let selectedSlug = localStorage.getItem("lambchop.selectedProject") || "";
     let projectEvents = null;
+    let latestStatus = null;
+    let activeFilter = "";
+
+    const statusHelp = {
+      todo: "Ready to claim when dependencies and scope allow it.",
+      in_progress: "Claimed by a run or parallel lane right now.",
+      blocked: "Cannot continue until a specific issue or missing input is cleared.",
+      done: "Completed with validation evidence recorded.",
+      skipped: "Intentionally not worked, with a reason recorded.",
+      dispatched: "Sent to a subagent lane for bounded implementation.",
+      not_dispatched: "Handled by the main run, not sent to a separate subagent.",
+      not_useful: "Parallel dispatch was considered but not helpful for this item.",
+      failed_validation: "Work ran, but a required check failed.",
+      conflicted: "A lane result needs orchestrator reconciliation before completion."
+    };
+
+    function statusMeta(item) {
+      const dispatch = item.dispatch_status || "";
+      const status = item.status || "unknown";
+      if (dispatch && dispatch !== "not_dispatched" && dispatch !== "not_useful") {
+        return { key: dispatch, label: labelize(dispatch), help: statusHelp[dispatch] || statusHelp[status] || "" };
+      }
+      if (dispatch === "not_dispatched") {
+        return { key: "not_dispatched", label: "Main run", help: statusHelp.not_dispatched };
+      }
+      if (dispatch === "not_useful") {
+        return { key: "not_useful", label: "Main run", help: statusHelp.not_useful };
+      }
+      return { key: status, label: labelize(status), help: statusHelp[status] || "" };
+    }
+
+    function labelize(value) {
+      return String(value || "unknown").replace(/_/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase());
+    }
+
+    function formatList(values) {
+      if (!Array.isArray(values) || !values.length) return "not recorded";
+      return values.map((value) => {
+        if (typeof value === "string") return value;
+        if (value?.command && value?.status) return `${value.status}: ${value.command}`;
+        if (value?.status) return value.status;
+        return JSON.stringify(value);
+      }).join("; ");
+    }
+
+    function matchesFilter(item) {
+      if (!activeFilter) return true;
+      if (activeFilter === "proposal") return false;
+      return item.status === activeFilter;
+    }
 
     function renderItem(item) {
-      const status = item.dispatch_status || item.status || "unknown";
-      return `<article class="lane">
+      const status = statusMeta(item);
+      return `<article class="lane clickable" tabindex="0" data-work-key="${escapeHtml(item.key || "")}">
         <h3>${escapeHtml(item.key || "work-item")}: ${escapeHtml(item.title || "")}</h3>
-        <span class="status ${escapeHtml(item.status || status)}">${escapeHtml(status)}</span>
+        <span class="status ${escapeHtml(status.key)}" title="${escapeHtml(status.help)}">${escapeHtml(status.label)} <span class="hint">?</span></span>
         <dl>
           <dt>Subagent</dt><dd>${escapeHtml(item.assigned_subagent || "main run")}</dd>
           <dt>Branch</dt><dd>${escapeHtml(item.branch || "not claimed")}</dd>
           <dt>Worktree</dt><dd>${escapeHtml(item.worktree || "not created")}</dd>
-          <dt>Validation</dt><dd>${escapeHtml((item.validation || []).join("; ") || "not run")}</dd>
+          <dt>Validation</dt><dd>${escapeHtml(formatList(item.validation) || "not run")}</dd>
           <dt>Next step</dt><dd>${escapeHtml(item.next_step || "")}</dd>
         </dl>
       </article>`;
@@ -153,8 +234,8 @@
 
     function renderProjectList() {
       byId("registered-projects").innerHTML = projects.length
-        ? projects.map((project) => `<article class="lane"><h3>${escapeHtml(project.name || project.slug)}</h3><p class="meta">${escapeHtml(project.api_url || "")}</p></article>`).join("")
-        : `<p class="meta">No project APIs have registered yet.</p>`;
+        ? projects.map((project) => `<article class="lane"><h3><span class="live-dot"></span>${escapeHtml(project.name || project.slug)}</h3><p class="meta">Live at ${escapeHtml(project.api_url || "")}</p></article>`).join("")
+        : `<p class="meta">No live project APIs have registered in the last 20 seconds.</p>`;
     }
 
     function renderProjectOptions() {
@@ -169,6 +250,7 @@
     }
 
     function renderStatus(data) {
+      latestStatus = data;
       const summary = data.summary || {};
       text("project-name", data.project?.name || "Lambchop project");
       text("project-purpose", data.project?.purpose || "");
@@ -179,15 +261,61 @@
       text("done-count", summary.done || 0);
       text("proposal-count", summary.proposals_need_review || 0);
       text("lane-count", summary.active_parallel_lanes || 0);
-      text("milestone", data.roadmap?.current_milestone || data.project?.phase || "");
       text("next-action", summary.next_action || "");
       byId("current-run").innerHTML = renderRun(data.current_run);
-      byId("lanes").innerHTML = data.active_lanes?.length ? data.active_lanes.map(renderItem).join("") : `<p class="meta">No active lanes.</p>`;
-      byId("latest-work").innerHTML = data.latest_work_items?.length ? data.latest_work_items.map(renderItem).join("") : `<p class="meta">No work items yet.</p>`;
+      const activeLanes = (data.active_lanes || []).filter(matchesFilter);
+      const latestItems = (data.latest_work_items || []).filter(matchesFilter);
+      byId("lanes").innerHTML = activeLanes.length ? activeLanes.map(renderItem).join("") : `<p class="meta">No active lanes${activeFilter ? " for this filter" : ""}.</p>`;
+      byId("latest-work").innerHTML = latestItems.length ? latestItems.map(renderItem).join("") : `<p class="meta">No work items${activeFilter ? " for this filter" : " yet"}.</p>`;
       byId("proposal-backlog").innerHTML = data.proposal_backlog?.length ? data.proposal_backlog.map(renderProposal).join("") : `<p class="meta">No proposals need review.</p>`;
       byId("blocked").innerHTML = data.blocked?.length ? data.blocked.map(renderItem).join("") : `<p class="meta">No blocked work.</p>`;
-      byId("backlog").innerHTML = (data.roadmap?.next_backlog_seeds || []).map((seed) => `<li>${escapeHtml(seed.replace(/^- /, ""))}</li>`).join("");
-      text("progress-tail", (data.progress_tail || []).join("\n"));
+      renderRoadmap(data);
+      renderProgress(data);
+      renderFilterBar();
+    }
+
+    function renderRoadmap(data) {
+      const summary = data.summary || {};
+      const seeds = (data.roadmap?.next_backlog_seeds || []).slice(0, 5);
+      byId("roadmap-summary").innerHTML = `
+        <p><strong>Where we are</strong>${escapeHtml(data.roadmap?.current_milestone || data.project?.phase || "No milestone recorded.")}</p>
+        <p><strong>Queue</strong>${summary.todo || 0} todo, ${summary.in_progress || 0} in progress, ${summary.blocked || 0} blocked, ${summary.proposals_need_review || 0} awaiting review.</p>
+        <p><strong>Next decision</strong>${escapeHtml(summary.next_action || "Waiting for the next automation update.")}</p>
+        ${seeds.length ? `<p><strong>Upcoming seeds</strong></p><ul>${seeds.map((seed) => `<li>${escapeHtml(seed.replace(/^- /, ""))}</li>`).join("")}</ul>` : ""}`;
+    }
+
+    function renderProgress(data) {
+      const lines = data.progress_highlights || [];
+      byId("progress-highlights").innerHTML = lines.length
+        ? lines.map((line) => `<p>${escapeHtml(line)}</p>`).join("")
+        : `<p class="meta">No recent proof entries yet.</p>`;
+    }
+
+    function renderFilterBar() {
+      document.querySelectorAll("[data-filter]").forEach((button) => button.classList.toggle("active", button.dataset.filter === activeFilter));
+      byId("filter-bar").classList.toggle("active", Boolean(activeFilter));
+      text("filter-label", activeFilter ? `Showing ${labelize(activeFilter)} work below.` : "");
+    }
+
+    function liveProjects(rawProjects) {
+      const now = Date.now();
+      return (rawProjects || []).filter((project) => {
+        const seen = Date.parse(project.last_seen_at || project.registry_updated_at || "");
+        return Number.isFinite(seen) && now - seen < 20000;
+      });
+    }
+
+    function browserReachableUrl(value) {
+      try {
+        const url = new URL(value);
+        const pageHost = window.location.hostname;
+        if ((url.hostname === "127.0.0.1" || url.hostname === "localhost") && pageHost !== "127.0.0.1" && pageHost !== "localhost") {
+          url.hostname = pageHost;
+        }
+        return url.toString();
+      } catch {
+        return value;
+      }
     }
 
     function connectProjectStream() {
@@ -197,7 +325,7 @@
         text("refresh-status", "Waiting for a project API to register.");
         return;
       }
-      projectEvents = new EventSource(project.events_endpoint);
+      projectEvents = new EventSource(browserReachableUrl(project.events_endpoint));
       projectEvents.addEventListener("status", (event) => renderStatus(JSON.parse(event.data)));
       projectEvents.onerror = () => {
         text("refresh-status", `Project stream unavailable: ${project.events_endpoint}`);
@@ -205,16 +333,55 @@
     }
 
     function applyProjects(payload) {
-      projects = payload.projects || [];
+      projects = liveProjects(payload.projects);
       renderProjectList();
       renderProjectOptions();
       connectProjectStream();
+    }
+
+    async function openWorkModal(key) {
+      const project = projects.find((entry) => entry.slug === selectedSlug);
+      if (!project || !key) return;
+      byId("modal-title").textContent = key;
+      byId("modal-subtitle").textContent = "Loading progress evidence...";
+      byId("modal-body").innerHTML = "";
+      byId("work-modal").classList.add("open");
+      try {
+        const response = await fetch(`${browserReachableUrl(project.api_url)}/api/work-item/${encodeURIComponent(key)}`, { cache: "no-store" });
+        const evidence = await response.json();
+        byId("modal-subtitle").textContent = `${evidence.source_file || "progress.md"} - ${evidence.note || ""}`;
+        byId("modal-body").innerHTML = `
+          ${evidence.item ? renderItem(evidence.item).replace("clickable", "") : ""}
+          ${(evidence.sections || []).map((section) => `<pre>${escapeHtml(section)}</pre>`).join("")}`;
+      } catch (error) {
+        byId("modal-subtitle").textContent = "Could not load work evidence.";
+        byId("modal-body").innerHTML = `<p>${escapeHtml(error.message)}</p>`;
+      }
     }
 
     byId("project-select").addEventListener("change", (event) => {
       selectedSlug = event.target.value;
       localStorage.setItem("lambchop.selectedProject", selectedSlug);
       connectProjectStream();
+    });
+
+    document.addEventListener("click", (event) => {
+      const filterButton = event.target.closest("[data-filter]");
+      if (filterButton) {
+        activeFilter = activeFilter === filterButton.dataset.filter ? "" : filterButton.dataset.filter;
+        if (latestStatus) renderStatus(latestStatus);
+      }
+      const workCard = event.target.closest("[data-work-key]");
+      if (workCard) openWorkModal(workCard.dataset.workKey);
+    });
+
+    byId("clear-filter").addEventListener("click", () => {
+      activeFilter = "";
+      if (latestStatus) renderStatus(latestStatus);
+    });
+    byId("modal-close").addEventListener("click", () => byId("work-modal").classList.remove("open"));
+    byId("work-modal").addEventListener("click", (event) => {
+      if (event.target.id === "work-modal") byId("work-modal").classList.remove("open");
     });
 
     const hubEvents = new EventSource("/api/project-events");

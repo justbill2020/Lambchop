@@ -12,6 +12,7 @@ const projectName = process.env.LAMBCHOP_PROJECT_NAME || "Lambchop";
 const projectApiUrl = process.env.LAMBCHOP_PROJECT_API_PUBLIC_URL || "http://127.0.0.1:8766";
 const projectRegistrationFile = path.join(registryRoot, `${projectSlug}.json`);
 const watchFiles = ["state.json", "dashboard-data.json", "backoff.json", "progress.md", "scheduled-work-plan.md"];
+const liveProjectWindowMs = Number(process.env.LAMBCHOP_LIVE_PROJECT_WINDOW_MS || 20000);
 
 const statusClients = new Set();
 const registryClients = new Set();
@@ -35,8 +36,47 @@ async function readLines(fileName, tail = 40) {
   }
 }
 
+async function readText(fileName) {
+  try {
+    return await readFile(path.join(root, fileName), "utf8");
+  } catch {
+    return "";
+  }
+}
+
 function count(items, status) {
   return items.filter((item) => item.status === status).length;
+}
+
+function isLiveProject(project) {
+  const seen = Date.parse(project?.last_seen_at || project?.registry_updated_at || "");
+  return Number.isFinite(seen) && Date.now() - seen < liveProjectWindowMs;
+}
+
+function progressSections(progressText) {
+  const sections = [];
+  const chunks = progressText.split(/\n(?=##\s+)/);
+  for (const chunk of chunks) {
+    const trimmed = chunk.trim();
+    if (trimmed.startsWith("## ")) sections.push(trimmed);
+  }
+  return sections;
+}
+
+function simplifyProgressLine(line) {
+  return line
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\s+/g, " ")
+    .replace(/^- /, "")
+    .trim();
+}
+
+function progressHighlights(lines) {
+  const useful = lines
+    .map(simplifyProgressLine)
+    .filter((line) => /status:|run id:|next step:|next work:|blocked|validation|scheduler|trigger|done|created|paused|failed/i.test(line))
+    .slice(-8);
+  return useful.length ? useful : lines.map(simplifyProgressLine).filter(Boolean).slice(-5);
 }
 
 async function statusPayload() {
@@ -44,6 +84,7 @@ async function statusPayload() {
   const dashboard = await readJson("dashboard-data.json");
   const backoff = await readJson("backoff.json");
   const progressTail = await readLines("progress.md", 50);
+  const progressText = await readText("progress.md");
   const planLines = await readLines("scheduled-work-plan.md", 200);
   const items = Array.isArray(state?.work_items) ? state.work_items : Array.isArray(dashboard?.work_items) ? dashboard.work_items : [];
   const proposals = Array.isArray(state?.proposal_backlog) ? state.proposal_backlog : Array.isArray(dashboard?.proposal_backlog) ? dashboard.proposal_backlog : [];
@@ -78,7 +119,30 @@ async function statusPayload() {
       next_backlog_seeds: planSeeds
     },
     scheduler: backoff,
-    progress_tail: progressTail
+    progress_tail: progressTail,
+    progress_highlights: progressHighlights(progressTail),
+    evidence_sources: {
+      progress_file: "progress.md",
+      state_file: "state.json",
+      scheduled_work_plan_file: "scheduled-work-plan.md"
+    },
+    latest_progress_section: progressSections(progressText).at(-1) || ""
+  };
+}
+
+async function workItemEvidence(key) {
+  const state = await readJson("state.json");
+  const dashboard = await readJson("dashboard-data.json");
+  const items = Array.isArray(state?.work_items) ? state.work_items : Array.isArray(dashboard?.work_items) ? dashboard.work_items : [];
+  const item = items.find((entry) => entry.key === key) || null;
+  const progressText = await readText("progress.md");
+  const matchingSections = progressSections(progressText).filter((section) => section.includes(key));
+  return {
+    key,
+    item,
+    source_file: "progress.md",
+    sections: matchingSections.length ? matchingSections : progressSections(progressText).slice(-1),
+    note: matchingSections.length ? "Matched progress entries that mention this work item." : "No exact progress entry matched this work item, so the latest run entry is shown."
   };
 }
 
@@ -115,7 +179,7 @@ async function registeredProjects() {
         // Ignore partial writes from containers that are currently registering.
       }
     }
-    return projects.sort((a, b) => String(a.name || a.slug).localeCompare(String(b.name || b.slug)));
+    return projects.filter(isLiveProject).sort((a, b) => String(a.name || a.slug).localeCompare(String(b.name || b.slug)));
   } catch {
     return [];
   }
@@ -208,6 +272,12 @@ const server = createServer(async (req, res) => {
 
   if (url.pathname === "/api/projects") {
     send(res, 200, "application/json; charset=utf-8", JSON.stringify({ generated_at: new Date().toISOString(), projects: await registeredProjects() }));
+    return;
+  }
+
+  if (url.pathname.startsWith("/api/work-item/")) {
+    const key = decodeURIComponent(url.pathname.replace("/api/work-item/", ""));
+    send(res, 200, "application/json; charset=utf-8", JSON.stringify(await workItemEvidence(key)));
     return;
   }
 

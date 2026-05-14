@@ -15,6 +15,9 @@
     "dashboard_compose_file": "docs/<PROJECT_SLUG>/dashboard.compose.yml",
     "dashboard_env_file": "docs/<PROJECT_SLUG>/dashboard.env",
     "dashboard_server_dir": "docs/<PROJECT_SLUG>/dashboard-server",
+    "automation_id": "<AUTOMATION_ID>",
+    "automation_status": "ACTIVE",
+    "contract_version": "lambchop-current-2026-05-14",
     "dashboard_hub_port": 8765,
     "project_api_port": 8766,
     "worktree_root": ".worktrees",
@@ -73,7 +76,9 @@
       "trigger_after_completed_active_run": true,
       "skip_trigger_when_paused_or_inactive": true,
       "preserve_weekly_rrule_on_run_now": true,
-      "forbid_worker_or_local_artifact_trigger_substitute": true
+      "forbid_worker_or_local_artifact_trigger_substitute": true,
+      "pause_after_consecutive_no_progress_runs": 3,
+      "skip_run_now_when_pause_recommended": true
     },
     "autonomy_policy": {
       "default_mode": "local-commit",
