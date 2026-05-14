@@ -1,21 +1,36 @@
 {
-  "schedule_mode": "weekly-anchor-with-completion-trigger",
-  "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+  "schedule_mode": "parked-weekly-anchor-with-completion-trigger",
+  "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE",
+  "parked_anchor_policy": {
+    "mode": "yesterday_at_noon",
+    "timezone": "operator_local",
+    "recalculate_before_automation_update": true,
+    "recalculate_before_run_now_trigger": true,
+    "prevents_normal_schedule_extra_runs": true,
+    "example": "On Thursday, set BYDAY=WE and BYHOUR=12."
+  },
+  "maintenance_pause_policy": {
+    "pause_before_workflow_or_automation_update": true,
+    "unpause_after_successful_update": true,
+    "do_not_trigger_run_now_after_unpause": true,
+    "leave_running_processes_alone": true,
+    "leave_paused_when_user_requests_or_validation_blocks": true
+  },
   "completion_trigger": "trigger_next_run_when_active",
   "last_work_found": true,
   "consecutive_no_progress_runs": 0,
   "last_no_progress_reason": null,
   "pause_recommended": false,
   "pause_after_consecutive_no_progress_runs": 3,
-  "last_result": "dashboard_usability_pass",
-  "last_trigger_result": "not_attempted_manual_repo_update",
-  "updated_at": "2026-05-14T11:44:14.9481931-05:00",
+  "last_result": "task-09-dashboard-usability-pass",
+  "last_trigger_result": "db_run_now_triggered",
+  "updated_at": "2026-05-14T12:02:37.4491456-05:00",
   "scheduler_persistence": {
-    "desired_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
-    "actual_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
-    "status": "automation_update_applied_paused",
+    "desired_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE",
+    "actual_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE",
+    "status": "db_run_now_verified",
     "automation_id": "lambchop-autonomous-coding-team",
-    "last_checked_at": "2026-05-14T11:44:14.9481931-05:00",
-    "notes": "Dashboard usability pass installed in Lambchop templates and live dashboard assets. Lambchop automation remains paused; do not trigger next_run_at while paused."
+    "last_checked_at": "2026-05-14T12:02:37.4491456-05:00",
+    "notes": "Verified scheduler DB row for lambchop-autonomous-coding-team: status ACTIVE, parked RRULE preserved (BYDAY=WE). Backed up codex-dev.db and set next_run_at to now; observed a new automation_runs row (thread_id 019e2770-266c-7a80-af5f-ab4898a9e0cf, status IN_PROGRESS). After triggering, next_run_at reset to the weekly anchor (2026-05-20 12:00 America/Chicago)."
   }
 }

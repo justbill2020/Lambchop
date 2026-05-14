@@ -14,7 +14,7 @@
     "branch_prefix": "codex/",
     "branch_name_template": "codex/lambchop-{work_item_key}",
     "automation_id": "lambchop-autonomous-coding-team",
-    "automation_status": "PAUSED",
+    "automation_status": "ACTIVE",
     "contract_version": "lambchop-current-2026-05-14",
     "concurrency_mode": "cooperative",
     "max_concurrent_runs": 5,
@@ -33,11 +33,22 @@
       "no_work_requires_scheduled_plan_check": true
     },
     "scheduling_policy": {
-      "mode": "weekly_anchor_with_completion_trigger",
-      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+      "mode": "parked_weekly_anchor_with_completion_trigger",
+      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE",
+      "parked_anchor_policy": {
+        "mode": "yesterday_at_noon",
+        "timezone": "operator_local",
+        "recalculate_before_automation_update": true,
+        "recalculate_before_run_now_trigger": true,
+        "prevents_normal_schedule_extra_runs": true,
+        "example": "On Thursday, set BYDAY=WE and BYHOUR=12."
+      },
       "trigger_after_completed_active_run": true,
       "skip_trigger_when_paused_or_inactive": true,
-      "preserve_weekly_rrule_on_run_now": true,
+      "repair_parked_weekly_rrule_on_run_now": true,
+      "pause_before_automation_maintenance": true,
+      "unpause_after_successful_maintenance": true,
+      "do_not_trigger_run_now_after_maintenance_unpause": true,
       "forbid_worker_or_local_artifact_trigger_substitute": true,
       "pause_after_consecutive_no_progress_runs": 3,
       "skip_run_now_when_pause_recommended": true
@@ -53,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-14T11:44:14.9481931-05:00",
+    "updated_at": "2026-05-14T12:02:37.4491456-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -757,6 +768,80 @@
         "reconciled_at": "2026-05-11T14:05:00-05:00"
       },
       "updated_at": "2026-05-11T14:05:00-05:00"
+    },
+    {
+      "key": "task-09-dashboard-usability-pass",
+      "title": "Dashboard usability pass (filters + evidence modal)",
+      "type": "dashboard-usability",
+      "status": "done",
+      "priority": 25,
+      "dependencies": [
+        "task-08-parallel-sprint-dashboard"
+      ],
+      "source_refs": [
+        "docs/lambchop/dashboard.html",
+        "docs/lambchop/dashboard-server/server.mjs",
+        "docs/lambchop/progress.md"
+      ],
+      "acceptance_criteria": [
+        "Dashboard uses clearer lane labels and tooltips for dispatch statuses.",
+        "Summary tiles filter the work list.",
+        "Clicking a work card opens evidence modal backed by /api/work-item/<key> and progress sections.",
+        "Roadmap panel shows where we are / queue / next decision / seeds, and progress highlights replace raw tail spam."
+      ],
+      "implementation_notes": [
+        "Reconciled and committed the dashboard usability improvements into Lambchop docs and reusable templates."
+      ],
+      "validation": [
+        "git preflight: temp branch/worktree + ledger R/W OK",
+        "docs and template JSON parse checks passed (state/backoff/dashboard-data)",
+        "node --check passed for docs and template dashboard-server/server.mjs",
+        "placeholder scan: <PLACEHOLDER_*> outside templates OK"
+      ],
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "commit": "7ce826a",
+      "blocker": null,
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": "run-2026-05-14T164622Z-a917c1",
+        "parallelism_reason": "No dependency-safe independent todo items existed; reconciled and committed the pending dashboard usability pass in one lane."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_useful",
+      "integration_status": "ready",
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "autonomous-coding-team/assets/templates/",
+        "autonomous-coding-team/references/",
+        "docs/lambchop/dashboard.html",
+        "docs/lambchop/dashboard-server/",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/backoff.json"
+      ],
+      "shared_scope": [
+        "docs/lambchop/"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items.",
+      "integration": {
+        "target_branch": "main",
+        "status": "ready",
+        "merged_at": "2026-05-14T11:49:28-05:00",
+        "merge_commit": "7ce826a",
+        "reconciled_at": "2026-05-14T12:02:37.4491456-05:00"
+      },
+      "updated_at": "2026-05-14T12:02:37.4491456-05:00"
     }
   ],
   "proposal_backlog": [
@@ -813,12 +898,12 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-20260514-dashboard-usability",
-    "started_at": "2026-05-14T11:44:14.9481931-05:00",
-    "work_item_key": "dashboard-usability-pass",
+    "run_id": "run-2026-05-14T164622Z-a917c1",
+    "started_at": "2026-05-14T11:46:22-05:00",
+    "work_item_key": "task-09-dashboard-usability-pass",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-14T11:44:14.9481931-05:00",
-    "next_action": "Dashboard usability pass is installed; review proposal backlog entries before converting any to executable work."
+    "dashboard_updated_at": "2026-05-14T12:02:37.4491456-05:00",
+    "next_action": "Run-now trigger queued a new automation run (thread_id 019e2770-266c-7a80-af5f-ab4898a9e0cf); review proposal backlog entries to choose the next work packet."
   }
 }

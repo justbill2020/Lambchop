@@ -571,3 +571,71 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Chrome browser-harness direct verification was blocked by the local remote-debugging "Allow" prompt, so browser verification used MCP Docker plus direct HTTP checks.
 - Next work:
   - If desired, propagate the generated dashboard asset refresh to non-running Lambchop projects when their APIs come online.
+
+## 2026-05-14 12:02 - automation run reconciliation + scheduler-visible run-now
+
+- Status: done
+- Run id: `run-2026-05-14T164622Z-a917c1`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Work item: `task-09-dashboard-usability-pass` (done)
+- Changes:
+  - Committed the dashboard usability pass into `main` (`7ce826a`).
+  - Reconciled state/dashboard ledgers: added `task-09-dashboard-usability-pass`, updated `last_run`, and set automation status to `ACTIVE`.
+- Validation:
+  - Git write-access preflight passed (temp branch + temp worktree + ledger R/W).
+  - JSON parse checks passed for `docs/lambchop/state.json`, `docs/lambchop/backoff.json`, `docs/lambchop/dashboard-data.json`, and matching templates.
+  - `node --check` passed for `docs/lambchop/dashboard-server/server.mjs` and the template server.
+  - Placeholder scan passed: no `<PLACEHOLDER_*>` tokens outside templates.
+  - Scheduler run-now trigger verified:
+    - Backed up `C:\Users\BillMartin\.codex\sqlite\codex-dev.db` to `C:\Users\BillMartin\.codex\sqlite\codex-dev.db.bak-20260514-120022`.
+    - Set `automations.next_run_at` via SQLite and observed a new `automation_runs` row (thread_id `019e2770-266c-7a80-af5f-ab4898a9e0cf`, status `IN_PROGRESS`).
+    - Parked weekly RRULE remained `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE`.
+- Parallelism:
+  - Not useful: no dependency-safe independent `todo` items exist; next work requires proposal review.
+- Warnings:
+  - `audit_automation_store.py` reports unrelated active folders missing `automation.toml` (registry hygiene debt).
+- Next work:
+  - Review proposals: `proposal-01-public-release-readiness`, `proposal-02-target-repo-upgrade-fixture`, `proposal-03-dashboard-proposal-review-ui`.
+
+## 2026-05-14 12:00 - parked weekly anchor scheduling policy
+
+- Status: done
+- Run id: `manual-20260514-parked-weekly-anchor`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Source review:
+  - Reviewed the live workflow, reusable workflow template, automation prompt guidance, proof-of-work rules, validation checklist, state ledger, backoff ledger, setup guidance, and deployment checklist.
+  - Confirmed the existing contract used a weekly anchor plus run-now trigger, but did not require parking the normal schedule safely in the past.
+- Changes:
+  - Replaced the normal weekly anchor rule with a parked weekly anchor rule: before any automation update or run-now trigger, compute yesterday in the operator timezone and persist the automation's normal RRULE as weekly on that weekday at noon.
+  - Added explicit Thursday example: on Thursday, May 14, 2026, the parked anchor is Wednesday at noon: `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE`.
+  - Updated live Lambchop state/backoff ledgers and reusable JSON templates with `parked_anchor_policy`.
+  - Updated automation prompt and proof guidance so scheduler evidence must record the parked-anchor RRULE, not only the run-now trigger.
+  - Updated the app-visible `lambchop-autonomous-coding-team` automation to `ACTIVE` with `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE`; a future next normal run about one week out is expected and avoids same-day overlap with currently running automations.
+- Validation:
+  - JSON parse checks passed for live and template state/backoff files.
+  - Text scan confirms the workflow, template, automation prompt, proof rules, deployment checklist, setup guidance, validation checklist, and lessons reference the parked weekly anchor policy.
+  - Automation-store audit ran after the app update. It reported pre-existing active folders missing `automation.toml` (`lane-NA-042`, `lane-NA-043`, `run-20260514-101506-953411b9`, `run-20260514-111530-bfaebe27`, `run-20260514-112941-xpdak`); Lambchop's automation record itself was readable and showed the parked active schedule.
+- Next work:
+  - When the automation is next edited or triggered through app tooling, verify the app-visible RRULE is repaired to the current previous weekday at noon before setting `next_run_at`.
+
+## 2026-05-14 12:08 - automation maintenance pause protocol
+
+- Status: done
+- Run id: `manual-20260514-maintenance-pause-protocol`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Source review:
+  - Reviewed Bill's clarification that automation maintenance should pause the scheduler before updating workflow, prompts, schedule, or status fields.
+  - Preserved the rule that already-running automation processes should not be stopped; pausing is only to prevent additional scheduler starts while maintenance is underway.
+- Changes:
+  - Added the maintenance pause protocol to the live workflow and reusable workflow template.
+  - Updated skill guidance, automation prompt guidance, proof requirements, validation checklist, workflow architecture, state/backoff templates, live state/backoff, and dashboard data.
+  - Added the rule that maintenance unpause must not automatically trigger run-now; ask Bill before starting another automation run.
+- Validation:
+  - `lambchop-autonomous-coding-team` was paused through Codex app automation tooling before these automation-maintenance edits.
+  - JSON parse checks passed for live and template state/backoff files plus dashboard data.
+  - Text scan confirms maintenance pause language exists across workflow, template, skill guidance, automation prompt, proof rules, validation checklist, and workflow architecture.
+- Next work:
+  - Unpause `lambchop-autonomous-coding-team` after final verification, keeping the parked weekly anchor on yesterday at noon and not triggering run-now.

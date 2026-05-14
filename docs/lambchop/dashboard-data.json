@@ -6,17 +6,17 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-14",
-    "updated_at": "2026-05-14T11:44:14.9481931-05:00"
+    "updated_at": "2026-05-14T12:02:37.4491456-05:00"
   },
   "summary": {
     "todo": 0,
     "in_progress": 0,
     "blocked": 0,
-    "done": 10,
+    "done": 11,
     "skipped": 0,
     "proposals_need_review": 3,
     "active_parallel_lanes": 0,
-    "next_action": "Dashboard usability pass is installed; review proposal backlog entries before converting any to executable work."
+    "next_action": "Run-now trigger queued a new automation run; review proposal backlog entries to choose the next work packet."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -144,6 +144,26 @@
       ],
       "blocker": null,
       "next_step": "Run docker compose from docs/lambchop to view live automation status while the workflow updates state/progress/backoff files."
+    },
+    {
+      "key": "task-09-dashboard-usability-pass",
+      "title": "Dashboard usability pass (filters + evidence modal)",
+      "status": "done",
+      "priority": 25,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_useful",
+      "integration_status": "ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "git preflight: temp branch/worktree + ledger R/W OK",
+        "docs and template JSON parse checks passed (state/backoff/dashboard-data)",
+        "node --check passed for docs and template dashboard-server/server.mjs",
+        "placeholder scan: <PLACEHOLDER_*> outside templates OK"
+      ],
+      "blocker": null,
+      "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items."
     }
   ],
   "proposal_backlog": [
@@ -218,18 +238,22 @@
     "operational glossary added to workflow and reusable workflow template",
     "automation prompt upgraded from single-item language to adaptive 2-5 lane orchestration",
     "dashboard usability pass validated: live-only project picker, status tooltips, summary filters, work-item evidence modal, clearer roadmap, recent proof highlights",
-    "running DM4Me hub and NOPE project API refreshed with generated dashboard assets"
+    "running DM4Me hub and NOPE project API refreshed with generated dashboard assets",
+    "parked weekly anchor policy added: automation updates and run-now triggers must set the normal RRULE to yesterday at noon, currently BYDAY=WE for 2026-05-14",
+    "app automation parked: lambchop-autonomous-coding-team is ACTIVE with BYDAY=WE; next normal run is expected to be about one week out",
+    "maintenance pause policy added: pause the scheduler before workflow/automation edits, leave already-running processes alone, unpause after successful validation, and do not run-now after unpause unless Bill asks"
   ],
   "commits": [
-    "1753bf1"
+    "1753bf1",
+    "7ce826a"
   ],
   "last_run": {
-    "run_id": "manual-20260514-dashboard-usability",
-    "started_at": "2026-05-14T11:44:14.9481931-05:00",
-    "work_item_key": "dashboard-usability-pass",
+    "run_id": "run-2026-05-14T164622Z-a917c1",
+    "started_at": "2026-05-14T11:46:22-05:00",
+    "work_item_key": "task-09-dashboard-usability-pass",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-14T11:44:14.9481931-05:00",
-    "next_action": "Dashboard usability pass is installed; review proposal backlog entries before converting any to executable work."
+    "dashboard_updated_at": "2026-05-14T12:02:37.4491456-05:00",
+    "next_action": "Run-now trigger queued a new automation run; review proposal backlog entries to choose the next work packet."
   }
 }
