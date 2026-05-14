@@ -73,6 +73,15 @@ Automation may inspect the repo, create worktrees, create local `codex/lambchop-
 ## Forbidden Actions
 Automation must not publish branches, open pull requests, deploy, modify production configuration, use external trackers, delete or revert user work, do implementation work directly in the main checkout after setup, overwrite another live lease, or mark work done without validation evidence.
 
+## Project Chat Intake
+When Bill reports a new need, feature request, bug, regression, vague problem, or "this is broken" issue in an ordinary project chat, that chat session must act as an intake agent, not an implementation agent.
+
+The intake chat may investigate enough to produce a useful task. It may inspect relevant files, run safe read-only or diagnostic checks, reproduce the issue when practical, identify likely ownership, and update workflow ledgers. It must not edit production code, implement the feature, fix the bug, refactor nearby code, or mark the work done. If documentation-only clarification is required to make the task understandable, keep it limited to the work item/progress/dashboard ledgers.
+
+The intake chat must create or update one or more bounded work items in `docs/lambchop/state.json` with source references, acceptance criteria, implementation notes, validation expectations, exclusive scope, shared scope, blockers if any, and a clear `next_step`. It must append an intake entry to `docs/lambchop/progress.md`, refresh `docs/lambchop/dashboard-data.json` when applicable, and set status to `todo` unless the item is blocked by a missing decision or unavailable local input.
+
+After intake, the chat should tell Bill what task was queued and what evidence was captured. The actual implementation must wait for the recurring coding automation or an explicit user instruction that overrides this intake-only rule for the current chat.
+
 ## Run Loop
 Every automation run must:
 

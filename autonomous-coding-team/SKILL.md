@@ -55,6 +55,7 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Use cooperative leases; a live `in_progress` item is not a global lock.
 - Prefer adaptive parallel sprint packets of 2 to 5 independent work items when dependencies and `exclusive_scope` allow it.
 - Keep the main automation run as orchestrator for subagent dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.
+- Treat ordinary project chats about new needs, feature requests, bugs, regressions, or "this is broken" reports as intake only: investigate, document evidence, and queue bounded work items for the recurring automation instead of implementing fixes in that chat.
 - Use TDD for production behavior and record RED/GREEN evidence.
 - Use Superpowers `dispatching-parallel-agents` for bounded non-overlapping subagent lanes when available and useful.
 - Fall back to single-item local work when fewer than 2 independent tasks exist or multi-agent support is unavailable, and record why.
@@ -78,6 +79,7 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Using a minute-interval automation as the default instead of a weekly anchor plus completion trigger.
 - Triggering the next run while the automation is paused.
 - Doing implementation work in the main checkout.
+- Letting an ordinary project chat fix a feature request or bug instead of creating documented work items for the recurring automation.
 - Treating one live lease as a global lock.
 - Serializing independent sprint work when 2 to 5 safe subagent lanes are available.
 - Letting a subagent act as orchestrator, update scheduler fields, or overwrite another lane.

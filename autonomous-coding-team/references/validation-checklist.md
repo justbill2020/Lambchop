@@ -14,6 +14,7 @@ Before claiming a setup is complete, confirm:
 - setup does not allocate a new GUI port per repo; it allocates a project API port and registers the project with the shared dashboard hub.
 - the Dockerized project API responds locally, `/api/status` returns live workflow data, `/api/events` streams updates, and the hub `/api/projects` registry includes the project.
 - The workflow states local-only safety defaults.
+- The workflow includes project chat intake rules: ordinary chats investigate user-reported needs or breakages, create/update queued work items and progress evidence, and do not implement unless explicitly overridden.
 - Push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts are forbidden by default.
 - Worktree root and branch naming are present.
 - Git write-access preflight is required before claiming work.
@@ -61,6 +62,7 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Dashboard accuracy: does the live dashboard reflect state counts, active lanes, blockers, validation, commits, roadmap seeds, current run, progress tail, and next action from real workflow data?
 - Review consolidation: does the agent re-run evidence before moving review items to done?
 - Private local input: does the agent require ignored paths or environment-only configuration and log only bounded public evidence?
+- Project chat intake: when the user says "I need this" or "this is broken" in a normal chat, does the agent investigate, document, and queue bounded work for automation instead of fixing it directly?
 - "Fully autonomous" pressure: does the agent keep push, PR, deploy, and external trackers disabled until explicitly enabled?
 - Local skill deployment: can the skill be installed/linked into `$CODEX_HOME/skills/` and then discovered by Codex?
 

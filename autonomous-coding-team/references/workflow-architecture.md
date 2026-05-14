@@ -19,6 +19,7 @@ Every configured repo should contain:
 - scheduled work plan path and planner rules
 - automation memory paths
 - allowed and forbidden actions
+- project chat intake rules for turning user-reported needs or breakages into queued work without implementing them in the chat session
 - run loop and git preflight
 - worktree and branch conventions
 - work item schema and statuses
@@ -53,6 +54,11 @@ Every automation run:
 18. Update state, progress, schedule/trigger ledger, and automation memory.
 19. If the automation is ACTIVE, trigger the next scheduler-visible run while preserving the weekly RRULE; if PAUSED or inactive, skip the trigger and record why.
 20. Stop safely if blocked.
+
+## Project Chat Intake
+Interactive project chats are intake sessions by default when the user says they need something, reports a bug, or says something is broken. They investigate and document; they do not implement.
+
+An intake chat may inspect files, run diagnostic or reproduction checks, and identify likely ownership. It must then create or update bounded work items in the generated state file, append an intake note to progress, refresh dashboard data when applicable, and leave the item `todo` or `blocked`. Production code changes, bug fixes, feature implementation, refactors, and done-state promotion are reserved for the recurring coding automation unless the user explicitly overrides the intake-only rule for that chat.
 
 ## Parallel Sprint Orchestration
 The main automation run is always the orchestrator. It should prefer parallel execution when 2 or more independent ready work items exist, up to a cap of 5 lanes.

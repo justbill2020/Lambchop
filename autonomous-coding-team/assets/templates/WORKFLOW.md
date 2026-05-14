@@ -101,6 +101,15 @@ Automation must not:
 
 These actions require explicit user permission and a workflow update.
 
+## Project Chat Intake
+When the user reports a new need, feature request, bug, regression, vague problem, or "this is broken" issue in an ordinary project chat, that chat session must act as an intake agent, not an implementation agent.
+
+The intake chat may investigate enough to produce a useful task. It may inspect relevant files, run safe read-only or diagnostic checks, reproduce the issue when practical, identify likely ownership, and update workflow ledgers. It must not edit production code, implement the feature, fix the bug, refactor nearby code, or mark the work done. If documentation-only clarification is required to make the task understandable, keep it limited to the work item/progress/dashboard ledgers.
+
+The intake chat must create or update one or more bounded work items in `docs/<PROJECT_SLUG>/state.json` with source references, acceptance criteria, implementation notes, validation expectations, exclusive scope, shared scope, blockers if any, and a clear `next_step`. It must append an intake entry to `docs/<PROJECT_SLUG>/progress.md`, refresh `docs/<PROJECT_SLUG>/dashboard-data.json` when applicable, and set status to `todo` unless the item is blocked by a missing decision or unavailable local input.
+
+After intake, the chat should tell the user what task was queued and what evidence was captured. The actual implementation must wait for the recurring coding automation or an explicit user instruction that overrides this intake-only rule for the current chat.
+
 ## First Run Discovery
 On the first run, or whenever required project details are missing, inspect before selecting work:
 
