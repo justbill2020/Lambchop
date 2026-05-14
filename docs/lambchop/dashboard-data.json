@@ -6,13 +6,13 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-14",
-    "updated_at": "2026-05-14T12:19:02.021-05:00"
+    "updated_at": "2026-05-14T12:34:57.466-05:00"
   },
   "summary": {
     "todo": 0,
     "in_progress": 0,
     "blocked": 0,
-    "done": 12,
+    "done": 13,
     "skipped": 0,
     "proposals_need_review": 3,
     "active_parallel_lanes": 0,
@@ -184,6 +184,23 @@
       ],
       "blocker": null,
       "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items."
+    },
+    {
+      "key": "task-11-ledger-reconcile-dashboard-commits",
+      "title": "Reconcile dashboard commit evidence against state and progress",
+      "status": "done",
+      "priority": 15,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_useful",
+      "integration_status": "ready",
+      "branch": "codex/lambchop-task-11-ledger-reconcile-dashboard-commits",
+      "worktree": ".worktrees/task-11-ledger-reconcile",
+      "validation": [
+        "docs/lambchop/{state,backoff,dashboard-data} parse as JSON"
+      ],
+      "blocker": null,
+      "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items."
     }
   ],
   "proposal_backlog": [
@@ -265,16 +282,18 @@
     "maintenance unpause verified: lambchop-autonomous-coding-team ACTIVE, BYDAY=WE, next normal run 2026-05-20 12:00 America/Chicago"
   ],
   "commits": [
-    "1753bf1",
-    "7ce826a"
+    "47d6927",
+    "8628254",
+    "7ce826a",
+    "1753bf1"
   ],
   "last_run": {
-    "run_id": "manual-20260514-task-10-scheduler-guardrails",
-    "started_at": "2026-05-14T12:19:02.021-05:00",
-    "work_item_key": "task-10-scheduler-guardrails",
+    "run_id": "run-20260514T123457-ledger-reconcile",
+    "started_at": "2026-05-14T12:34:57.466-05:00",
+    "work_item_key": "task-11-ledger-reconcile-dashboard-commits",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-14T12:19:02.021-05:00",
-    "next_action": "Review proposal backlog entries; do not trigger run-now after maintenance unless Bill explicitly asks."
+    "dashboard_updated_at": "2026-05-14T12:34:57.466-05:00",
+    "next_action": "Review proposal backlog entries; do not trigger run-now unless Bill explicitly asks."
   }
 }

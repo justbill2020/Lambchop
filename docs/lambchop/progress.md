@@ -661,3 +661,19 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Scheduler DB check: `status=ACTIVE`, `rrule=RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE`, `next_run_at=2026-05-20T12:00:00-05:00`.
 - Next work:
   - Review proposals: `proposal-01-public-release-readiness`, `proposal-02-target-repo-upgrade-fixture`, `proposal-03-dashboard-proposal-review-ui`.
+
+## 2026-05-14 12:35 - task-11 ledger commit reconciliation
+
+- Status: done
+- Run id: `run-20260514T123457-ledger-reconcile`
+- Branch: `codex/lambchop-task-11-ledger-reconcile-dashboard-commits`
+- Worktree: `.worktrees/task-11-ledger-reconcile`
+- Work item: `task-11-ledger-reconcile-dashboard-commits` (done)
+- Changes:
+  - Reconciled `docs/lambchop/state.json` to record the `task-10-scheduler-guardrails` commit (`47d6927`).
+  - Refreshed `docs/lambchop/dashboard-data.json` to include the most recent guardrail commits (`47d6927`, `8628254`) and record task-11.
+  - Updated `docs/lambchop/backoff.json` to record the ledger-only run and note no scheduler action.
+- Validation:
+  - JSON parse checks passed for `docs/lambchop/state.json`, `docs/lambchop/backoff.json`, and `docs/lambchop/dashboard-data.json`.
+- Next work:
+  - Review proposals: `proposal-01-public-release-readiness`, `proposal-02-target-repo-upgrade-fixture`, `proposal-03-dashboard-proposal-review-ui`.
