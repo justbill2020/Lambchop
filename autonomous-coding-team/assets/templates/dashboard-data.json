@@ -25,6 +25,15 @@
     "max_subagents": 5,
     "last_parallelism_decision": "Initial setup starts with one discovery item until independent work is generated."
   },
+  "hooks": {
+    "mode": "repo-local",
+    "status": "installed",
+    "hooks_file": ".codex/hooks.json",
+    "hooks_dir": ".codex/hooks",
+    "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
+    "last_checked_at": "<ISO8601_TIMESTAMP>",
+    "notes": "Hooks improve active-session quality; automations remain required for unattended recurrence."
+  },
   "roadmap": {
     "current_milestone": "<CURRENT_MILESTONE>",
     "planning_sources": [

@@ -15,7 +15,7 @@
     "branch_name_template": "codex/lambchop-{work_item_key}",
     "automation_id": "lambchop-autonomous-coding-team",
     "automation_status": "ACTIVE",
-    "contract_version": "lambchop-current-2026-05-14",
+    "contract_version": "lambchop-current-2026-05-15-hooks",
     "concurrency_mode": "cooperative",
     "max_concurrent_runs": 5,
     "lease_minutes": 120,
@@ -34,7 +34,7 @@
     },
     "scheduling_policy": {
       "mode": "parked_weekly_anchor_with_completion_trigger",
-      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=WE",
+      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
       "parked_anchor_policy": {
         "mode": "yesterday_at_noon",
         "timezone": "operator_local",
@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-14T12:34:57.466-05:00",
+    "updated_at": "2026-05-15T11:14:23.3442214-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -100,7 +100,16 @@
       "reactive_updates": "server-sent-events"
     },
     "dashboard_compose_file": "docs/lambchop/dashboard.compose.yml",
-    "dashboard_server_dir": "docs/lambchop/dashboard-server"
+    "dashboard_server_dir": "docs/lambchop/dashboard-server",
+    "hooks": {
+      "mode": "repo-local",
+      "status": "installed",
+      "hooks_file": ".codex/hooks.json",
+      "hooks_dir": ".codex/hooks",
+      "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
+      "last_checked_at": "2026-05-15T11:14:23.3442214-05:00",
+      "notes": "Installed in Lambchop and templated for setup/in-place upgrades; automations remain required for unattended recurrence."
+    }
   },
   "work_items": [
     {
@@ -934,6 +943,64 @@
       },
       "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items.",
       "updated_at": "2026-05-14T12:34:57.466-05:00"
+    },
+    {
+      "key": "task-12-repo-local-hooks-upgrade",
+      "title": "Add repo-local Codex hooks to Lambchop setup and upgrade flow",
+      "type": "workflow-hooks",
+      "status": "done",
+      "priority": 20,
+      "dependencies": [
+        "task-10-scheduler-guardrails"
+      ],
+      "source_refs": [
+        "WORKFLOW.md",
+        "README.md",
+        "autonomous-coding-team/SKILL.md",
+        "autonomous-coding-team/assets/templates/.codex/hooks.json"
+      ],
+      "acceptance_criteria": [
+        "New target repos receive repo-local Lambchop hook templates.",
+        "In-place upgrades merge Lambchop hooks while preserving unrelated hook handlers.",
+        "Hooks provide balanced guardrails for session start, prompt intake, pre-tool safety, post-tool evidence, and stop completion checks.",
+        "Workflow/state/dashboard/progress evidence records hook status and automation fallback."
+      ],
+      "validation": [
+        "RED: node --test tests/lambchop-hooks.test.mjs failed before hook templates/install script existed.",
+        "GREEN: node --test tests/lambchop-hooks.test.mjs (8 tests, 0 failures).",
+        "python -m py_compile passed for template and installed Lambchop hook scripts.",
+        "JSON parse passed for .codex/hooks.json, template hooks.json, live state/backoff/dashboard data, and matching templates.",
+        "git diff --check passed with line-ending warnings only.",
+        "automation-store audit found pre-existing unrelated active folders missing automation.toml; Lambchop automation itself remained parseable and was updated through app tooling."
+      ],
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "README.md",
+        "autonomous-coding-team/",
+        "docs/lambchop/",
+        ".codex/",
+        "tests/lambchop-hooks.test.mjs"
+      ],
+      "shared_scope": [
+        "Codex app automation status/prompt/rrule"
+      ],
+      "next_step": "Review proposals or run a target-repo in-place upgrade pressure test that verifies hook merge behavior in a real Lambchop-managed project.",
+      "lease": {
+        "owner": null,
+        "run_id": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "completed_at": "2026-05-15T11:14:23.3442214-05:00"
     }
   ],
   "proposal_backlog": [
@@ -990,12 +1057,12 @@
     }
   ],
   "last_run": {
-    "run_id": "run-20260514T123457-ledger-reconcile",
-    "started_at": "2026-05-14T12:34:57.466-05:00",
-    "work_item_key": "task-11-ledger-reconcile-dashboard-commits",
+    "run_id": "manual-20260515-repo-local-hooks-upgrade",
+    "started_at": "2026-05-15T11:14:23.3442214-05:00",
+    "work_item_key": "task-12-repo-local-hooks-upgrade",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-14T12:34:57.466-05:00",
-    "next_action": "Review proposal backlog entries; do not trigger run-now unless Bill explicitly asks."
+    "dashboard_updated_at": "2026-05-15T11:14:23.3442214-05:00",
+    "next_action": "Review proposal backlog entries or pressure-test in-place hook upgrade in a target repo; no run-now trigger was requested after maintenance unpause."
   }
 }

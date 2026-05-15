@@ -15,6 +15,8 @@ automation:
   dashboard_compose_file: docs/lambchop/dashboard.compose.yml
   dashboard_env_file: docs/lambchop/dashboard.env
   dashboard_server_dir: docs/lambchop/dashboard-server
+  hooks_file: .codex/hooks.json
+  hooks_dir: .codex/hooks
   dashboard_hub_port: 8765
   project_api_default_port: 8766
   memory_file_primary: $CODEX_HOME/automations/lambchop-autonomous-coding-team/memory.md
@@ -51,8 +53,9 @@ Use these sources in this order:
 3. `docs/lambchop/progress.md` records human-readable proof of work.
 4. `docs/lambchop/scheduled-work-plan.md` defines how future tasks are planned when the queue is empty.
 5. `docs/lambchop/dashboard-data.json`, `docs/lambchop/dashboard.html`, `docs/lambchop/dashboard.compose.yml`, `docs/lambchop/dashboard.env`, and `docs/lambchop/dashboard-server/` provide the current visual operating picture.
-6. `autonomous-coding-team/` contains the skill, references, and templates.
-7. Repository files and validation results are the source of truth for implemented behavior.
+6. `.codex/hooks.json` and `.codex/hooks/lambchop_*.py` provide repo-local active-session guardrails when trusted by Codex.
+7. `autonomous-coding-team/` contains the skill, references, and templates.
+8. Repository files and validation results are the source of truth for implemented behavior.
 
 If these sources disagree, preserve explicit user intent first, then implemented passing behavior, then safety and data integrity. Update state/progress to match reality and record the reconciliation.
 
@@ -79,6 +82,7 @@ When instructions conflict, follow explicit user intent first, then safety, then
 - `project chat intake`: a normal interactive Codex chat in this repository where Bill reports a feature request, bug, regression, rough need, or "this is broken" style issue outside a scheduled automation run.
 - `proposal_backlog`: candidate next work with `needs_user_review`; proposals are visible in the dashboard but are not executable work items until Bill approves or edits them.
 - `reactive status stream`: the project API `/api/events` server-sent event stream and hub `/api/project-events` registry stream that publish real state/progress/backoff/dashboard changes.
+- `repo-local hooks`: Codex lifecycle hooks installed under `.codex/` for active-session context, safety guardrails, evidence reminders, and completion checks. They improve automation and chat quality but do not replace the unattended cron automation.
 
 ## Allowed Actions
 Automation may inspect the repo, create worktrees, create local `codex/lambchop-{work_item_key}` branches, edit skill/docs/templates for the active item, run validation commands, commit locally, and update state/progress/schedule ledgers.
@@ -95,6 +99,13 @@ The intake chat must create or update one or more bounded work items in `docs/la
 
 After intake, the chat should tell Bill what task was queued and what evidence was captured. The actual implementation must wait for the recurring coding automation or an explicit user instruction that overrides this intake-only rule for the current chat.
 
+## Repo-Local Codex Hooks
+When Codex project hooks are available and trusted, Lambchop must install or repair `.codex/hooks.json` and `.codex/hooks/lambchop_*.py` during setup and in-place upgrades. Hook installation must use merge-namespaced behavior: preserve unrelated existing hook handlers, remove stale Lambchop-owned handlers identified by `lambchop_` commands, then append the current Lambchop hook groups.
+
+Hooks are an active-session quality layer. They load Lambchop context on session start, reinforce intake behavior for user prompts, block clearly forbidden local actions before supported tool calls, remind Codex to record evidence after risky or failed tool calls, and continue a turn when required Lambchop completion evidence is missing. They are not a complete enforcement boundary and they do not replace the parked weekly cron automation or scheduler-visible completion trigger.
+
+If project hooks are unavailable, untrusted, or blocked by malformed existing hook config, record `hooks.status` as `unavailable` or `blocked` in state, progress, and dashboard data. Continue with the automation-only contract and make hook repair a visible next action.
+
 ## Run Loop
 Every automation run must:
 
@@ -102,22 +113,23 @@ Every automation run must:
 2. Read this workflow plus state, progress, backoff, and scheduled work plan ledgers.
 3. Resolve automation memory.
 4. Inspect repository structure, git status, branches, remotes, and worktrees.
-5. Run git write-access preflight before selecting work.
-6. Reconcile state/progress with repository reality.
-7. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, using dependency and lease rules plus non-overlapping `exclusive_scope`. If fewer than 2 independent items are available, select one eligible item and record why parallelism was not useful.
-8. Recheck blocked work and consolidate any review-ready work only after fresh validation evidence.
-9. Claim the selected item or sprint packet with leases.
-10. Work in `.worktrees/{work_item_key}` on `codex/lambchop-{work_item_key}`.
-11. When a sprint packet has 2 or more independent items and subagents are available, the main automation run orchestrates bounded parallel subagents. It dispatches one self-contained task per work item, requires Superpowers `dispatching-parallel-agents`, TDD, and verification guidance, and keeps ownership of integration, state, progress, dashboard regeneration, commits, and scheduler finalization.
-12. Use TDD-style proof for skill behavior: write or identify a pressure scenario first, then update the skill/templates, then validate that the scenario is addressed.
-13. Integrate subagent results one at a time, reconcile shared-scope risks, and mark each lane as completed, blocked, conflicted, failed_validation, or not_useful.
-14. Run relevant validation.
-15. Commit coherent completed changes locally with validation details.
-16. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review.
-17. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/lambchop/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
-18. Update state, progress, and the schedule/trigger ledger.
-19. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.
-20. Apply the completion trigger protocol: if the automation is ACTIVE and the no-progress guard did not pause or block triggering, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
+5. Inspect repo-local hook status and repair Lambchop-owned hooks during setup or in-place upgrade work.
+6. Run git write-access preflight before selecting work.
+7. Reconcile state/progress with repository reality.
+8. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, using dependency and lease rules plus non-overlapping `exclusive_scope`. If fewer than 2 independent items are available, select one eligible item and record why parallelism was not useful.
+9. Recheck blocked work and consolidate any review-ready work only after fresh validation evidence.
+10. Claim the selected item or sprint packet with leases.
+11. Work in `.worktrees/{work_item_key}` on `codex/lambchop-{work_item_key}`.
+12. When a sprint packet has 2 or more independent items and subagents are available, the main automation run orchestrates bounded parallel subagents. It dispatches one self-contained task per work item, requires Superpowers `dispatching-parallel-agents`, TDD, and verification guidance, and keeps ownership of integration, state, progress, dashboard regeneration, commits, and scheduler finalization.
+13. Use TDD-style proof for skill behavior: write or identify a pressure scenario first, then update the skill/templates, then validate that the scenario is addressed.
+14. Integrate subagent results one at a time, reconcile shared-scope risks, and mark each lane as completed, blocked, conflicted, failed_validation, or not_useful.
+15. Run relevant validation.
+16. Commit coherent completed changes locally with validation details.
+17. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review.
+18. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/lambchop/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
+19. Update state, progress, and the schedule/trigger ledger.
+20. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.
+21. Apply the completion trigger protocol: if the automation is ACTIVE and the no-progress guard did not pause or block triggering, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
 
 ## Work Item Statuses
 Use only `todo`, `in_progress`, `blocked`, `done`, and `skipped`.

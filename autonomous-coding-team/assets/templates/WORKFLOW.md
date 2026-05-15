@@ -15,6 +15,8 @@ automation:
   dashboard_compose_file: docs/<PROJECT_SLUG>/dashboard.compose.yml
   dashboard_env_file: docs/<PROJECT_SLUG>/dashboard.env
   dashboard_server_dir: docs/<PROJECT_SLUG>/dashboard-server
+  hooks_file: .codex/hooks.json
+  hooks_dir: .codex/hooks
   dashboard_hub_port: 8765
   project_api_default_port: 8766
   memory_file_primary: $CODEX_HOME/automations/<AUTOMATION_ID>/memory.md
@@ -51,9 +53,10 @@ Use these sources in this order:
 3. `docs/<PROJECT_SLUG>/progress.md` records human-readable proof of work.
 4. `docs/<PROJECT_SLUG>/scheduled-work-plan.md` defines how future tasks are planned when the queue is empty.
 5. `docs/<PROJECT_SLUG>/dashboard-data.json`, `docs/<PROJECT_SLUG>/dashboard.html`, `docs/<PROJECT_SLUG>/dashboard.compose.yml`, `docs/<PROJECT_SLUG>/dashboard.env`, and `docs/<PROJECT_SLUG>/dashboard-server/` provide the current visual operating picture.
-6. `<SPECS_SOURCE>` contains project requirements, plans, specs, TODOs, or user instructions.
-7. Repository code and tests are the source of truth for implemented behavior.
-8. Existing documentation explains expected operation and should be updated when behavior changes.
+6. `.codex/hooks.json` and `.codex/hooks/lambchop_*.py` provide repo-local active-session guardrails when trusted by Codex.
+7. `<SPECS_SOURCE>` contains project requirements, plans, specs, TODOs, or user instructions.
+8. Repository code and tests are the source of truth for implemented behavior.
+9. Existing documentation explains expected operation and should be updated when behavior changes.
 
 If these sources disagree, stop and reconcile them in this order:
 
@@ -86,6 +89,7 @@ When instructions conflict, follow explicit user intent first, then safety, then
 - `project chat intake`: a normal interactive Codex chat in this repository where the user reports a feature request, bug, regression, rough need, or "this is broken" style issue outside a scheduled automation run.
 - `proposal_backlog`: candidate next work with `needs_user_review`; proposals are visible in the dashboard but are not executable work items until the user approves or edits them.
 - `reactive status stream`: the project API `/api/events` server-sent event stream and hub `/api/project-events` registry stream that publish real state/progress/backoff/dashboard changes.
+- `repo-local hooks`: Codex lifecycle hooks installed under `.codex/` for active-session context, safety guardrails, evidence reminders, and completion checks. They improve automation and chat quality but do not replace the unattended cron automation.
 
 ## Allowed Actions
 By default, automation may:
@@ -123,6 +127,13 @@ The intake chat must create or update one or more bounded work items in `docs/<P
 
 After intake, the chat should tell the user what task was queued and what evidence was captured. The actual implementation must wait for the recurring coding automation or an explicit user instruction that overrides this intake-only rule for the current chat.
 
+## Repo-Local Codex Hooks
+When Codex project hooks are available and trusted, Lambchop must install or repair `.codex/hooks.json` and `.codex/hooks/lambchop_*.py` during setup and in-place upgrades. Hook installation must use merge-namespaced behavior: preserve unrelated existing hook handlers, remove stale Lambchop-owned handlers identified by `lambchop_` commands, then append the current Lambchop hook groups.
+
+Hooks are an active-session quality layer. They load Lambchop context on session start, reinforce intake behavior for user prompts, block clearly forbidden local actions before supported tool calls, remind Codex to record evidence after risky or failed tool calls, and continue a turn when required Lambchop completion evidence is missing. They are not a complete enforcement boundary and they do not replace the parked weekly cron automation or scheduler-visible completion trigger.
+
+If project hooks are unavailable, untrusted, or blocked by malformed existing hook config, record `hooks.status` as `unavailable` or `blocked` in state, progress, and dashboard data. Continue with the automation-only contract and make hook repair a visible next action.
+
 ## First Run Discovery
 On the first run, or whenever required project details are missing, inspect before selecting work:
 
@@ -149,30 +160,31 @@ Every automation run must:
    - Windows fallback: `%USERPROFILE%\.codex\automations\<AUTOMATION_ID>\memory.md`
    - Unix fallback: `~/.codex/automations/<AUTOMATION_ID>/memory.md`
 4. Inspect repository structure, git status, current branch, remotes, local branches, and `git worktree list --porcelain`.
-5. Run git write-access preflight:
+5. Inspect repo-local hook status and repair Lambchop-owned hooks during setup or in-place upgrade work.
+6. Run git write-access preflight:
    - create and delete a temporary branch
    - create and remove a temporary worktree under `.worktrees/`
    - confirm state, progress, and backoff files can be updated
-6. Reconcile state/progress with repository reality before selecting work.
-7. Re-test any blocker before honoring a `blocked` item.
-8. Consolidate review-ready work only after fresh validation evidence.
-9. Apply cooperative concurrency rules before selecting work.
-10. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, using dependency and lease rules plus non-overlapping `exclusive_scope`. If fewer than 2 independent items are available, select one eligible item and record why parallelism was not useful.
-11. Create or reuse `.worktrees/<work-item-key>` for the active item.
-12. Use branch `codex/<PROJECT_SLUG>-<work-item-key>`.
-13. Work only the active item or sprint packet until complete or blocked.
-14. When a sprint packet has 2 or more independent items and subagents are available, the main automation run orchestrates bounded parallel subagents. It dispatches one self-contained task per work item, requires Superpowers `dispatching-parallel-agents`, TDD, and verification guidance, and keeps ownership of integration, state, progress, dashboard regeneration, commits, and scheduler finalization.
-15. Use TDD for production behavior: RED, GREEN, refactor when needed.
-16. Integrate subagent results one at a time, reconcile shared-scope risks, and mark each lane as completed, blocked, conflicted, failed_validation, or not_useful.
-17. Run relevant verification for the changed behavior.
-18. Update documentation when behavior, setup, commands, architecture, or limitations change.
-19. Commit coherent completed changes locally with validation details in the commit body.
-20. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review.
-21. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/<PROJECT_SLUG>/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
-22. Update state, progress, and the schedule/trigger ledger.
-23. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.
-24. Apply the completion trigger protocol: if the automation is ACTIVE and the no-progress guard did not pause or block triggering, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
-25. Append an operator summary for the user.
+7. Reconcile state/progress with repository reality before selecting work.
+8. Re-test any blocker before honoring a `blocked` item.
+9. Consolidate review-ready work only after fresh validation evidence.
+10. Apply cooperative concurrency rules before selecting work.
+11. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, using dependency and lease rules plus non-overlapping `exclusive_scope`. If fewer than 2 independent items are available, select one eligible item and record why parallelism was not useful.
+12. Create or reuse `.worktrees/<work-item-key>` for the active item.
+13. Use branch `codex/<PROJECT_SLUG>-<work-item-key>`.
+14. Work only the active item or sprint packet until complete or blocked.
+15. When a sprint packet has 2 or more independent items and subagents are available, the main automation run orchestrates bounded parallel subagents. It dispatches one self-contained task per work item, requires Superpowers `dispatching-parallel-agents`, TDD, and verification guidance, and keeps ownership of integration, state, progress, dashboard regeneration, commits, and scheduler finalization.
+16. Use TDD for production behavior: RED, GREEN, refactor when needed.
+17. Integrate subagent results one at a time, reconcile shared-scope risks, and mark each lane as completed, blocked, conflicted, failed_validation, or not_useful.
+18. Run relevant verification for the changed behavior.
+19. Update documentation when behavior, setup, commands, architecture, or limitations change.
+20. Commit coherent completed changes locally with validation details in the commit body.
+21. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review.
+22. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/<PROJECT_SLUG>/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
+23. Update state, progress, and the schedule/trigger ledger.
+24. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.
+25. Apply the completion trigger protocol: if the automation is ACTIVE and the no-progress guard did not pause or block triggering, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
+26. Append an operator summary for the user.
 
 If the active item cannot be finished in one run, leave it `in_progress` or `blocked` with an exact next step.
 

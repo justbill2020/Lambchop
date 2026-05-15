@@ -15,6 +15,15 @@
     "dashboard_compose_file": "docs/<PROJECT_SLUG>/dashboard.compose.yml",
     "dashboard_env_file": "docs/<PROJECT_SLUG>/dashboard.env",
     "dashboard_server_dir": "docs/<PROJECT_SLUG>/dashboard-server",
+    "hooks": {
+      "mode": "repo-local",
+      "status": "installed",
+      "hooks_file": ".codex/hooks.json",
+      "hooks_dir": ".codex/hooks",
+      "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
+      "last_checked_at": "<ISO8601_TIMESTAMP>",
+      "notes": "Repo-local hooks are preferred when available and trusted; automation-only fallback must be recorded when hooks cannot be used."
+    },
     "automation_id": "<AUTOMATION_ID>",
     "automation_status": "ACTIVE",
     "contract_version": "lambchop-current-2026-05-14",

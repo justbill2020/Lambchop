@@ -10,6 +10,9 @@ Before claiming a setup is complete, confirm:
 - exhausted queues generate a PRD/spec-backed `proposal_backlog` with `needs_user_review` entries instead of ending with only "all tasks complete" when plausible next work exists.
 - the generated dashboard data file under `docs/` exists and parses as JSON.
 - the generated dashboard HTML, Docker compose/env files, and dashboard server files under `docs/` exist.
+- repo-local `.codex/hooks.json` exists, parses as JSON, and contains Lambchop `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, and `Stop` hooks when project hooks are available.
+- `.codex/hooks/lambchop_*.py` scripts exist or hook unavailability/blockage is recorded in state/progress/dashboard data.
+- in-place upgrades preserve unrelated existing hooks and replace only Lambchop-owned hook entries.
 - `dashboard.env` records one shared `LAMBCHOP_DASHBOARD_PORT`, a unique `LAMBCHOP_PROJECT_API_PORT`, `LAMBCHOP_PROJECT_SLUG`, `LAMBCHOP_PROJECT_NAME`, and `LAMBCHOP_PROJECT_API_PUBLIC_URL`.
 - setup does not allocate a new GUI port per repo; it allocates a project API port and registers the project with the shared dashboard hub.
 - the Dockerized project API responds locally, `/api/status` returns live workflow data, `/api/events` streams updates, and the hub `/api/projects` registry includes the project.
@@ -25,6 +28,7 @@ Before claiming a setup is complete, confirm:
 - Subagents are forbidden from triggering scheduler runs, publishing, deploying, mutating external trackers, or overwriting another lane.
 - Weekly automation rules include a parked weekly RRULE anchor set to yesterday at noon before automation updates or run-now triggers, scheduler-visible run-now trigger after completed ACTIVE runs, pause/inactive skip behavior, trigger evidence in progress/memory, and no worker/subagent trigger substitute.
 - Automation-maintenance rules require pausing before workflow/prompt/schedule/status edits, leaving already-running processes alone, unpausing after successful validation unless the user asks to stay paused or a blocker makes unpausing unsafe, and not triggering run-now after maintenance unpause unless the user asks.
+- Hook rules state that repo-local hooks are preferred when available/trusted, automations remain required for unattended recurrence, and automation-only fallback is recorded when hooks cannot be used.
 - Automation prompt tells Codex to read `WORKFLOW.md` first and does not hide schedule/workspace/model fields in prose.
 - No user-facing Python setup requirement exists.
 - Progress entries distinguish desired trigger behavior from actual scheduler-visible trigger or pause-skip evidence.
@@ -62,6 +66,8 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Parallel conflict: does exclusive-scope overlap prevent unsafe subagent dispatch while keeping non-overlapping work eligible?
 - Subagent integration: does the orchestrator review lane results, run validation, record completed/blocked/conflicted/failed_validation/not_useful outcomes, and commit only coherent validated work?
 - Dashboard accuracy: does the live dashboard reflect state counts, active lanes, blockers, validation, commits, roadmap seeds, current run, progress tail, and next action from real workflow data?
+- Hook upgrade: does setup or in-place upgrade install/repair repo-local Lambchop hooks, preserve unrelated existing hooks, and record hook status?
+- Hook guardrails: do PreToolUse hooks block clearly forbidden publish/PR/deploy/destructive-git/external-tracker actions while allowing ordinary reads and validation commands?
 - Review consolidation: does the agent re-run evidence before moving review items to done?
 - Private local input: does the agent require ignored paths or environment-only configuration and log only bounded public evidence?
 - Project chat intake: when the user says "I need this" or "this is broken" in a normal chat, does the agent investigate, document, and queue bounded work for automation instead of fixing it directly?
@@ -92,6 +98,8 @@ Use this as a step-by-step “pressure” checklist for a brand-new repo with no
    - `docs/<project-slug>/dashboard.compose.yml`
    - `docs/<project-slug>/dashboard.env`
    - `docs/<project-slug>/dashboard-server/`
+   - `.codex/hooks.json`
+   - `.codex/hooks/lambchop_*.py`
 5. Validate proof:
    - `state.json` and `backoff.json` parse as JSON.
    - `dashboard-data.json` parses as JSON.
@@ -101,6 +109,7 @@ Use this as a step-by-step “pressure” checklist for a brand-new repo with no
    - No unresolved `<PLACEHOLDER>` tokens exist outside reusable templates.
    - Workflow explicitly forbids push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts by default.
    - Workflow includes adaptive 2-5 parallel subagent orchestration with main-run integration.
+   - Repo-local hooks parse and include the Lambchop lifecycle hook entries, or the exact hook trust/capability blocker is recorded.
 6. Record evidence in the generated progress ledger:
    - target repo path
    - files created/updated

@@ -677,3 +677,31 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - JSON parse checks passed for `docs/lambchop/state.json`, `docs/lambchop/backoff.json`, and `docs/lambchop/dashboard-data.json`.
 - Next work:
   - Review proposals: `proposal-01-public-release-readiness`, `proposal-02-target-repo-upgrade-fixture`, `proposal-03-dashboard-proposal-review-ui`.
+
+## 2026-05-15 11:13 - repo-local hook upgrade
+
+- Status: done
+- Run id: manual-20260515-repo-local-hooks-upgrade
+- Branch: main
+- Worktree: REPO_ROOT
+- Work item: 	ask-12-repo-local-hooks-upgrade (done)
+- Maintenance window:
+  - Paused lambchop-autonomous-coding-team through Codex app automation tooling before hook/workflow maintenance.
+  - Repaired the parked weekly anchor for Friday, May 15, 2026: RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH.
+  - Updated the app automation prompt to require hook status inspection/repair during setup and in-place upgrades.
+  - Unpaused the automation to ACTIVE after validation; no run-now trigger was requested.
+- Changes:
+  - Added repo-local Codex hook templates under `autonomous-coding-team/assets/templates/.codex/` for `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, and `Stop`.
+  - Added `autonomous-coding-team/tools/install-repo-hooks.ps1` to merge Lambchop-owned hooks while preserving unrelated hook handlers.
+  - Installed the same hook set into this repo under .codex/hooks.json and .codex/hooks/.
+  - Updated README, WORKFLOW, skill guidance, reusable workflow/state/dashboard templates, automation prompt guidance, workflow architecture, and validation checklist for hooks-first active-session behavior with automation fallback.
+  - Recorded hook status in live state and dashboard data.
+- Validation:
+  - RED proof: `node --test tests/lambchop-hooks.test.mjs` failed before hook templates and installer existed.
+  - GREEN proof: `node --test tests/lambchop-hooks.test.mjs` passed with 8 tests and 0 failures.
+  - python -m py_compile passed for template and installed Lambchop hook scripts.
+  - JSON parse passed for .codex/hooks.json, template hooks config, live state/backoff/dashboard data, and matching templates.
+  - git diff --check passed with line-ending warnings only.
+  - Automation-store audit found pre-existing unrelated active folders missing utomation.toml (diagram-datacenter-details-labels, lane-NA-042, lane-NA-043, and several un-* folders); Lambchop's automation record itself remained parseable and was updated through app tooling.
+- Next work:
+  - Review proposals or pressure-test an in-place upgrade in a target Lambchop-managed repo to prove hooks merge into a real existing project.

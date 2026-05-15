@@ -9,6 +9,7 @@ Every configured repo should contain:
 - the generated backoff file under `docs/`: historical schedule/trigger ledger
 - the generated scheduled work plan under `docs/`: roadmap and task-generation source
 - the generated dashboard data, HTML, compose/env files, and server files under `docs/`: live visual operating picture
+- `.codex/hooks.json` and `.codex/hooks/lambchop_*.py`: repo-local Codex hooks for active-session quality guardrails
 - `.codex/environments/environment.toml`: optional local environment config when useful
 
 ## Operating Contract
@@ -25,6 +26,7 @@ Every configured repo should contain:
 - work item schema and statuses
 - adaptive 2-5 parallel subagent orchestration policy
 - dashboard data and local visual dashboard paths
+- repo-local hook paths, trust/fallback policy, and merge-namespaced upgrade behavior
 - cooperative lease rules
 - review consolidation and blocked-work recheck rules
 - local-only operator input rules for ignored private files, credentials, or fixtures
@@ -38,7 +40,7 @@ Every automation run:
 1. Read `WORKFLOW.md` first.
 2. Read state, progress, and backoff ledgers.
 3. Resolve automation memory.
-4. Inspect repo structure, git status, branches, remotes, and worktrees.
+4. Inspect repo structure, git status, branches, remotes, worktrees, and repo-local hook status.
 5. Run git write-access preflight before selecting work.
 6. Reconcile state/progress with repository reality.
 7. Recheck blocked items whose next step is testable in the current environment.
@@ -61,6 +63,13 @@ Every automation run:
 Interactive project chats are intake sessions by default when the user says they need something, reports a bug, or says something is broken. They investigate and document; they do not implement.
 
 An intake chat may inspect files, run diagnostic or reproduction checks, and identify likely ownership. It must then create or update bounded work items in the generated state file, append an intake note to progress, refresh dashboard data when applicable, and leave the item `todo` or `blocked`. Production code changes, bug fixes, feature implementation, refactors, and done-state promotion are reserved for the recurring coding automation unless the user explicitly overrides the intake-only rule for that chat.
+
+## Repo-Local Codex Hooks
+When Codex project hooks are available and trusted, setup and in-place upgrades install or repair `.codex/hooks.json` plus `.codex/hooks/lambchop_*.py`. Hooks are Lambchop's active-session quality layer: they add workflow context at session start, reinforce intake behavior for user prompts, block clearly forbidden local actions before supported tool calls, remind Codex to record evidence after risky or failed tool calls, and continue a turn when required Lambchop completion evidence is missing.
+
+Hook installation uses merge-namespaced behavior. Preserve unrelated existing hook handlers, remove stale Lambchop-owned handlers identified by `lambchop_` commands, then append the current Lambchop hook groups. If hooks are unavailable, untrusted, or malformed, record `hooks.status` as `unavailable` or `blocked` in state/progress/dashboard data and continue with the automation-only contract.
+
+Hooks do not replace the recurring Codex cron automation. They are guardrails and context injectors for active Codex sessions; the parked weekly anchor plus scheduler-visible completion trigger remains the unattended execution path.
 
 ## No-Progress Pause Guard
 

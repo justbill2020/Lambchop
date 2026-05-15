@@ -2,7 +2,7 @@
 
 Lambchop is a reusable Codex skill package for setting up a repository as an autonomous local coding team.
 
-Use it when you want Codex to inspect a greenfield or brownfield repo, create the durable workflow files, install a local work queue, schedule recurring runs, and keep advancing implementation without relying on chat history.
+Use it when you want Codex to inspect a greenfield or brownfield repo, create the durable workflow files, install a local work queue, install repo-local Codex hooks for active-session quality, schedule recurring runs, and keep advancing implementation without relying on chat history.
 
 When the active queue runs out, Lambchop should not stop at "all tasks complete" if the PRD, roadmap, specs, or repository evidence still imply possible next advances. It creates a proposal backlog with candidate next feature sets, marks them as needing user review, shows them in the dashboard, and waits for approval before converting them into executable work items.
 
@@ -33,7 +33,9 @@ The embedded skill lives at `autonomous-coding-team/`. It contains:
 - `SKILL.md`: the trigger and required setup flow
 - `references/`: setup, deployment, workflow, work item, automation prompt, validation, upstream skill, and lessons references
 - `assets/templates/`: reusable workflow and ledger templates for target repos
+- `assets/templates/.codex/`: repo-local Codex hook templates for Lambchop-managed projects
 - `tools/install-skill.ps1`: local install helper for Codex
+- `tools/install-repo-hooks.ps1`: merge installer for repo-local Lambchop hooks
 
 Generated target repos get their own workflow and ledgers. Lambchop itself stays the reusable source package.
 
@@ -106,9 +108,9 @@ Restart Codex after installing or linking so skill discovery refreshes.
 1. Open Codex in the target project checkout.
 2. Paste the prompt from “Quick Use From Another Repo.”
 3. Answer only the project decisions Codex cannot infer after inspection, such as the first milestone and any autonomy limits.
-4. Let Lambchop create or repair `WORKFLOW.md`, `docs/{project-slug}/state.json`, `progress.md`, `backoff.json`, `scheduled-work-plan.md`, `dashboard-data.json`, `dashboard.html`, `dashboard.compose.yml`, `dashboard.env`, `dashboard-server/`, and the weekly Codex cron automation.
+4. Let Lambchop create or repair `WORKFLOW.md`, `.codex/hooks.json`, `.codex/hooks/`, `docs/{project-slug}/state.json`, `progress.md`, `backoff.json`, `scheduled-work-plan.md`, `dashboard-data.json`, `dashboard.html`, `dashboard.compose.yml`, `dashboard.env`, `dashboard-server/`, and the weekly Codex cron automation.
 5. Confirm the first queued work item and validation commands look right.
-6. Let the automation run locally. It should work in `.worktrees/`, use `codex/` branches, dispatch 2-5 safe Superpowers subagent lanes when independent work exists, validate changes, commit locally, update ledgers and the dashboard, and avoid push/PR/deploy/external trackers unless you explicitly enable them.
+6. Let the automation run locally. It should work in `.worktrees/`, use `codex/` branches, dispatch 2-5 safe Superpowers subagent lanes when independent work exists, validate changes, commit locally, update ledgers and the dashboard, and avoid push/PR/deploy/external trackers unless you explicitly enable them. Repo-local hooks should improve active chats and run quality, but they do not replace the cron automation.
 7. Keep the automation ACTIVE while you want continuous autonomous work. Each completed run should trigger the next scheduler-visible run while preserving the weekly RRULE; PAUSED or inactive status must skip that trigger.
 
 ## Updating A Repo That Already Has Lambchop
@@ -122,7 +124,7 @@ Use the latest Lambchop instructions from https://github.com/justbill2020/Lambch
 
 Review the README and the `autonomous-coding-team/` skill before changing this repository. If you cannot access GitHub or cannot read those files, stop and tell me exactly what access is missing.
 
-This repository already has Lambchop workflow files. Upgrade the existing setup in place using Lambchop's current contract. Preserve existing work items, progress history, commits, blockers, validation evidence, leases, and automation id. Add any missing parallel orchestration, dashboard hub/project API registration, reactive status streaming, glossary, state fields, validation checks, and automation prompt updates. Keep default safety local-only and report files changed, automation cadence, first queued or next work, validation evidence, dashboard status, and blockers.
+This repository already has Lambchop workflow files. Upgrade the existing setup in place using Lambchop's current contract. Preserve existing work items, progress history, commits, blockers, validation evidence, leases, existing non-Lambchop repo hooks, and automation id. Add or repair Lambchop-owned repo-local Codex hooks using merge-namespaced behavior, plus any missing parallel orchestration, dashboard hub/project API registration, reactive status streaming, glossary, state fields, validation checks, and automation prompt updates. Keep default safety local-only and report files changed, hook status, automation cadence, first queued or next work, validation evidence, dashboard status, and blockers.
 ```
 
 Expected result:
@@ -135,3 +137,4 @@ Expected result:
 - the first project can start the shared GUI with `docker compose --env-file docs/{project-slug}/dashboard.env -f docs/{project-slug}/dashboard.compose.yml --profile hub up --build`
 - later projects can join the same dashboard with `docker compose --env-file docs/{project-slug}/dashboard.env -f docs/{project-slug}/dashboard.compose.yml up --build`
 - the existing Codex automation is updated rather than duplicated
+- repo-local Lambchop hooks are installed or repaired without overwriting unrelated hooks
