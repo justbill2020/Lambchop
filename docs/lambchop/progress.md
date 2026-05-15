@@ -745,3 +745,48 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Updated app-visible Lambchop automation prompt with shared capability and Lambchop source check-in rules.
 - Unpaused `lambchop-autonomous-coding-team` with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH`.
 - No scheduler-visible run-now was triggered after maintenance unpause.
+
+## 2026-05-15 13:15 - dashboard registry stability and control API
+- Status: done
+- Run id: `manual-20260515-dashboard-control-api`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Work item: `task-15-dashboard-registry-stability-and-control-api` (done)
+- Maintenance window:
+  - Paused `lambchop-autonomous-coding-team` through Codex app automation tooling before dashboard/workflow maintenance.
+  - Preserved parked weekly anchor for Friday, May 15, 2026: `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH`.
+  - No scheduler-visible run-now should be requested after maintenance unpause.
+- Root cause:
+  - The dashboard was unstable because registry display was live-only with a 20 second heartbeat window.
+  - A running hub also showed a zero-byte project registry file, proving non-atomic writes could make valid projects disappear during refresh.
+  - Short request timeouts and project API slowness amplified the symptom, but the real bug was treating heartbeat freshness as registration existence.
+- Changes:
+  - Increased the live window default to 120 seconds and kept stale projects visible with `live`/`stale` health metadata.
+  - Changed project registration writes to temp-file plus rename so the hub does not read partial JSON.
+  - Added `dashboard-control-requests.json` as the repo-visible queue for dashboard-originated commands.
+  - Added `POST /api/dashboard-command` on project APIs and `POST /api/project-command/<slug>` on the hub.
+  - Kept the dashboard API as a control-plane queue only: update requests are recorded for automation execution, not executed by the server.
+  - Added host-gateway fallback for hub-to-project forwarding when project API URLs use `127.0.0.1` and the hub is running inside Docker.
+  - Updated live and reusable dashboard HTML with a `Request update` control and live/stale project indicators.
+  - Updated workflow, architecture, automation prompt, and validation references so target repo setup/upgrade inherits the same behavior.
+- Validation:
+  - `node --test tests/dashboard-registry.test.mjs tests/shared-capabilities.test.mjs tests/lambchop-hooks.test.mjs` passed with 17 tests and 0 failures.
+  - `node --check` passed for live and template dashboard server modules.
+  - JSON parse passed for live state/backoff/dashboard/control files and template control file.
+  - `git diff --check` passed with line-ending warnings only.
+  - Docker smoke on alternate ports `18965`/`18966` verified `/api/projects` returns stable live/stale registrations and `POST /api/project-command/lambchop` queues a dashboard-control request.
+- Best test process:
+  - Unit test registry behavior first: stale entries visible, malformed/partial entries ignored, atomic registration writes, command queue accepts only known actions.
+  - Syntax and JSON validate generated assets.
+  - Smoke the compose stack on alternate ports, including hub `/api/projects` and hub-to-project command forwarding.
+  - Verify the queue file is created/updated, then clear smoke requests before commit.
+  - Only use browser/UI screenshots after those pass, because this failure was server/state behavior first and presentation second.
+- Next work:
+  - Use the dashboard `Request update` control to queue target-repo Lambchop updates; automation remains the executor.
+
+### Follow-up: GitHub Stop-hook commit/push gate
+- Added a Stop-hook evidence gate for GitHub repos where push is enabled or explicitly requested.
+- The hook now blocks completion until the final answer records both commit and push evidence along with validation/ledger evidence.
+- The hook does not blindly publish when workflow safety still forbids push; it requires recording that blocker instead.
+- Validation: `node --test tests/lambchop-hooks.test.mjs` passed after the new RED/GREEN test.
+- Maintenance finalization: `lambchop-autonomous-coding-team` was unpaused to ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH`; no run-now was triggered.

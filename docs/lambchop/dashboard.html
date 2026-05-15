@@ -50,6 +50,7 @@
     .status.failed_validation, .status.conflicted { background: #fef3f2; color: var(--bad); }
     .hint { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-left: 5px; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); font-size: 12px; font-weight: 700; }
     .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--good); margin-right: 6px; }
+    .live-dot.stale { background: var(--warn); }
     .filter-bar { display: none; align-items: center; justify-content: space-between; gap: 12px; margin: 12px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #f2f7f7; }
     .filter-bar.active { display: flex; }
     button.link { border: 0; background: transparent; color: var(--accent); cursor: pointer; font: inherit; padding: 0; }
@@ -75,6 +76,7 @@
     <div class="toolbar">
       <label class="meta" for="project-select">Project</label>
       <select id="project-select" aria-label="Registered project"></select>
+      <button class="link" id="request-update" type="button">Request update</button>
       <span class="meta" id="refresh-status">Connecting to dashboard hub...</span>
     </div>
     <section class="grid summary" aria-label="Status summary">
@@ -234,8 +236,8 @@
 
     function renderProjectList() {
       byId("registered-projects").innerHTML = projects.length
-        ? projects.map((project) => `<article class="lane"><h3><span class="live-dot"></span>${escapeHtml(project.name || project.slug)}</h3><p class="meta">Live at ${escapeHtml(project.api_url || "")}</p></article>`).join("")
-        : `<p class="meta">No live project APIs have registered in the last 20 seconds.</p>`;
+        ? projects.map((project) => `<article class="lane"><h3><span class="live-dot ${escapeHtml(project.health || "live")}"></span>${escapeHtml(project.name || project.slug)}</h3><p class="meta">${escapeHtml(labelize(project.health || "live"))} at ${escapeHtml(project.api_url || "")}</p></article>`).join("")
+        : `<p class="meta">No project APIs have registered yet.</p>`;
     }
 
     function renderProjectOptions() {
@@ -297,12 +299,8 @@
       text("filter-label", activeFilter ? `Showing ${labelize(activeFilter)} work below.` : "");
     }
 
-    function liveProjects(rawProjects) {
-      const now = Date.now();
-      return (rawProjects || []).filter((project) => {
-        const seen = Date.parse(project.last_seen_at || project.registry_updated_at || "");
-        return Number.isFinite(seen) && now - seen < 20000;
-      });
+    function normalizeProjects(rawProjects) {
+      return (rawProjects || []).map((project) => ({ ...project, health: project.health || "stale" }));
     }
 
     function browserReachableUrl(value) {
@@ -333,7 +331,7 @@
     }
 
     function applyProjects(payload) {
-      projects = liveProjects(payload.projects);
+      projects = normalizeProjects(payload.projects);
       renderProjectList();
       renderProjectOptions();
       connectProjectStream();
@@ -378,6 +376,22 @@
     byId("clear-filter").addEventListener("click", () => {
       activeFilter = "";
       if (latestStatus) renderStatus(latestStatus);
+    });
+    byId("request-update").addEventListener("click", async () => {
+      if (!selectedSlug) return;
+      try {
+        text("refresh-status", `Queueing Lambchop update for ${selectedSlug}...`);
+        const response = await fetch(`/api/project-command/${encodeURIComponent(selectedSlug)}`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ action: "lambchop-update", requested_by: "dashboard", reason: "Dashboard user requested Lambchop update." })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || "Update request failed");
+        text("refresh-status", `Queued Lambchop update for ${selectedSlug}.`);
+      } catch (error) {
+        text("refresh-status", `Update request failed: ${error.message}`);
+      }
     });
     byId("modal-close").addEventListener("click", () => byId("work-modal").classList.remove("open"));
     byId("work-modal").addEventListener("click", (event) => {

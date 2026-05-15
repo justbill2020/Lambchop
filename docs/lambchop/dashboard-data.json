@@ -5,18 +5,18 @@
     "phase": "autonomous-skill-mvp",
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
-    "contract_version": "lambchop-current-2026-05-15-shared-capabilities",
-    "updated_at": "2026-05-15T17:37:43.766Z"
+    "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
+    "updated_at": "2026-05-15T18:33:00.000Z"
   },
   "summary": {
     "todo": 0,
     "in_progress": 0,
     "blocked": 0,
-    "done": 11,
+    "done": 17,
     "skipped": 0,
     "proposals_need_review": 3,
     "active_parallel_lanes": 0,
-    "next_action": "Apply the committed shared-capability and source-check upgrade to target Lambchop-managed repos when requested."
+    "next_action": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -261,6 +261,28 @@
       "blocker": null,
       "next_step": "Use shared capability bootstrap during target repo upgrades.",
       "commit": "c52a31918d91ee991478bc15eb2b73c047edc883"
+    },
+    {
+      "key": "task-15-dashboard-registry-stability-and-control-api",
+      "title": "Stabilize dashboard registry and queue update commands through dashboard API",
+      "status": "done",
+      "priority": 22,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "node --test tests/dashboard-registry.test.mjs tests/shared-capabilities.test.mjs tests/lambchop-hooks.test.mjs passed with 17 tests and 0 failures.",
+        "node --check passed for live and template dashboard server modules.",
+        "JSON parse passed for live state/backoff/dashboard/control files and template control file.",
+        "git diff --check passed with line-ending warnings only.",
+        "Docker smoke on alternate ports 18965/18966 verified /api/projects returns live/stale health and POST /api/project-command/lambchop queues a dashboard-control request.",
+        "node --test tests/lambchop-hooks.test.mjs passed after adding GitHub commit/push Stop-hook evidence gate."
+      ],
+      "blocker": null,
+      "next_step": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor."
     }
   ],
   "proposal_backlog": [
@@ -339,7 +361,10 @@
     "parked weekly anchor policy added: automation updates and run-now triggers must set the normal RRULE to yesterday at noon, currently BYDAY=WE for 2026-05-14",
     "app automation parked: lambchop-autonomous-coding-team is ACTIVE with BYDAY=WE; next normal run is expected to be about one week out",
     "maintenance pause policy added: pause the scheduler before workflow/automation edits, leave already-running processes alone, unpause after successful validation, and do not run-now after unpause unless Bill asks",
-    "maintenance unpause verified: lambchop-autonomous-coding-team ACTIVE, BYDAY=WE, next normal run 2026-05-20 12:00 America/Chicago"
+    "maintenance unpause verified: lambchop-autonomous-coding-team ACTIVE, BYDAY=WE, next normal run 2026-05-20 12:00 America/Chicago",
+    "dashboard registry stability/control API validated: stale projects remain visible, partial registry files are ignored, atomic writes are used, and dashboard update requests queue automation-only commands",
+    "GitHub Stop hook validated: completion is blocked until commit and push evidence is present when push is enabled or requested.",
+    "automation maintenance finalized: lambchop-autonomous-coding-team ACTIVE, parked BYDAY=TH anchor preserved, no run-now triggered."
   ],
   "commits": [
     "47d6927",
@@ -348,16 +373,16 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "manual-20260515-intake-automation-handoff",
-    "started_at": "2026-05-15T12:13:37.4909851-05:00",
-    "work_item_key": "task-13-intake-automation-handoff-guardrail",
+    "run_id": "manual-20260515-dashboard-control-api",
+    "started_at": "2026-05-15T18:15:00.000Z",
+    "work_item_key": "task-15-dashboard-registry-stability-and-control-api",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-15T12:13:37.4909851-05:00",
-    "next_action": "Apply the committed shared-capability and source-check upgrade to target Lambchop-managed repos when requested.",
-    "timestamp": "2026-05-15T17:37:43.766Z",
-    "summary": "Shared upstream skill bootstrap and Lambchop source check-in contract added.",
-    "active_work_item": "task-14-shared-capabilities-and-source-checkin"
+    "dashboard_updated_at": "2026-05-15T18:33:00.000Z",
+    "next_action": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor.",
+    "timestamp": "2026-05-15T18:33:00.000Z",
+    "summary": "Dashboard registry stability, queued update control API, and GitHub commit/push Stop-hook evidence gate added.",
+    "active_work_item": "task-15-dashboard-registry-stability-and-control-api"
   },
   "hooks": {
     "mode": "repo-local",
@@ -365,8 +390,8 @@
     "hooks_file": ".codex/hooks.json",
     "hooks_dir": ".codex/hooks",
     "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
-    "last_checked_at": "2026-05-15T17:34:15.959Z",
-    "notes": "Hooks now require feature/bug chats to queue tasks and hand off to automation; they also remind UI work to use Huashu Design and setup/upgrade work to check Lambchop source commits."
+    "last_checked_at": "2026-05-15T18:28:00.000Z",
+    "notes": "Hooks require feature/bug chats to queue tasks and hand off to automation; UI work uses Huashu Design; setup/upgrade checks Lambchop source commits; Stop hook requires commit and push evidence for GitHub repos when push is enabled or explicitly requested."
   },
   "shared_capabilities": {
     "mode": "first-run-install-once",
@@ -394,5 +419,15 @@
     "status": "current",
     "last_checked_at": "2026-05-15T17:36:56.392Z",
     "notes": "Self-maintenance ledger records the applied feature commit. Target repos record the external Lambchop source commit used during setup/upgrade and compare it with current Lambchop source during future check-ins."
+  },
+  "dashboard_control": {
+    "mode": "queued-automation-execution",
+    "file": "docs/lambchop/dashboard-control-requests.json",
+    "allowed_actions": [
+      "lambchop-update",
+      "dashboard-refresh"
+    ],
+    "last_checked_at": "2026-05-15T18:15:00.000Z",
+    "status": "validated"
   }
 }

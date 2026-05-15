@@ -22,17 +22,17 @@
   "last_no_progress_reason": null,
   "pause_recommended": false,
   "pause_after_consecutive_no_progress_runs": 3,
-  "last_result": "shared_capability_bootstrap_and_lambchop_source_checkin_added",
+  "last_result": "dashboard_control_api_and_github_stop_hook_gate_added",
   "last_trigger_result": "maintenance_unpaused_no_run_now",
-  "updated_at": "2026-05-15T17:37:43.766Z",
+  "updated_at": "2026-05-15T18:33:00.000Z",
   "scheduler_persistence": {
     "desired_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
     "actual_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
-    "status": "ACTIVE_after_shared_capability_maintenance",
+    "status": "ACTIVE_after_dashboard_control_and_github_stop_hook_maintenance",
     "automation_id": "lambchop-autonomous-coding-team",
-    "last_checked_at": "2026-05-15T17:14:53.505Z",
-    "notes": "Lambchop automation prompt updated and automation unpaused after shared capability maintenance. No run-now was triggered after maintenance unpause.",
-    "updated_at": "2026-05-15T17:37:43.766Z",
+    "last_checked_at": "2026-05-15T18:33:00.000Z",
+    "notes": "Lambchop automation prompt updated for dashboard control requests and GitHub Stop-hook commit/push evidence. Automation unpaused after validation with parked anchor preserved. No run-now was triggered.",
+    "updated_at": "2026-05-15T18:33:00.000Z",
     "rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH"
   },
   "audit_result": {

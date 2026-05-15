@@ -19,6 +19,8 @@ Before claiming a setup is complete, confirm:
 - shared capability evidence records Superpowers and Huashu Design status plus installed/latest source commits or blockers.
 - the target repo records the Lambchop source commit used for setup or upgrade, and upgrade checks compare that saved commit with current Lambchop source.
 - the Dockerized project API responds locally, `/api/status` returns live workflow data, `/api/events` streams updates, and the hub `/api/projects` registry includes the project.
+- project registration is stable: stale projects remain visible with health metadata, partial/zero-byte registration files do not hide valid projects, and registration writes are atomic.
+- dashboard control requests are queued through `POST /api/dashboard-command` or hub forwarding through `POST /api/project-command/<slug>`; dashboard servers do not directly execute updates.
 - The workflow states local-only safety defaults.
 - The workflow includes project chat intake rules: ordinary chats investigate user-reported needs or breakages, create/update queued work items and progress evidence, and do not implement unless explicitly overridden.
 - The workflow requires intake chats to hand off queued work by unpausing or confirming active automation status, triggering scheduler-visible run-now, and recording trigger evidence.
@@ -70,12 +72,15 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Parallel conflict: does exclusive-scope overlap prevent unsafe subagent dispatch while keeping non-overlapping work eligible?
 - Subagent integration: does the orchestrator review lane results, run validation, record completed/blocked/conflicted/failed_validation/not_useful outcomes, and commit only coherent validated work?
 - Dashboard accuracy: does the live dashboard reflect state counts, active lanes, blockers, validation, commits, roadmap seeds, current run, progress tail, and next action from real workflow data?
+- Dashboard registry stability: does `/api/projects` keep registered projects visible as live/stale instead of flickering when heartbeats or partial writes occur?
+- Dashboard control plane: does the API queue `lambchop-update` and `dashboard-refresh` requests for automation execution and reject unknown command actions?
 - Shared capability bootstrap: does the first repo install missing Superpowers/Huashu skills once, and do later repos detect existing installs without replacing them?
 - Shared capability update check: when a saved installed commit differs from latest, does setup/upgrade record `update_available` or update during an explicit maintenance path?
 - Lambchop source check-in: does a target repo compare its saved Lambchop source commit to the current Lambchop source and queue or perform an in-place upgrade when behind?
 - UI design work: does dashboard/app UI work load Huashu Design before changing the user-facing interface?
 - Hook upgrade: does setup or in-place upgrade install/repair repo-local Lambchop hooks, preserve unrelated existing hooks, and record hook status?
 - Hook guardrails: do PreToolUse hooks block clearly forbidden publish/PR/deploy/destructive-git/external-tracker actions while allowing ordinary reads and validation commands?
+- GitHub Stop hook: when push is enabled or explicitly requested for a GitHub repo, does the Stop hook require commit and push evidence before completion while recording a blocker instead of publishing when push remains forbidden?
 - Review consolidation: does the agent re-run evidence before moving review items to done?
 - Private local input: does the agent require ignored paths or environment-only configuration and log only bounded public evidence?
 - Project chat intake: when the user says "I need this" or "this is broken" in a normal chat, does the agent investigate, document, and queue bounded work for automation instead of fixing it directly?

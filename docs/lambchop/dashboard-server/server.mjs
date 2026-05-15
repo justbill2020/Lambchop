@@ -1,7 +1,8 @@
 import { createServer } from "node:http";
-import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, stat, writeFile } from "node:fs/promises";
 import { existsSync, watch } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const role = process.env.LAMBCHOP_DASHBOARD_ROLE || "project-api";
 const root = process.env.LAMBCHOP_STATUS_ROOT || "/data";
@@ -10,35 +11,37 @@ const port = Number(process.env.PORT || (role === "hub" ? 8765 : 8766));
 const projectSlug = process.env.LAMBCHOP_PROJECT_SLUG || "lambchop";
 const projectName = process.env.LAMBCHOP_PROJECT_NAME || "Lambchop";
 const projectApiUrl = process.env.LAMBCHOP_PROJECT_API_PUBLIC_URL || "http://127.0.0.1:8766";
+const hostGateway = process.env.LAMBCHOP_HOST_GATEWAY || "host.docker.internal";
 const projectRegistrationFile = path.join(registryRoot, `${projectSlug}.json`);
-const watchFiles = ["state.json", "dashboard-data.json", "backoff.json", "progress.md", "scheduled-work-plan.md"];
-const liveProjectWindowMs = Number(process.env.LAMBCHOP_LIVE_PROJECT_WINDOW_MS || 20000);
+const controlRequestsFile = "dashboard-control-requests.json";
+const watchFiles = ["state.json", "dashboard-data.json", "backoff.json", "progress.md", "scheduled-work-plan.md", controlRequestsFile];
+const liveProjectWindowMs = Number(process.env.LAMBCHOP_LIVE_PROJECT_WINDOW_MS || 120000);
 
 const statusClients = new Set();
 const registryClients = new Set();
 let lastStatusBody = "";
 let lastRegistryBody = "";
 
-async function readJson(fileName) {
+async function readJson(fileName, statusRoot = root) {
   try {
-    return JSON.parse(await readFile(path.join(root, fileName), "utf8"));
+    return JSON.parse(await readFile(path.join(statusRoot, fileName), "utf8"));
   } catch {
     return null;
   }
 }
 
-async function readLines(fileName, tail = 40) {
+async function readLines(fileName, tail = 40, statusRoot = root) {
   try {
-    const text = await readFile(path.join(root, fileName), "utf8");
+    const text = await readFile(path.join(statusRoot, fileName), "utf8");
     return text.split(/\r?\n/).filter(Boolean).slice(-tail);
   } catch {
     return [];
   }
 }
 
-async function readText(fileName) {
+async function readText(fileName, statusRoot = root) {
   try {
-    return await readFile(path.join(root, fileName), "utf8");
+    return await readFile(path.join(statusRoot, fileName), "utf8");
   } catch {
     return "";
   }
@@ -48,9 +51,15 @@ function count(items, status) {
   return items.filter((item) => item.status === status).length;
 }
 
-function isLiveProject(project) {
+function projectHealth(project, options = {}) {
+  const now = Number.isFinite(options.now) ? options.now : Date.now();
+  const windowMs = Number.isFinite(options.liveProjectWindowMs) ? options.liveProjectWindowMs : liveProjectWindowMs;
   const seen = Date.parse(project?.last_seen_at || project?.registry_updated_at || "");
-  return Number.isFinite(seen) && Date.now() - seen < liveProjectWindowMs;
+  const age = Number.isFinite(seen) ? now - seen : null;
+  return {
+    health: Number.isFinite(age) && age < windowMs ? "live" : "stale",
+    last_seen_age_ms: Number.isFinite(age) ? age : null
+  };
 }
 
 function progressSections(progressText) {
@@ -79,13 +88,15 @@ function progressHighlights(lines) {
   return useful.length ? useful : lines.map(simplifyProgressLine).filter(Boolean).slice(-5);
 }
 
-async function statusPayload() {
-  const state = await readJson("state.json");
-  const dashboard = await readJson("dashboard-data.json");
-  const backoff = await readJson("backoff.json");
-  const progressTail = await readLines("progress.md", 50);
-  const progressText = await readText("progress.md");
-  const planLines = await readLines("scheduled-work-plan.md", 200);
+export async function statusPayload(options = {}) {
+  const statusRoot = options.root || root;
+  const state = await readJson("state.json", statusRoot);
+  const dashboard = await readJson("dashboard-data.json", statusRoot);
+  const backoff = await readJson("backoff.json", statusRoot);
+  const controlRequests = await readJson(controlRequestsFile, statusRoot);
+  const progressTail = await readLines("progress.md", 50, statusRoot);
+  const progressText = await readText("progress.md", statusRoot);
+  const planLines = await readLines("scheduled-work-plan.md", 200, statusRoot);
   const items = Array.isArray(state?.work_items) ? state.work_items : Array.isArray(dashboard?.work_items) ? dashboard.work_items : [];
   const proposals = Array.isArray(state?.proposal_backlog) ? state.proposal_backlog : Array.isArray(dashboard?.proposal_backlog) ? dashboard.proposal_backlog : [];
   const active = items.filter((item) => item.status === "in_progress");
@@ -119,12 +130,14 @@ async function statusPayload() {
       next_backlog_seeds: planSeeds
     },
     scheduler: backoff,
+    dashboard_control: controlRequests || { version: 1, requests: [] },
     progress_tail: progressTail,
     progress_highlights: progressHighlights(progressTail),
     evidence_sources: {
       progress_file: "progress.md",
       state_file: "state.json",
-      scheduled_work_plan_file: "scheduled-work-plan.md"
+      scheduled_work_plan_file: "scheduled-work-plan.md",
+      dashboard_control_file: controlRequestsFile
     },
     latest_progress_section: progressSections(progressText).at(-1) || ""
   };
@@ -146,43 +159,155 @@ async function workItemEvidence(key) {
   };
 }
 
-async function registrationPayload() {
-  const status = await statusPayload();
+export async function registrationPayload(options = {}) {
+  const status = await statusPayload({ root: options.root || root });
+  const slug = options.projectSlug || status.project?.slug || projectSlug;
+  const name = options.projectName || status.project?.name || projectName;
+  const apiUrl = options.projectApiUrl || projectApiUrl;
   return {
-    slug: status.project?.slug || projectSlug,
-    name: status.project?.name || projectName,
+    slug,
+    name,
     purpose: status.project?.purpose || "",
-    api_url: projectApiUrl,
-    status_endpoint: `${projectApiUrl}/api/status`,
-    events_endpoint: `${projectApiUrl}/api/events`,
+    api_url: apiUrl,
+    status_endpoint: `${apiUrl}/api/status`,
+    events_endpoint: `${apiUrl}/api/events`,
     last_seen_at: new Date().toISOString()
   };
 }
 
-async function registerProject() {
-  await mkdir(registryRoot, { recursive: true });
-  await writeFile(projectRegistrationFile, `${JSON.stringify(await registrationPayload(), null, 2)}\n`);
+export async function registerProject(options = {}) {
+  const targetRegistryRoot = options.registryRoot || registryRoot;
+  const slug = options.projectSlug || projectSlug;
+  await mkdir(targetRegistryRoot, { recursive: true });
+  const targetFile = path.join(targetRegistryRoot, `${slug}.json`);
+  const tempFile = path.join(targetRegistryRoot, `.${slug}.${process.pid}.${Date.now()}.tmp`);
+  await writeFile(tempFile, `${JSON.stringify(await registrationPayload(options), null, 2)}\n`);
+  await rename(tempFile, targetFile);
 }
 
-async function registeredProjects() {
+export async function registeredProjects(options = {}) {
+  const targetRegistryRoot = options.registryRoot || registryRoot;
   try {
-    await mkdir(registryRoot, { recursive: true });
-    const files = await readdir(registryRoot);
+    await mkdir(targetRegistryRoot, { recursive: true });
+    const files = await readdir(targetRegistryRoot);
     const projects = [];
     for (const file of files.filter((entry) => entry.endsWith(".json"))) {
       try {
-        const fullPath = path.join(registryRoot, file);
+        const fullPath = path.join(targetRegistryRoot, file);
         const parsed = JSON.parse(await readFile(fullPath, "utf8"));
         const info = await stat(fullPath);
-        projects.push({ ...parsed, registry_updated_at: info.mtime.toISOString() });
+        projects.push({ ...parsed, registry_updated_at: info.mtime.toISOString(), ...projectHealth(parsed, options) });
       } catch {
         // Ignore partial writes from containers that are currently registering.
       }
     }
-    return projects.filter(isLiveProject).sort((a, b) => String(a.name || a.slug).localeCompare(String(b.name || b.slug)));
+    return projects.sort((a, b) => {
+      if (a.health !== b.health) return a.health === "live" ? -1 : 1;
+      return String(a.name || a.slug).localeCompare(String(b.name || b.slug));
+    });
   } catch {
     return [];
   }
+}
+
+async function readRequestBody(req, limit = 65536) {
+  let body = "";
+  for await (const chunk of req) {
+    body += chunk;
+    if (body.length > limit) throw new Error("Request body too large");
+  }
+  return body ? JSON.parse(body) : {};
+}
+
+async function postJson(url, body) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+    const text = await response.text();
+    let payload = {};
+    try {
+      payload = text ? JSON.parse(text) : {};
+    } catch {
+      payload = { raw: text };
+    }
+    if (!response.ok) {
+      const error = new Error(payload.error || `Request failed with ${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+    return payload;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function dashboardCommandUrls(project) {
+  const apiUrl = String(project.api_url || "").replace(/\/$/, "");
+  if (!apiUrl) {
+    return [];
+  }
+
+  const urls = [`${apiUrl}/api/dashboard-command`];
+  try {
+    const parsed = new URL(apiUrl);
+    if (["127.0.0.1", "localhost", "::1"].includes(parsed.hostname) && hostGateway) {
+      parsed.hostname = hostGateway;
+      urls.unshift(`${parsed.toString().replace(/\/$/, "")}/api/dashboard-command`);
+    }
+  } catch {
+    return urls;
+  }
+
+  return Array.from(new Set(urls));
+}
+
+function normalizeDashboardCommand(input) {
+  const action = String(input?.action || "lambchop-update").trim();
+  const allowed = new Set(["lambchop-update", "dashboard-refresh"]);
+  if (!allowed.has(action)) {
+    const error = new Error(`Unsupported dashboard command action: ${action}`);
+    error.status = 400;
+    throw error;
+  }
+  return {
+    id: `dashboard-command-${new Date().toISOString().replace(/[^0-9A-Za-z]/g, "")}`,
+    action,
+    status: "queued",
+    requested_by: String(input?.requested_by || "dashboard-api").slice(0, 80),
+    reason: String(input?.reason || "").slice(0, 500),
+    requested_at: new Date().toISOString(),
+    source: "dashboard-api",
+    execution: "automation"
+  };
+}
+
+export async function queueDashboardCommand(input, options = {}) {
+  const statusRoot = options.root || root;
+  const command = normalizeDashboardCommand(input);
+  const fileName = options.fileName || controlRequestsFile;
+  const fullPath = path.join(statusRoot, fileName);
+  let existing = { version: 1, requests: [] };
+  try {
+    existing = JSON.parse(await readFile(fullPath, "utf8"));
+  } catch {
+    // Missing file starts a new command queue.
+  }
+  const requests = Array.isArray(existing.requests) ? existing.requests : [];
+  const next = {
+    version: 1,
+    updated_at: new Date().toISOString(),
+    requests: [...requests, command]
+  };
+  const tempFile = `${fullPath}.${process.pid}.${Date.now()}.tmp`;
+  await writeFile(tempFile, `${JSON.stringify(next, null, 2)}\n`);
+  await rename(tempFile, fullPath);
+  return command;
 }
 
 function send(res, status, contentType, body) {
@@ -254,7 +379,8 @@ function watchRegistry() {
   setInterval(() => publishRegistry(), 1000).unref();
 }
 
-const server = createServer(async (req, res) => {
+export function createDashboardServer() {
+  return createServer(async (req, res) => {
   const url = new URL(req.url || "/", `http://${req.headers.host || "127.0.0.1"}`);
 
   if (url.pathname === "/api/status") {
@@ -272,6 +398,55 @@ const server = createServer(async (req, res) => {
 
   if (url.pathname === "/api/projects") {
     send(res, 200, "application/json; charset=utf-8", JSON.stringify({ generated_at: new Date().toISOString(), projects: await registeredProjects() }));
+    return;
+  }
+
+  if (url.pathname.startsWith("/api/project-command/") && req.method === "POST") {
+    if (role !== "hub") {
+      send(res, 405, "application/json; charset=utf-8", JSON.stringify({ error: "Project command forwarding must be requested through the dashboard hub." }));
+      return;
+    }
+    try {
+      const slug = decodeURIComponent(url.pathname.replace("/api/project-command/", ""));
+      const project = (await registeredProjects()).find((entry) => entry.slug === slug);
+      if (!project) {
+        send(res, 404, "application/json; charset=utf-8", JSON.stringify({ error: `Project not registered: ${slug}` }));
+        return;
+      }
+      const payload = await readRequestBody(req);
+      const commandUrls = dashboardCommandUrls(project);
+      let lastError = null;
+      let result = null;
+      for (const commandUrl of commandUrls) {
+        try {
+          result = await postJson(commandUrl, payload);
+          break;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      if (!result) {
+        throw lastError || new Error("Project API URL is unavailable");
+      }
+      send(res, 202, "application/json; charset=utf-8", JSON.stringify({ forwarded: true, project: slug, result }));
+    } catch (error) {
+      send(res, error.status || 502, "application/json; charset=utf-8", JSON.stringify({ error: error.message }));
+    }
+    return;
+  }
+
+  if (url.pathname === "/api/dashboard-command" && req.method === "POST") {
+    if (role !== "project-api") {
+      send(res, 405, "application/json; charset=utf-8", JSON.stringify({ error: "Dashboard commands must be queued through a project API." }));
+      return;
+    }
+    try {
+      const command = await queueDashboardCommand(await readRequestBody(req));
+      await publishStatus(true);
+      send(res, 202, "application/json; charset=utf-8", JSON.stringify({ queued: true, command }));
+    } catch (error) {
+      send(res, error.status || 500, "application/json; charset=utf-8", JSON.stringify({ error: error.message }));
+    }
     return;
   }
 
@@ -301,8 +476,11 @@ const server = createServer(async (req, res) => {
 
   send(res, 404, "text/plain; charset=utf-8", "Not found");
 });
+}
 
-server.listen(port, "0.0.0.0", async () => {
+export async function startDashboardServer() {
+  const server = createDashboardServer();
+  server.listen(port, "0.0.0.0", async () => {
   if (role === "project-api") {
     await registerProject();
     watchStatusFiles();
@@ -313,3 +491,9 @@ server.listen(port, "0.0.0.0", async () => {
     console.log(`Lambchop dashboard hub: http://127.0.0.1:${port}/dashboard.html`);
   }
 });
+  return server;
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  startDashboardServer();
+}

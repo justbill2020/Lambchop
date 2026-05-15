@@ -15,6 +15,7 @@ automation:
   dashboard_compose_file: docs/<PROJECT_SLUG>/dashboard.compose.yml
   dashboard_env_file: docs/<PROJECT_SLUG>/dashboard.env
   dashboard_server_dir: docs/<PROJECT_SLUG>/dashboard-server
+  dashboard_control_file: docs/<PROJECT_SLUG>/dashboard-control-requests.json
   hooks_file: .codex/hooks.json
   hooks_dir: .codex/hooks
   shared_capabilities_registry: $CODEX_HOME/lambchop/shared-capabilities.json
@@ -91,6 +92,7 @@ When instructions conflict, follow explicit user intent first, then safety, then
 - `project chat intake`: a normal interactive Codex chat in this repository where the user reports a feature request, bug, regression, rough need, or "this is broken" style issue outside a scheduled automation run.
 - `proposal_backlog`: candidate next work with `needs_user_review`; proposals are visible in the dashboard but are not executable work items until the user approves or edits them.
 - `reactive status stream`: the project API `/api/events` server-sent event stream and hub `/api/project-events` registry stream that publish real state/progress/backoff/dashboard changes.
+- `dashboard control request`: a structured request queued through the dashboard hub/project API for the automation to execute later. Dashboard APIs may queue known commands such as `lambchop-update` or `dashboard-refresh`; they must not directly mutate arbitrary repo files or run shell commands.
 - `repo-local hooks`: Codex lifecycle hooks installed under `.codex/` for active-session context, safety guardrails, evidence reminders, and completion checks. They improve automation and chat quality but do not replace the unattended cron automation.
 - `shared capabilities`: first-run shared resources installed once into the Codex environment and reused by every Lambchop-managed repo. This includes the dashboard hub, Superpowers, Huashu Design, and future core upstream skills.
 - `Lambchop source commit`: the git commit of the Lambchop skill/templates used during setup or in-place upgrade. Target repos must record it so later check-ins can compare the saved commit with the current Lambchop source and repair stale deployments.
@@ -134,7 +136,7 @@ After intake, the chat must hand off to the automation instead of stopping at a 
 ## Repo-Local Codex Hooks
 When Codex project hooks are available and trusted, Lambchop must install or repair `.codex/hooks.json` and `.codex/hooks/lambchop_*.py` during setup and in-place upgrades. Hook installation must use merge-namespaced behavior: preserve unrelated existing hook handlers, remove stale Lambchop-owned handlers identified by `lambchop_` commands, then append the current Lambchop hook groups.
 
-Hooks are an active-session quality layer. They load Lambchop context on session start, reinforce intake behavior for user prompts, block clearly forbidden local actions before supported tool calls, remind Codex to record evidence after risky or failed tool calls, and continue a turn when required Lambchop completion evidence is missing. For feature/bug chats, the hooks must steer the agent away from implementation in the chat and toward task creation, automation unpause or active-status evidence, and scheduler-visible run-now handoff. They are not a complete enforcement boundary and they do not replace the parked weekly cron automation or scheduler-visible completion trigger.
+Hooks are an active-session quality layer. They load Lambchop context on session start, reinforce intake behavior for user prompts, block clearly forbidden local actions before supported tool calls, remind Codex to record evidence after risky or failed tool calls, and continue a turn when required Lambchop completion evidence is missing. For feature/bug chats, the hooks must steer the agent away from implementation in the chat and toward task creation, automation unpause or active-status evidence, and scheduler-visible run-now handoff. For GitHub repos where push is explicitly enabled or requested, the Stop hook must require commit and push evidence before completion; it must not blindly publish when workflow safety still forbids pushing. Hooks are not a complete enforcement boundary and they do not replace the parked weekly cron automation or scheduler-visible completion trigger.
 
 If project hooks are unavailable, untrusted, or blocked by malformed existing hook config, record `hooks.status` as `unavailable` or `blocked` in state, progress, and dashboard data. Continue with the automation-only contract and make hook repair a visible next action.
 
@@ -269,8 +271,11 @@ Every setup and run must maintain:
 - `docs/<PROJECT_SLUG>/dashboard-data.json`: normalized machine-readable status from state, scheduled work plan, progress, backoff, leases, validation, blockers, commits, and next actions.
 - `docs/<PROJECT_SLUG>/dashboard.html`: the single hub browser UI. It subscribes to the hub project registry with `/api/project-events`, then subscribes to the selected project API with `/api/events`.
 - `docs/<PROJECT_SLUG>/dashboard.compose.yml`, `docs/<PROJECT_SLUG>/dashboard.env`, and `docs/<PROJECT_SLUG>/dashboard-server/`: Dockerized local services. `lambchop-dashboard-hub` owns the one GUI port, default `8765`. `lambchop-project-api` owns the per-project API port, default `8766`, and registers itself in the shared Docker volume `lambchop-dashboard-registry`.
+- `docs/<PROJECT_SLUG>/dashboard-control-requests.json`: optional queued dashboard commands written by the project API. The automation consumes these requests and performs the actual update/refresh work with normal validation, commits, and evidence.
 
 The dashboard must use real workflow data only. Do not hand-write decorative status that cannot be traced back to state, progress, scheduled work, validation, or git evidence. Use the Dockerized status server instead of opening the HTML with `file://`. When installing or repairing Lambchop, keep one shared hub GUI port and choose a free per-project API port. Write `LAMBCHOP_PROJECT_API_PORT` and `LAMBCHOP_PROJECT_API_PUBLIC_URL` to `dashboard.env`, then verify the project appears in the hub registry. If the hub port is already occupied by a Lambchop hub, start only the project API for the current repo and tell the user to open the existing hub.
+
+Project registration must be stable. The registry must keep stale projects visible with a stale/healthy marker instead of dropping them from the picker, and project API registration writes must be atomic so the hub never sees a zero-byte registration as a disappearance. The project API may expose `POST /api/dashboard-command` to queue allowed commands into `dashboard-control-requests.json`; the hub may forward `POST /api/project-command/<slug>` to the selected project API. The dashboard server queues requests only. The automation performs Lambchop updates, dashboard refreshes, validation, commits, and run-now handoff.
 
 ## Review Consolidation
 If this repo uses a `review` queue or equivalent pending-review state, treat it as not done. Re-run the relevant checks, record fresh validation evidence, and only then move the work to `done`. If validation is missing, stale, or partial, leave the item in review and name the missing check.

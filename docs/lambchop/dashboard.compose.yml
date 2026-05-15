@@ -5,7 +5,7 @@ services:
     ports:
       - "${LAMBCHOP_PROJECT_API_PORT:-8766}:8766"
     volumes:
-      - .:/data:ro
+      - .:/data
       - lambchop-dashboard-registry:/registry
     environment:
       - LAMBCHOP_DASHBOARD_ROLE=project-api

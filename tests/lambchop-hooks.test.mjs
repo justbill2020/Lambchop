@@ -138,6 +138,29 @@ test('Stop hook blocks feature-chat endings that skip automation handoff', () =>
   assert.equal(handedOff.continue, true);
 });
 
+test('Stop hook requires commit and push evidence for GitHub repos when publishing is enabled', () => {
+  const scriptPath = join(templateRoot, 'hooks', 'lambchop_stop.py');
+  const missingPublishEvidence = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    github_repo: true,
+    workflow_allows_push: true,
+    last_assistant_message: 'Validated tests, updated progress.md, dashboard, and backoff evidence.',
+  });
+  assert.equal(missingPublishEvidence.decision, 'block');
+  assert.match(missingPublishEvidence.reason, /commit/i);
+  assert.match(missingPublishEvidence.reason, /push/i);
+
+  const published = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    github_repo: true,
+    workflow_allows_push: true,
+    last_assistant_message: 'Validated tests, committed the changes, pushed the branch to GitHub, and updated progress.md/dashboard/backoff evidence.',
+  });
+  assert.equal(published.continue, true);
+});
+
 test('repo hook installer preserves unrelated hooks and replaces stale Lambchop hooks', () => {
   const targetRoot = mkdtempSync(join(tmpdir(), 'lambchop-hooks-'));
   mkdirSync(join(targetRoot, '.codex', 'hooks'), { recursive: true });

@@ -15,7 +15,7 @@
     "branch_name_template": "codex/lambchop-{work_item_key}",
     "automation_id": "lambchop-autonomous-coding-team",
     "automation_status": "ACTIVE",
-    "contract_version": "lambchop-current-2026-05-15-shared-capabilities",
+    "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
     "concurrency_mode": "cooperative",
     "max_concurrent_runs": 5,
     "lease_minutes": 120,
@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-15T17:37:43.766Z",
+    "updated_at": "2026-05-15T18:33:00.000Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -97,7 +97,17 @@
       "requires_single_shared_gui_port": true,
       "requires_free_project_api_port": true,
       "registration_required": true,
-      "reactive_updates": "server-sent-events"
+      "reactive_updates": "server-sent-events",
+      "control_requests_file": "docs/lambchop/dashboard-control-requests.json",
+      "registry_health": "live-or-stale-visible",
+      "registration_write_policy": "atomic-temp-file-rename",
+      "control_plane": "queue-dashboard-requests-for-automation-execution",
+      "hub_project_command_endpoint": "/api/project-command/{projectSlug}",
+      "project_command_endpoint": "/api/dashboard-command",
+      "allowed_control_actions": [
+        "lambchop-update",
+        "dashboard-refresh"
+      ]
     },
     "dashboard_compose_file": "docs/lambchop/dashboard.compose.yml",
     "dashboard_server_dir": "docs/lambchop/dashboard-server",
@@ -107,8 +117,8 @@
       "hooks_file": ".codex/hooks.json",
       "hooks_dir": ".codex/hooks",
       "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
-      "last_checked_at": "2026-05-15T17:34:15.959Z",
-      "notes": "Hooks now require feature/bug chats to queue tasks and hand off to automation; they also remind UI work to use Huashu Design and setup/upgrade work to check Lambchop source commits."
+      "last_checked_at": "2026-05-15T18:28:00.000Z",
+      "notes": "Hooks require feature/bug chats to queue tasks and hand off to automation; UI work uses Huashu Design; setup/upgrade checks Lambchop source commits; Stop hook requires commit and push evidence for GitHub repos when push is enabled or explicitly requested."
     },
     "shared_capabilities": {
       "mode": "first-run-install-once",
@@ -1176,6 +1186,76 @@
         "reconciled_at": "2026-05-15T17:34:15.959Z"
       },
       "updated_at": "2026-05-15T17:36:56.392Z"
+    },
+    {
+      "key": "task-15-dashboard-registry-stability-and-control-api",
+      "title": "Stabilize dashboard registry and queue update commands through dashboard API",
+      "type": "dashboard-control-plane",
+      "status": "done",
+      "priority": 22,
+      "dependencies": [
+        "task-08-parallel-sprint-dashboard",
+        "task-14-shared-capabilities-and-source-checkin"
+      ],
+      "source_refs": [
+        "docs/lambchop/dashboard-server/server.mjs",
+        "docs/lambchop/dashboard.html",
+        "docs/lambchop/dashboard-control-requests.json",
+        "autonomous-coding-team/assets/templates/dashboard-server/server.mjs",
+        "tests/dashboard-registry.test.mjs"
+      ],
+      "acceptance_criteria": [
+        "Dashboard registry keeps registered projects visible with live/stale health instead of deleting them after a short heartbeat gap.",
+        "Project registration writes are atomic so the hub does not observe zero-byte or partial JSON as disappearing projects.",
+        "Dashboard API can queue Lambchop/dashboard update commands for automation execution without performing direct updates in the server.",
+        "Reusable templates install the same stable registry and queued control behavior into target repos."
+      ],
+      "implementation_notes": [
+        "Root cause validated from the running dashboard hub: a 20 second live-only filter hid slow projects, and a zero-byte registry file proved non-atomic registration writes could make valid projects disappear.",
+        "Hub forwarding uses host-gateway fallback for localhost project API URLs when the hub runs inside Docker.",
+        "Stop hook now blocks completion for GitHub repos with push enabled or requested unless the final evidence includes both commit and push."
+      ],
+      "validation": [
+        "node --test tests/dashboard-registry.test.mjs tests/shared-capabilities.test.mjs tests/lambchop-hooks.test.mjs passed with 17 tests and 0 failures.",
+        "node --check passed for live and template dashboard server modules.",
+        "JSON parse passed for live state/backoff/dashboard/control files and template control file.",
+        "git diff --check passed with line-ending warnings only.",
+        "Docker smoke on alternate ports 18965/18966 verified /api/projects returns live/stale health and POST /api/project-command/lambchop queues a dashboard-control request.",
+        "node --test tests/lambchop-hooks.test.mjs passed after adding GitHub commit/push Stop-hook evidence gate.",
+        "Lambchop automation unpaused to ACTIVE after validation with parked weekly anchor preserved; no run-now triggered."
+      ],
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "docs/lambchop/dashboard-server/",
+        "docs/lambchop/dashboard.html",
+        "docs/lambchop/dashboard-control-requests.json",
+        "autonomous-coding-team/assets/templates/dashboard-server/",
+        "autonomous-coding-team/assets/templates/dashboard.html",
+        "autonomous-coding-team/assets/templates/dashboard-control-requests.json",
+        "tests/dashboard-registry.test.mjs"
+      ],
+      "shared_scope": [
+        "WORKFLOW.md",
+        "autonomous-coding-team/references/",
+        "docs/lambchop/"
+      ],
+      "next_step": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "completed_at": "2026-05-15T18:15:00.000Z",
+      "updated_at": "2026-05-15T18:33:00.000Z"
     }
   ],
   "proposal_backlog": [
@@ -1232,15 +1312,15 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-20260515-intake-automation-handoff",
-    "started_at": "2026-05-15T12:13:37.4909851-05:00",
-    "work_item_key": "task-13-intake-automation-handoff-guardrail",
+    "run_id": "manual-20260515-dashboard-control-api",
+    "started_at": "2026-05-15T18:15:00.000Z",
+    "work_item_key": "task-15-dashboard-registry-stability-and-control-api",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-15T17:36:56.392Z",
-    "next_action": "Apply the committed shared-capability and source-check upgrade to target Lambchop-managed repos when requested.",
-    "timestamp": "2026-05-15T17:37:43.766Z",
-    "summary": "Shared upstream skill bootstrap and Lambchop source check-in contract added.",
-    "active_work_item": "task-14-shared-capabilities-and-source-checkin"
+    "dashboard_updated_at": "2026-05-15T18:33:00.000Z",
+    "next_action": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor.",
+    "timestamp": "2026-05-15T18:33:00.000Z",
+    "summary": "Dashboard registry stability, queued update control API, and GitHub commit/push Stop-hook evidence gate added.",
+    "active_work_item": "task-15-dashboard-registry-stability-and-control-api"
   }
 }
