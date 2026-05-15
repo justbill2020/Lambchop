@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-15T17:36:56.392Z",
+    "updated_at": "2026-05-15T17:37:43.766Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -1238,8 +1238,8 @@
     "parallel_group": null,
     "subagent_lanes": [],
     "dashboard_updated_at": "2026-05-15T17:36:56.392Z",
-    "next_action": "Commit the shared capability upgrade, then use in-place upgrade in target Lambchop-managed repos.",
-    "timestamp": "2026-05-15T17:36:56.392Z",
+    "next_action": "Apply the committed shared-capability and source-check upgrade to target Lambchop-managed repos when requested.",
+    "timestamp": "2026-05-15T17:37:43.766Z",
     "summary": "Shared upstream skill bootstrap and Lambchop source check-in contract added.",
     "active_work_item": "task-14-shared-capabilities-and-source-checkin"
   }

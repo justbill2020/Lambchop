@@ -740,3 +740,8 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Maintenance: Lambchop automation paused before workflow edits; unpause after final validation/commit; no run-now after maintenance unpause.
 - Audit caveat: `python C:\Users\BillMartin\.codex\skills\writing-automation\scripts\audit_automation_store.py --codex-home $env:USERPROFILE\.codex` reported unrelated registry drift: `active_folder_missing_toml:dm4me-codeit-20260515-122425`. Lambchop automation record remained managed through app tooling.
 - Source ledger follow-up: recorded applied Lambchop feature commit `c52a31918d91ee991478bc15eb2b73c047edc883`; target repos should save the external Lambchop source commit they upgrade from.
+
+## 2026-05-15 12:40 - shared capability maintenance finalization
+- Updated app-visible Lambchop automation prompt with shared capability and Lambchop source check-in rules.
+- Unpaused `lambchop-autonomous-coding-team` with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH`.
+- No scheduler-visible run-now was triggered after maintenance unpause.

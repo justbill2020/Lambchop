@@ -23,16 +23,17 @@
   "pause_recommended": false,
   "pause_after_consecutive_no_progress_runs": 3,
   "last_result": "shared_capability_bootstrap_and_lambchop_source_checkin_added",
-  "last_trigger_result": "maintenance_paused_no_run_now_pending_unpause",
-  "updated_at": "2026-05-15T17:34:15.959Z",
+  "last_trigger_result": "maintenance_unpaused_no_run_now",
+  "updated_at": "2026-05-15T17:37:43.766Z",
   "scheduler_persistence": {
     "desired_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
     "actual_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
-    "status": "PAUSED_for_maintenance",
+    "status": "ACTIVE_after_shared_capability_maintenance",
     "automation_id": "lambchop-autonomous-coding-team",
     "last_checked_at": "2026-05-15T17:14:53.505Z",
-    "notes": "Automation paused during shared capability maintenance. Unpause after validation and commit; do not run-now after maintenance unpause.",
-    "updated_at": "2026-05-15T17:34:15.959Z"
+    "notes": "Lambchop automation prompt updated and automation unpaused after shared capability maintenance. No run-now was triggered after maintenance unpause.",
+    "updated_at": "2026-05-15T17:37:43.766Z",
+    "rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH"
   },
   "audit_result": {
     "status": "failed_unrelated_registry_drift",
