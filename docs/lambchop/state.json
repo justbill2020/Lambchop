@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-15T17:36:08.430Z",
+    "updated_at": "2026-05-15T17:36:56.392Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -149,11 +149,11 @@
     "lambchop_source": {
       "mode": "commit-pinned-in-place-upgrade",
       "repository": "git@github.com:justbill2020/Lambchop.git",
-      "installed_commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
-      "latest_checked_commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+      "installed_commit": "c52a31918d91ee991478bc15eb2b73c047edc883",
+      "latest_checked_commit": "c52a31918d91ee991478bc15eb2b73c047edc883",
       "status": "current",
-      "last_checked_at": "2026-05-15T17:36:08.430Z",
-      "notes": "This repo records the Lambchop source commit used for its own maintenance. Target repos should record this value during setup/upgrade and compare it during future check-ins."
+      "last_checked_at": "2026-05-15T17:36:56.392Z",
+      "notes": "Self-maintenance ledger records the applied feature commit. Target repos record the external Lambchop source commit used during setup/upgrade and compare it with current Lambchop source during future check-ins."
     }
   },
   "work_items": [
@@ -1136,7 +1136,7 @@
       ],
       "branch": "main",
       "worktree": null,
-      "commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+      "commit": "c52a31918d91ee991478bc15eb2b73c047edc883",
       "blocker": null,
       "orchestration": {
         "mode": "single-item",
@@ -1172,10 +1172,10 @@
         "target_branch": "main",
         "status": "integrated",
         "merged_at": "2026-05-15T17:34:15.959Z",
-        "merge_commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+        "merge_commit": "c52a31918d91ee991478bc15eb2b73c047edc883",
         "reconciled_at": "2026-05-15T17:34:15.959Z"
       },
-      "updated_at": "2026-05-15T17:36:08.430Z"
+      "updated_at": "2026-05-15T17:36:56.392Z"
     }
   ],
   "proposal_backlog": [
@@ -1237,9 +1237,9 @@
     "work_item_key": "task-13-intake-automation-handoff-guardrail",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-15T17:36:08.430Z",
+    "dashboard_updated_at": "2026-05-15T17:36:56.392Z",
     "next_action": "Commit the shared capability upgrade, then use in-place upgrade in target Lambchop-managed repos.",
-    "timestamp": "2026-05-15T17:36:08.430Z",
+    "timestamp": "2026-05-15T17:36:56.392Z",
     "summary": "Shared upstream skill bootstrap and Lambchop source check-in contract added.",
     "active_work_item": "task-14-shared-capabilities-and-source-checkin"
   }
