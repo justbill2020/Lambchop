@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "registry_file": "lambchop/shared-capabilities.json",
+  "skills": [
+    {
+      "name": "superpowers",
+      "display_name": "Superpowers",
+      "repository": "https://github.com/obra/superpowers.git",
+      "install_type": "skill_collection",
+      "skill_path": "skills",
+      "required": true,
+      "use_when": "planning, TDD, debugging, subagent dispatch, code review, verification, and implementation workflow discipline"
+    },
+    {
+      "name": "huashu-design",
+      "display_name": "Huashu Design",
+      "repository": "https://github.com/alchaincyf/huashu-design.git",
+      "install_type": "single_skill",
+      "skill_path": ".",
+      "target_name": "huashu-design",
+      "required": true,
+      "use_when": "dashboard GUI, app UI, prototype, mockup, visual direction exploration, motion, infographic, slide, or design critique work"
+    }
+  ]
+}

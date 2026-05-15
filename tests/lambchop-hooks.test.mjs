@@ -73,6 +73,8 @@ test('prompt and session hooks add Lambchop operating context', () => {
   });
   assert.match(session.hookSpecificOutput.additionalContext, /WORKFLOW\.md/);
   assert.match(session.hookSpecificOutput.additionalContext, /repo-local hooks/i);
+  assert.match(session.hookSpecificOutput.additionalContext, /Huashu Design/i);
+  assert.match(session.hookSpecificOutput.additionalContext, /Lambchop source/i);
 
   const prompt = runPython(join(templateRoot, 'hooks', 'lambchop_user_prompt_submit.py'), {
     hook_event_name: 'UserPromptSubmit',
@@ -83,6 +85,12 @@ test('prompt and session hooks add Lambchop operating context', () => {
   assert.match(prompt.hookSpecificOutput.additionalContext, /do not implement/i);
   assert.match(prompt.hookSpecificOutput.additionalContext, /unpause/i);
   assert.match(prompt.hookSpecificOutput.additionalContext, /trigger/i);
+
+  const design = runPython(join(templateRoot, 'hooks', 'lambchop_user_prompt_submit.py'), {
+    prompt: 'Please improve the dashboard GUI layout and visual polish.',
+  });
+  assert.match(design.hookSpecificOutput.additionalContext, /Huashu Design/i);
+  assert.match(design.hookSpecificOutput.additionalContext, /before changing/i);
 });
 
 test('PostToolUse and Stop hooks request evidence when workflow quality is at risk', () => {

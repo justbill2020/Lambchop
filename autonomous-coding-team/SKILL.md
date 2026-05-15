@@ -42,14 +42,15 @@ These notes are informational and do not change the Codex-first v1 workflow.
 3. Ask only for decisions that cannot be inferred, such as project purpose, source of truth, initial cadence, autonomy limits, and current milestone definition of done.
 4. Load `references/setup-interview.md` for the interview and setup sequence.
 5. Load `references/local-skill-install.md` when installing or linking this skill for local use.
-6. Load `references/upstream-skills.md` before installing or recommending general workflow skills such as Superpowers; prefer current upstream GitHub sources over cached embedded copies.
+6. Load `references/upstream-skills.md` before installing or recommending core upstream skills such as Superpowers and Huashu Design; prefer current upstream GitHub sources over cached embedded copies.
 7. Load `references/github-repo-deployment.md` when the user points to a GitHub repo, remote URL, or local project path to receive the autonomous team.
 8. Load `references/kanban-workflow-lessons.md` when adapting the proven Markdown Kanban, automation memory, task work log, review gate, or subagent-evaluation pattern.
 9. Load `references/workflow-architecture.md`, `references/work-item-model.md`, `references/scheduled-work-plan.md`, `references/automation-prompt.md`, and `references/proof-of-work.md` before writing workflow, state, progress, backoff, schedule plan, hook, or automation prompt content.
 10. Copy and customize templates from `assets/templates/`; remove all placeholders before finishing.
-11. Install or repair repo-local Codex hooks from `assets/templates/.codex/` during setup and in-place upgrades when project hooks are available and trusted. Use `tools/install-repo-hooks.ps1` or equivalent merge behavior: preserve unrelated hooks and replace only Lambchop-owned hook entries.
-12. Load `references/validation-checklist.md` and validate the generated setup before claiming completion.
-13. Load `references/autonomous-workflow-lessons.md` when adapting, repairing, or extending the operating contract.
+11. Check or install shared capabilities during setup and in-place upgrades using `tools/install-upstream-skills.ps1` and `references/core-upstream-skills.json`. Install missing core upstream skills once into the shared Codex skills area, record source commits in `$CODEX_HOME/lambchop/shared-capabilities.json`, and record any `update_available` or blocked status in project state/progress/dashboard evidence.
+12. Install or repair repo-local Codex hooks from `assets/templates/.codex/` during setup and in-place upgrades when project hooks are available and trusted. Use `tools/install-repo-hooks.ps1` or equivalent merge behavior: preserve unrelated hooks and replace only Lambchop-owned hook entries.
+13. Load `references/validation-checklist.md` and validate the generated setup before claiming completion.
+14. Load `references/autonomous-workflow-lessons.md` when adapting, repairing, or extending the operating contract.
 
 ## Safety Defaults
 - Create implementation work in a per-item `.worktrees/` folder on a `codex/` branch named for the project slug and work item.
@@ -61,6 +62,9 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Use Superpowers `dispatching-parallel-agents` for bounded non-overlapping subagent lanes when available and useful.
 - Fall back to single-item local work when fewer than 2 independent tasks exist or multi-agent support is unavailable, and record why.
 - Install `docs/<project-slug>/dashboard.html`, `dashboard.compose.yml`, `dashboard.env`, and `dashboard-server/`; keep one shared dashboard hub GUI port, choose a free per-project API port, register the project API with the shared Docker registry volume, and keep dashboard data current from real workflow files during setup and every run.
+- Treat Superpowers and Huashu Design as shared first-run capabilities like the dashboard hub: check the shared Codex skills area first, install missing upstream skills once, record exact source commits, and reuse them across Lambchop-managed repos.
+- Use Huashu Design for dashboard GUI, app UI, prototype, visual direction, motion, infographic, slide, and design critique work before changing user-facing UI.
+- Record the Lambchop source commit used for setup or in-place upgrade in each target repo so future hooks/upgrade runs can compare it with the current Lambchop source and repair stale deployments.
 - Install or repair repo-local `.codex/hooks.json` and `.codex/hooks/lambchop_*.py` during setup and in-place upgrade. Hooks are the active-session quality layer; automations remain the unattended execution engine. If project hooks are unavailable or untrusted, record the fallback and continue with the automation-only contract.
 - Keep blocked work visible to discovery, validation, context lookup, and backoff decisions.
 - Treat review/pending-review work as unfinished until fresh validation evidence promotes it.
@@ -91,6 +95,9 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Serializing independent sprint work when 2 to 5 safe subagent lanes are available.
 - Letting a subagent act as orchestrator, update scheduler fields, or overwrite another lane.
 - Letting the dashboard drift from state/progress/roadmap evidence.
+- Treating Huashu Design as a one-off manual instruction instead of a shared upstream skill dependency.
+- Upgrading a target repo without recording the Lambchop source commit that was applied.
+- Seeing a saved upstream skill commit differ from latest and silently ignoring `update_available` evidence.
 - Skipping repo-local hook repair during an in-place upgrade.
 - Replacing unrelated existing hooks instead of merging only Lambchop-owned hook entries.
 - Treating hooks as a replacement for the parked weekly automation and completion trigger.

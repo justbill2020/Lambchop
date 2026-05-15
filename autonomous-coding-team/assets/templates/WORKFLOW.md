@@ -17,6 +17,8 @@ automation:
   dashboard_server_dir: docs/<PROJECT_SLUG>/dashboard-server
   hooks_file: .codex/hooks.json
   hooks_dir: .codex/hooks
+  shared_capabilities_registry: $CODEX_HOME/lambchop/shared-capabilities.json
+  core_upstream_skills_manifest: autonomous-coding-team/references/core-upstream-skills.json
   dashboard_hub_port: 8765
   project_api_default_port: 8766
   memory_file_primary: $CODEX_HOME/automations/<AUTOMATION_ID>/memory.md
@@ -90,6 +92,8 @@ When instructions conflict, follow explicit user intent first, then safety, then
 - `proposal_backlog`: candidate next work with `needs_user_review`; proposals are visible in the dashboard but are not executable work items until the user approves or edits them.
 - `reactive status stream`: the project API `/api/events` server-sent event stream and hub `/api/project-events` registry stream that publish real state/progress/backoff/dashboard changes.
 - `repo-local hooks`: Codex lifecycle hooks installed under `.codex/` for active-session context, safety guardrails, evidence reminders, and completion checks. They improve automation and chat quality but do not replace the unattended cron automation.
+- `shared capabilities`: first-run shared resources installed once into the Codex environment and reused by every Lambchop-managed repo. This includes the dashboard hub, Superpowers, Huashu Design, and future core upstream skills.
+- `Lambchop source commit`: the git commit of the Lambchop skill/templates used during setup or in-place upgrade. Target repos must record it so later check-ins can compare the saved commit with the current Lambchop source and repair stale deployments.
 
 ## Allowed Actions
 By default, automation may:
@@ -134,6 +138,20 @@ Hooks are an active-session quality layer. They load Lambchop context on session
 
 If project hooks are unavailable, untrusted, or blocked by malformed existing hook config, record `hooks.status` as `unavailable` or `blocked` in state, progress, and dashboard data. Continue with the automation-only contract and make hook repair a visible next action.
 
+## Shared Capabilities And Upstream Skills
+Lambchop uses the same first-to-run, install-once pattern for shared skills that it uses for the dashboard hub. During setup, in-place upgrade, and automation maintenance, run or follow `autonomous-coding-team/tools/install-upstream-skills.ps1` with `autonomous-coding-team/references/core-upstream-skills.json`. Check the Codex shared skills root first; install only missing required skills; when a skill is already installed, record it as available instead of replacing it.
+
+Required shared upstream skills are:
+
+- Superpowers for planning, TDD, debugging, subagent dispatch, review, and verification workflows.
+- Huashu Design for dashboard GUI, app UI, prototype, mockup, visual direction, motion, infographic, slide, and design critique work.
+
+The bootstrapper records source commits in `$CODEX_HOME/lambchop/shared-capabilities.json`. If a later setup or upgrade finds that an upstream skill's saved `installed_commit` differs from the latest checked commit, record `update_available` and update only during an explicit setup/upgrade/maintenance path, not opportunistically mid-task.
+
+Every Lambchop-managed repo must also record the Lambchop source commit used for setup or upgrade in its state/dashboard/progress evidence. Repo-local hooks and upgrade runs must check this saved commit against the current Lambchop source. If the target repo is behind, queue or perform the normal in-place Lambchop upgrade: repair workflow files, dashboard artifacts, hooks, shared-capability status, and automation prompt while preserving project history and unrelated local hooks.
+
+For user-facing interface work, load Huashu Design before changing the dashboard or app UI. Use it as the design/prototype/critique layer, then implement the selected direction in the project code or Lambchop dashboard template.
+
 ## First Run Discovery
 On the first run, or whenever required project details are missing, inspect before selecting work:
 
@@ -160,7 +178,7 @@ Every automation run must:
    - Windows fallback: `%USERPROFILE%\.codex\automations\<AUTOMATION_ID>\memory.md`
    - Unix fallback: `~/.codex/automations/<AUTOMATION_ID>/memory.md`
 4. Inspect repository structure, git status, current branch, remotes, local branches, and `git worktree list --porcelain`.
-5. Inspect repo-local hook status and repair Lambchop-owned hooks during setup or in-place upgrade work.
+5. Inspect repo-local hook status and shared-capability status; repair Lambchop-owned hooks and check the saved Lambchop source commit during setup or in-place upgrade work.
 6. Run git write-access preflight:
    - create and delete a temporary branch
    - create and remove a temporary worktree under `.worktrees/`
@@ -181,7 +199,7 @@ Every automation run must:
 20. Commit coherent completed changes locally with validation details in the commit body.
 21. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review.
 22. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/<PROJECT_SLUG>/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
-23. Update state, progress, and the schedule/trigger ledger.
+23. Update state, progress, shared-capability evidence, and the schedule/trigger ledger.
 24. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.
 25. Apply the completion trigger protocol: if the automation is ACTIVE and the no-progress guard did not pause or block triggering, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
 26. Append an operator summary for the user.

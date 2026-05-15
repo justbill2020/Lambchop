@@ -729,3 +729,13 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Hook JSON parse passed for installed and template hook configs.
 - Next work:
   - Apply an in-place Lambchop upgrade to DM4me or another target repo so its repo-local hooks enforce intake plus automation handoff.
+
+## 2026-05-15 12:33 - shared capabilities and source check-in
+- Added first-run shared capability bootstrap for Superpowers and Huashu Design.
+- Installed Superpowers at f2cbfbefebbfef77321e4c9abc9e949826bea9d7 and Huashu Design at 8e25b23709747a747b80bf4d3820def8f8054a4e.
+- Added Lambchop source commit tracking so target repos can compare saved upgrade commit 3694a1ac78ae2827dd13e463e511ba8fb08cead2 with the current Lambchop source during future check-ins.
+- Final Lambchop source commit recorded after amend: bc3f1451e99e4cc166ed3055d8f41544c314d38f.
+- Updated hooks/templates/workflow guidance so UI/dashboard work uses Huashu Design and setup/upgrade work checks shared capabilities.
+- Validation: `node --test tests/shared-capabilities.test.mjs` passed.
+- Maintenance: Lambchop automation paused before workflow edits; unpause after final validation/commit; no run-now after maintenance unpause.
+- Audit caveat: `python C:\Users\BillMartin\.codex\skills\writing-automation\scripts\audit_automation_store.py --codex-home $env:USERPROFILE\.codex` reported unrelated registry drift: `active_folder_missing_toml:dm4me-codeit-20260515-122425`. Lambchop automation record remained managed through app tooling.

@@ -15,7 +15,7 @@
     "branch_name_template": "codex/lambchop-{work_item_key}",
     "automation_id": "lambchop-autonomous-coding-team",
     "automation_status": "ACTIVE",
-    "contract_version": "lambchop-current-2026-05-15-intake-handoff",
+    "contract_version": "lambchop-current-2026-05-15-shared-capabilities",
     "concurrency_mode": "cooperative",
     "max_concurrent_runs": 5,
     "lease_minutes": 120,
@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-15T12:13:37.4909851-05:00",
+    "updated_at": "2026-05-15T17:36:08.430Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -107,8 +107,53 @@
       "hooks_file": ".codex/hooks.json",
       "hooks_dir": ".codex/hooks",
       "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
-      "last_checked_at": "2026-05-15T12:13:37.4909851-05:00",
-      "notes": "Hooks now require feature/bug chats to queue tasks, unpause or confirm active automation, trigger scheduler-visible run-now, and avoid direct chat implementation."
+      "last_checked_at": "2026-05-15T17:34:15.959Z",
+      "notes": "Hooks now require feature/bug chats to queue tasks and hand off to automation; they also remind UI work to use Huashu Design and setup/upgrade work to check Lambchop source commits."
+    },
+    "shared_capabilities": {
+      "mode": "first-run-install-once",
+      "registry_file": "$CODEX_HOME/lambchop/shared-capabilities.json",
+      "manifest_file": "autonomous-coding-team/references/core-upstream-skills.json",
+      "status": "installed",
+      "last_checked_at": "2026-05-15T17:34:15.959Z",
+      "skills": {
+        "huashu-design": {
+          "name": "huashu-design",
+          "display_name": "Huashu Design",
+          "repository": "https://github.com/alchaincyf/huashu-design.git",
+          "source": "https://github.com/alchaincyf/huashu-design.git",
+          "install_type": "single_skill",
+          "skill_path": ".",
+          "status": "installed",
+          "installed_commit": "8e25b23709747a747b80bf4d3820def8f8054a4e",
+          "latest_commit": "8e25b23709747a747b80bf4d3820def8f8054a4e",
+          "checked_at": "2026-05-15T17:33:17.9949973Z",
+          "use_when": "dashboard GUI, app UI, prototype, mockup, visual direction exploration, motion, infographic, slide, or design critique work"
+        },
+        "superpowers": {
+          "name": "superpowers",
+          "display_name": "Superpowers",
+          "repository": "https://github.com/obra/superpowers.git",
+          "source": "https://github.com/obra/superpowers.git",
+          "install_type": "skill_collection",
+          "skill_path": "skills",
+          "status": "installed",
+          "installed_commit": "f2cbfbefebbfef77321e4c9abc9e949826bea9d7",
+          "latest_commit": "f2cbfbefebbfef77321e4c9abc9e949826bea9d7",
+          "checked_at": "2026-05-15T17:33:14.4151869Z",
+          "use_when": "planning, TDD, debugging, subagent dispatch, code review, verification, and implementation workflow discipline"
+        }
+      },
+      "notes": "Superpowers and Huashu Design installed as shared upstream skills; future setup/upgrade checks compare installed_commit with latest_commit and record update_available when they differ."
+    },
+    "lambchop_source": {
+      "mode": "commit-pinned-in-place-upgrade",
+      "repository": "git@github.com:justbill2020/Lambchop.git",
+      "installed_commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+      "latest_checked_commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+      "status": "current",
+      "last_checked_at": "2026-05-15T17:36:08.430Z",
+      "notes": "This repo records the Lambchop source commit used for its own maintenance. Target repos should record this value during setup/upgrade and compare it during future check-ins."
     }
   },
   "work_items": [
@@ -1058,6 +1103,79 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "ready",
       "completed_at": "2026-05-15T12:13:37.4909851-05:00"
+    },
+    {
+      "key": "task-14-shared-capabilities-and-source-checkin",
+      "title": "Add shared upstream skill bootstrap and Lambchop source check-in contract",
+      "type": "workflow-capability",
+      "status": "done",
+      "priority": 8,
+      "dependencies": [
+        "task-12-repo-local-hooks-upgrade"
+      ],
+      "source_refs": [
+        "autonomous-coding-team/tools/install-upstream-skills.ps1",
+        "autonomous-coding-team/references/core-upstream-skills.json",
+        "autonomous-coding-team/references/upstream-skills.md",
+        "WORKFLOW.md#shared-capabilities-and-upstream-skills"
+      ],
+      "acceptance_criteria": [
+        "Lambchop checks/installs Superpowers and Huashu Design as shared upstream skills using an install-once pattern.",
+        "Shared capability registry records installed and latest source commits.",
+        "Setup and in-place upgrade contracts record Lambchop source commits for future stale-deployment checks.",
+        "Hooks remind UI/dashboard work to use Huashu Design and upgrade work to check Lambchop source commits."
+      ],
+      "implementation_notes": [
+        "Added PowerShell bootstrapper with local-source override support for tests.",
+        "Installed Superpowers and Huashu Design into the shared Codex skills area for this machine."
+      ],
+      "validation": [
+        "node --test tests/shared-capabilities.test.mjs passed",
+        "shared bootstrapper installed superpowers@f2cbfbefebbfef77321e4c9abc9e949826bea9d7",
+        "shared bootstrapper installed huashu-design@8e25b23709747a747b80bf4d3820def8f8054a4e"
+      ],
+      "branch": "main",
+      "worktree": null,
+      "commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+      "blocker": null,
+      "orchestration": {
+        "mode": "single-item",
+        "parallel_group": null,
+        "orchestrator_run_id": "manual-maintenance-2026-05-15-shared-capabilities",
+        "parallelism_reason": "Workflow/tooling maintenance touched shared Lambchop contracts and templates."
+      },
+      "assigned_subagent": null,
+      "parallel_group": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "integrated",
+      "exclusive_scope": [
+        "autonomous-coding-team/tools/install-upstream-skills.ps1",
+        "autonomous-coding-team/references/core-upstream-skills.json",
+        "autonomous-coding-team/references/upstream-skills.md",
+        "WORKFLOW.md",
+        ".codex/hooks/"
+      ],
+      "shared_scope": [
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/dashboard-data.json"
+      ],
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "next_step": "Use this shared capability contract when upgrading Lambchop-managed repos such as DM4me.",
+      "integration": {
+        "target_branch": "main",
+        "status": "integrated",
+        "merged_at": "2026-05-15T17:34:15.959Z",
+        "merge_commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+        "reconciled_at": "2026-05-15T17:34:15.959Z"
+      },
+      "updated_at": "2026-05-15T17:36:08.430Z"
     }
   ],
   "proposal_backlog": [
@@ -1119,7 +1237,10 @@
     "work_item_key": "task-13-intake-automation-handoff-guardrail",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-15T12:13:37.4909851-05:00",
-    "next_action": "Commit the intake handoff guardrail, unpause Lambchop automation without run-now, then apply the in-place upgrade to target repos that need it."
+    "dashboard_updated_at": "2026-05-15T17:36:08.430Z",
+    "next_action": "Commit the shared capability upgrade, then use in-place upgrade in target Lambchop-managed repos.",
+    "timestamp": "2026-05-15T17:36:08.430Z",
+    "summary": "Shared upstream skill bootstrap and Lambchop source check-in contract added.",
+    "active_work_item": "task-14-shared-capabilities-and-source-checkin"
   }
 }

@@ -73,7 +73,14 @@ After linking/copying:
 - Confirm the `autonomous-coding-team` skill is available and can be invoked by name.
 
 ## Related Upstream Skills
-Lambchop intentionally embeds only its own `autonomous-coding-team` skill. Install general-purpose workflow packs such as Superpowers from their upstream GitHub source when available; see [`upstream-skills.md`](upstream-skills.md).
+Lambchop intentionally embeds only its own `autonomous-coding-team` skill. Install shared upstream skills such as Superpowers and Huashu Design from their upstream GitHub sources when available; see [`upstream-skills.md`](upstream-skills.md).
+
+Codex-first shared capability bootstrap:
+```powershell
+pwsh -NoProfile -File autonomous-coding-team\\tools\\install-upstream-skills.ps1
+```
+
+This checks the shared Codex skills area first, installs missing core upstream skills once, and records source commits in `$CODEX_HOME/lambchop/shared-capabilities.json`.
 
 ## Notes / Non-Goals
 - This is Codex-first installation. Cursor / Claude Code compatibility is explicitly out-of-scope for v1.

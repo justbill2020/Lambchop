@@ -5,18 +5,18 @@
     "phase": "autonomous-skill-mvp",
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
-    "contract_version": "lambchop-current-2026-05-15-intake-handoff",
-    "updated_at": "2026-05-15T12:13:37.4909851-05:00"
+    "contract_version": "lambchop-current-2026-05-15-shared-capabilities",
+    "updated_at": "2026-05-15T17:36:08.430Z"
   },
   "summary": {
     "todo": 0,
     "in_progress": 0,
     "blocked": 0,
-    "done": 15,
+    "done": 11,
     "skipped": 0,
     "proposals_need_review": 3,
     "active_parallel_lanes": 0,
-    "next_action": "Apply in-place hook upgrade to target repos such as DM4me so feature chats hand off to automation."
+    "next_action": "Commit shared capability upgrade; then apply in-place upgrades to target repos."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -243,6 +243,24 @@
       ],
       "blocker": null,
       "next_step": "Apply an in-place upgrade to a target Lambchop-managed repo such as DM4me so its hooks enforce intake plus automation handoff."
+    },
+    {
+      "key": "task-14-shared-capabilities-and-source-checkin",
+      "title": "Add shared upstream skill bootstrap and Lambchop source check-in contract",
+      "status": "done",
+      "priority": 8,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "integrated",
+      "branch": "main",
+      "worktree": null,
+      "validation": [
+        "node --test tests/shared-capabilities.test.mjs passed"
+      ],
+      "blocker": null,
+      "next_step": "Use shared capability bootstrap during target repo upgrades.",
+      "commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f"
     }
   ],
   "proposal_backlog": [
@@ -336,7 +354,10 @@
     "parallel_group": null,
     "subagent_lanes": [],
     "dashboard_updated_at": "2026-05-15T12:13:37.4909851-05:00",
-    "next_action": "Commit the intake handoff guardrail, unpause Lambchop automation without run-now, then apply the in-place upgrade to target repos that need it."
+    "next_action": "Commit shared capability upgrade; then apply in-place upgrades to target repos.",
+    "timestamp": "2026-05-15T17:36:08.430Z",
+    "summary": "Shared upstream skill bootstrap and Lambchop source check-in contract added.",
+    "active_work_item": "task-14-shared-capabilities-and-source-checkin"
   },
   "hooks": {
     "mode": "repo-local",
@@ -344,7 +365,34 @@
     "hooks_file": ".codex/hooks.json",
     "hooks_dir": ".codex/hooks",
     "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
-    "last_checked_at": "2026-05-15T12:13:37.4909851-05:00",
-    "notes": "Feature/bug chats must create tasks and hand off to automation; direct chat implementation is blocked unless explicitly overridden."
+    "last_checked_at": "2026-05-15T17:34:15.959Z",
+    "notes": "Hooks now require feature/bug chats to queue tasks and hand off to automation; they also remind UI work to use Huashu Design and setup/upgrade work to check Lambchop source commits."
+  },
+  "shared_capabilities": {
+    "mode": "first-run-install-once",
+    "status": "installed",
+    "registry_file": "$CODEX_HOME/lambchop/shared-capabilities.json",
+    "skills": {
+      "superpowers": {
+        "status": "installed",
+        "installed_commit": "f2cbfbefebbfef77321e4c9abc9e949826bea9d7",
+        "latest_commit": "f2cbfbefebbfef77321e4c9abc9e949826bea9d7"
+      },
+      "huashu-design": {
+        "status": "installed",
+        "installed_commit": "8e25b23709747a747b80bf4d3820def8f8054a4e",
+        "latest_commit": "8e25b23709747a747b80bf4d3820def8f8054a4e"
+      }
+    },
+    "notes": "Superpowers and Huashu Design installed as shared upstream skills; future setup/upgrade checks compare installed_commit with latest_commit and record update_available when they differ."
+  },
+  "lambchop_source": {
+    "mode": "commit-pinned-in-place-upgrade",
+    "repository": "git@github.com:justbill2020/Lambchop.git",
+    "installed_commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+    "latest_checked_commit": "bc3f1451e99e4cc166ed3055d8f41544c314d38f",
+    "status": "current",
+    "last_checked_at": "2026-05-15T17:36:08.430Z",
+    "notes": "This repo records the Lambchop source commit used for its own maintenance. Target repos should record this value during setup/upgrade and compare it during future check-ins."
   }
 }

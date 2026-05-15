@@ -27,6 +27,8 @@ Every configured repo should contain:
 - adaptive 2-5 parallel subagent orchestration policy
 - dashboard data and local visual dashboard paths
 - repo-local hook paths, trust/fallback policy, and merge-namespaced upgrade behavior
+- shared capability bootstrap status for Superpowers, Huashu Design, and future core upstream skills
+- Lambchop source commit tracking for in-place upgrade checks
 - cooperative lease rules
 - review consolidation and blocked-work recheck rules
 - local-only operator input rules for ignored private files, credentials, or fixtures
@@ -40,7 +42,7 @@ Every automation run:
 1. Read `WORKFLOW.md` first.
 2. Read state, progress, and backoff ledgers.
 3. Resolve automation memory.
-4. Inspect repo structure, git status, branches, remotes, worktrees, and repo-local hook status.
+4. Inspect repo structure, git status, branches, remotes, worktrees, repo-local hook status, shared capability status, and saved Lambchop source commit.
 5. Run git write-access preflight before selecting work.
 6. Reconcile state/progress with repository reality.
 7. Recheck blocked items whose next step is testable in the current environment.
@@ -54,7 +56,7 @@ Every automation run:
 15. Commit coherent completed changes locally.
 16. After completion, plan or select the next item before schedule finalization; if the queue is exhausted, create PRD/spec-backed proposals with `needs_user_review` instead of merely reporting all tasks complete.
 17. Keep dashboard data current from real workflow evidence so the Dockerized dashboard server shows live status.
-18. Update state, progress, schedule/trigger ledger, and automation memory.
+18. Update state, progress, shared capability evidence, schedule/trigger ledger, and automation memory.
 19. Apply the no-progress pause guard before triggering: reset the counter after real work, increment it after no-progress, and pause the automation after 3 consecutive no-progress runs.
 20. If the automation is ACTIVE and the no-progress guard did not pause or block triggering, first repair the parked weekly anchor to yesterday's weekday at noon, then trigger the next scheduler-visible run; if PAUSED or inactive, skip the trigger and record why.
 21. Stop safely if blocked.
@@ -70,6 +72,13 @@ When Codex project hooks are available and trusted, setup and in-place upgrades 
 Hook installation uses merge-namespaced behavior. Preserve unrelated existing hook handlers, remove stale Lambchop-owned handlers identified by `lambchop_` commands, then append the current Lambchop hook groups. If hooks are unavailable, untrusted, or malformed, record `hooks.status` as `unavailable` or `blocked` in state/progress/dashboard data and continue with the automation-only contract.
 
 Hooks do not replace the recurring Codex cron automation. They are guardrails and context injectors for active Codex sessions; the parked weekly anchor plus scheduler-visible completion trigger remains the unattended execution path.
+
+## Shared Capabilities And Source Check-In
+Shared capabilities are installed once and reused across Lambchop-managed repos. Use `tools/install-upstream-skills.ps1` with `references/core-upstream-skills.json` during setup and in-place upgrade to check or install Superpowers and Huashu Design. The shared registry at `$CODEX_HOME/lambchop/shared-capabilities.json` stores `installed_commit`, `latest_commit`, status, and blockers.
+
+Huashu Design is the required design/prototype/critique skill for dashboard GUI, app UI, mockup, visual direction, motion, infographic, and slide work. Superpowers remains the required workflow skill family for planning, TDD, debugging, review, verification, and subagent coordination. If either skill is unavailable, record the limitation and continue with the safest embedded Lambchop workflow.
+
+Every target repo must record the Lambchop source commit used for setup or upgrade. Hooks and automation check-ins compare the saved commit with the current Lambchop source commit. If the repo is behind, run the normal in-place upgrade path: preserve workflow history, automation id, project ledgers, unrelated hooks, and dashboard evidence while repairing Lambchop-owned workflow files, hooks, dashboard artifacts, shared capability records, and automation prompt guidance.
 
 ## No-Progress Pause Guard
 

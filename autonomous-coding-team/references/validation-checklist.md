@@ -15,6 +15,9 @@ Before claiming a setup is complete, confirm:
 - in-place upgrades preserve unrelated existing hooks and replace only Lambchop-owned hook entries.
 - `dashboard.env` records one shared `LAMBCHOP_DASHBOARD_PORT`, a unique `LAMBCHOP_PROJECT_API_PORT`, `LAMBCHOP_PROJECT_SLUG`, `LAMBCHOP_PROJECT_NAME`, and `LAMBCHOP_PROJECT_API_PUBLIC_URL`.
 - setup does not allocate a new GUI port per repo; it allocates a project API port and registers the project with the shared dashboard hub.
+- shared capabilities are checked or installed once into the Codex skills area using the upstream skills manifest.
+- shared capability evidence records Superpowers and Huashu Design status plus installed/latest source commits or blockers.
+- the target repo records the Lambchop source commit used for setup or upgrade, and upgrade checks compare that saved commit with current Lambchop source.
 - the Dockerized project API responds locally, `/api/status` returns live workflow data, `/api/events` streams updates, and the hub `/api/projects` registry includes the project.
 - The workflow states local-only safety defaults.
 - The workflow includes project chat intake rules: ordinary chats investigate user-reported needs or breakages, create/update queued work items and progress evidence, and do not implement unless explicitly overridden.
@@ -44,7 +47,7 @@ For this skill project:
 - Reference files are directly linked from `SKILL.md`.
 - Templates contain intentional placeholder tokens only in `assets/templates/`.
 - The skill explains inspect-before-asking and local-only autonomy.
-- The README and skill references tell target repos to install Superpowers from upstream GitHub when available instead of copying cached local skill versions.
+- The README and skill references tell target repos to install Superpowers and Huashu Design from upstream GitHub when available instead of copying cached local skill versions.
 - The setup flow records whether subagents were spawned, not useful, or unavailable.
 - The setup flow records dashboard files created and validates dashboard data plus the Dockerized live status endpoint.
 - Markdown Kanban guidance includes blocked and review folders in discovery, validation, task context, and no-work reasoning.
@@ -67,6 +70,10 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Parallel conflict: does exclusive-scope overlap prevent unsafe subagent dispatch while keeping non-overlapping work eligible?
 - Subagent integration: does the orchestrator review lane results, run validation, record completed/blocked/conflicted/failed_validation/not_useful outcomes, and commit only coherent validated work?
 - Dashboard accuracy: does the live dashboard reflect state counts, active lanes, blockers, validation, commits, roadmap seeds, current run, progress tail, and next action from real workflow data?
+- Shared capability bootstrap: does the first repo install missing Superpowers/Huashu skills once, and do later repos detect existing installs without replacing them?
+- Shared capability update check: when a saved installed commit differs from latest, does setup/upgrade record `update_available` or update during an explicit maintenance path?
+- Lambchop source check-in: does a target repo compare its saved Lambchop source commit to the current Lambchop source and queue or perform an in-place upgrade when behind?
+- UI design work: does dashboard/app UI work load Huashu Design before changing the user-facing interface?
 - Hook upgrade: does setup or in-place upgrade install/repair repo-local Lambchop hooks, preserve unrelated existing hooks, and record hook status?
 - Hook guardrails: do PreToolUse hooks block clearly forbidden publish/PR/deploy/destructive-git/external-tracker actions while allowing ordinary reads and validation commands?
 - Review consolidation: does the agent re-run evidence before moving review items to done?

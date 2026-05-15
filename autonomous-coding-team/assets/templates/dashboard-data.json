@@ -34,6 +34,31 @@
     "last_checked_at": "<ISO8601_TIMESTAMP>",
     "notes": "Hooks improve active-session quality; automations remain required for unattended recurrence."
   },
+  "shared_capabilities": {
+    "mode": "first-run-install-once",
+    "status": "pending_check",
+    "registry_file": "$CODEX_HOME/lambchop/shared-capabilities.json",
+    "skills": {
+      "superpowers": {
+        "status": "pending_check",
+        "installed_commit": null,
+        "latest_commit": null
+      },
+      "huashu-design": {
+        "status": "pending_check",
+        "installed_commit": null,
+        "latest_commit": null
+      }
+    },
+    "notes": "Superpowers and Huashu Design are shared upstream skills installed once and reused across Lambchop-managed repos."
+  },
+  "lambchop_source": {
+    "status": "current",
+    "installed_commit": "<LAMBCHOP_SOURCE_COMMIT>",
+    "latest_checked_commit": "<LAMBCHOP_SOURCE_COMMIT>",
+    "last_checked_at": "<ISO8601_TIMESTAMP>",
+    "notes": "Upgrade checks compare saved Lambchop source commit to current source."
+  },
   "roadmap": {
     "current_milestone": "<CURRENT_MILESTONE>",
     "planning_sources": [

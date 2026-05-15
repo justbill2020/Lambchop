@@ -24,6 +24,39 @@
       "last_checked_at": "<ISO8601_TIMESTAMP>",
       "notes": "Repo-local hooks are preferred when available and trusted; automation-only fallback must be recorded when hooks cannot be used."
     },
+    "shared_capabilities": {
+      "mode": "first-run-install-once",
+      "registry_file": "$CODEX_HOME/lambchop/shared-capabilities.json",
+      "manifest_file": "autonomous-coding-team/references/core-upstream-skills.json",
+      "status": "pending_check",
+      "last_checked_at": "<ISO8601_TIMESTAMP>",
+      "skills": {
+        "superpowers": {
+          "status": "pending_check",
+          "repository": "https://github.com/obra/superpowers.git",
+          "installed_commit": null,
+          "latest_commit": null,
+          "notes": "Required for planning, TDD, debugging, subagent dispatch, review, and verification workflows."
+        },
+        "huashu-design": {
+          "status": "pending_check",
+          "repository": "https://github.com/alchaincyf/huashu-design.git",
+          "installed_commit": null,
+          "latest_commit": null,
+          "notes": "Required for dashboard GUI, app UI, prototype, visual direction, and design critique work."
+        }
+      },
+      "notes": "Install missing core upstream skills once into the shared Codex skills area; record update_available when saved commits differ from latest."
+    },
+    "lambchop_source": {
+      "mode": "commit-pinned-in-place-upgrade",
+      "repository": "<LAMBCHOP_SOURCE_REPOSITORY>",
+      "installed_commit": "<LAMBCHOP_SOURCE_COMMIT>",
+      "latest_checked_commit": "<LAMBCHOP_SOURCE_COMMIT>",
+      "status": "current",
+      "last_checked_at": "<ISO8601_TIMESTAMP>",
+      "notes": "In-place upgrades compare this saved commit with the current Lambchop source commit and repair workflow files, hooks, dashboard artifacts, shared capability status, and automation prompt when behind."
+    },
     "automation_id": "<AUTOMATION_ID>",
     "automation_status": "ACTIVE",
     "contract_version": "lambchop-current-2026-05-14",

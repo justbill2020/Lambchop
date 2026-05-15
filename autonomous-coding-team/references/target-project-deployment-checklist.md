@@ -63,6 +63,9 @@ Use this checklist when deploying the autonomous coding team workflow into a new
   - when no ready work remains, inspect PRD/specs/roadmap before declaring no-work
   - create 3-7 `proposal_backlog` entries with `needs_user_review` when plausible next feature sets exist
   - show proposals in state, progress, and dashboard status
+  - check/install shared upstream skills once: Superpowers and Huashu Design
+  - record shared capability status and source commits in state/progress/dashboard evidence
+  - record the Lambchop source commit applied to the target repo for future in-place upgrade checks
   - convert proposals to `todo` work items only after user approval or edits
 
 ## Git Preflight (Before Claiming Work)

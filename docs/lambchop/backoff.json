@@ -22,15 +22,22 @@
   "last_no_progress_reason": null,
   "pause_recommended": false,
   "pause_after_consecutive_no_progress_runs": 3,
-  "last_result": "task-13-intake-automation-handoff-guardrail",
-  "last_trigger_result": "maintenance_unpaused_no_run_now",
-  "updated_at": "2026-05-15T17:14:53.505Z",
+  "last_result": "shared_capability_bootstrap_and_lambchop_source_checkin_added",
+  "last_trigger_result": "maintenance_paused_no_run_now_pending_unpause",
+  "updated_at": "2026-05-15T17:34:15.959Z",
   "scheduler_persistence": {
     "desired_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
     "actual_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
-    "status": "ACTIVE_after_maintenance_unpause",
+    "status": "PAUSED_for_maintenance",
     "automation_id": "lambchop-autonomous-coding-team",
     "last_checked_at": "2026-05-15T17:14:53.505Z",
-    "notes": "Paused before intake-handoff hook/workflow maintenance, updated hooks and automation prompt, then unpaused ACTIVE with parked Thursday noon RRULE. No run-now trigger requested after maintenance unpause."
+    "notes": "Automation paused during shared capability maintenance. Unpause after validation and commit; do not run-now after maintenance unpause.",
+    "updated_at": "2026-05-15T17:34:15.959Z"
+  },
+  "audit_result": {
+    "status": "failed_unrelated_registry_drift",
+    "checked_at": "2026-05-15T17:35:29.324Z",
+    "blocker": "active_folder_missing_toml:dm4me-codeit-20260515-122425",
+    "notes": "writing-automation audit failed on a non-Lambchop active automation folder missing automation.toml; Lambchop automation maintenance continues without editing unrelated automation folders."
   }
 }
