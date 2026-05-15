@@ -5,18 +5,18 @@
     "phase": "autonomous-skill-mvp",
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
-    "contract_version": "lambchop-current-2026-05-15-hooks",
-    "updated_at": "2026-05-15T11:14:23.3442214-05:00"
+    "contract_version": "lambchop-current-2026-05-15-intake-handoff",
+    "updated_at": "2026-05-15T12:13:37.4909851-05:00"
   },
   "summary": {
     "todo": 0,
     "in_progress": 0,
     "blocked": 0,
-    "done": 14,
+    "done": 15,
     "skipped": 0,
     "proposals_need_review": 3,
     "active_parallel_lanes": 0,
-    "next_action": "Review proposal backlog entries or pressure-test in-place hook upgrade in a target repo."
+    "next_action": "Apply in-place hook upgrade to target repos such as DM4me so feature chats hand off to automation."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -223,6 +223,26 @@
       ],
       "blocker": null,
       "next_step": "Review proposals or run a target-repo in-place upgrade pressure test that verifies hook merge behavior in a real Lambchop-managed project."
+    },
+    {
+      "key": "task-13-intake-automation-handoff-guardrail",
+      "title": "Require feature chat intake to hand off to automation",
+      "status": "done",
+      "priority": 20,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "RED: node --test tests/lambchop-hooks.test.mjs failed when prompt/stop hooks did not require do-not-implement and automation handoff evidence.",
+        "GREEN: node --test tests/lambchop-hooks.test.mjs passed with 9 tests and 0 failures.",
+        "python -m py_compile passed for updated template and installed hook scripts.",
+        "hook JSON parse passed for installed and template hook configs."
+      ],
+      "blocker": null,
+      "next_step": "Apply an in-place upgrade to a target Lambchop-managed repo such as DM4me so its hooks enforce intake plus automation handoff."
     }
   ],
   "proposal_backlog": [
@@ -310,13 +330,13 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "manual-20260515-repo-local-hooks-upgrade",
-    "started_at": "2026-05-15T11:14:23.3442214-05:00",
-    "work_item_key": "task-12-repo-local-hooks-upgrade",
+    "run_id": "manual-20260515-intake-automation-handoff",
+    "started_at": "2026-05-15T12:13:37.4909851-05:00",
+    "work_item_key": "task-13-intake-automation-handoff-guardrail",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-15T11:14:23.3442214-05:00",
-    "next_action": "Review proposal backlog entries or pressure-test in-place hook upgrade in a target repo; no run-now trigger was requested after maintenance unpause."
+    "dashboard_updated_at": "2026-05-15T12:13:37.4909851-05:00",
+    "next_action": "Commit the intake handoff guardrail, unpause Lambchop automation without run-now, then apply the in-place upgrade to target repos that need it."
   },
   "hooks": {
     "mode": "repo-local",
@@ -324,7 +344,7 @@
     "hooks_file": ".codex/hooks.json",
     "hooks_dir": ".codex/hooks",
     "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
-    "last_checked_at": "2026-05-15T11:14:23.3442214-05:00",
-    "notes": "Installed in Lambchop and templated for setup/in-place upgrades; automations remain required for unattended recurrence."
+    "last_checked_at": "2026-05-15T12:13:37.4909851-05:00",
+    "notes": "Feature/bug chats must create tasks and hand off to automation; direct chat implementation is blocked unless explicitly overridden."
   }
 }

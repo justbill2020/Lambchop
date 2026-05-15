@@ -705,3 +705,27 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Automation-store audit found pre-existing unrelated active folders missing utomation.toml (diagram-datacenter-details-labels, lane-NA-042, lane-NA-043, and several un-* folders); Lambchop's automation record itself remained parseable and was updated through app tooling.
 - Next work:
   - Review proposals or pressure-test an in-place upgrade in a target Lambchop-managed repo to prove hooks merge into a real existing project.
+
+## 2026-05-15 12:13 - intake automation handoff guardrail
+
+- Status: done
+- Run id: `manual-20260515-intake-automation-handoff`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Work item: `task-13-intake-automation-handoff-guardrail` (done)
+- Maintenance window:
+  - Paused `lambchop-autonomous-coding-team` through Codex app automation tooling before hook/workflow maintenance.
+  - Preserved parked weekly anchor for Friday, May 15, 2026: `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH`.
+  - No scheduler-visible run-now trigger should be requested after maintenance unpause.
+- Changes:
+  - Strengthened `lambchop_user_prompt_submit.py` so feature/bug prompts say not to implement in chat unless explicitly overridden.
+  - Strengthened `lambchop_stop.py` so chats cannot stop after only queuing work; they must record automation unpause/active status and scheduler-visible run-now trigger evidence.
+  - Blocked ordinary chat final answers that report implementation without intake, automation-run, or explicit-override context.
+  - Updated live and reusable workflow guidance, skill guidance, automation prompt guidance, workflow architecture, validation checklist, state, progress, dashboard, and backoff evidence.
+- Validation:
+  - RED proof: `node --test tests/lambchop-hooks.test.mjs` failed when hooks did not require handoff evidence.
+  - GREEN proof: `node --test tests/lambchop-hooks.test.mjs` passed with 9 tests and 0 failures.
+  - `python -m py_compile` passed for updated template and installed hook scripts.
+  - Hook JSON parse passed for installed and template hook configs.
+- Next work:
+  - Apply an in-place Lambchop upgrade to DM4me or another target repo so its repo-local hooks enforce intake plus automation handoff.

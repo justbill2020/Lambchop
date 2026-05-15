@@ -80,6 +80,9 @@ test('prompt and session hooks add Lambchop operating context', () => {
   });
   assert.match(prompt.hookSpecificOutput.additionalContext, /intake/i);
   assert.match(prompt.hookSpecificOutput.additionalContext, /queue/i);
+  assert.match(prompt.hookSpecificOutput.additionalContext, /do not implement/i);
+  assert.match(prompt.hookSpecificOutput.additionalContext, /unpause/i);
+  assert.match(prompt.hookSpecificOutput.additionalContext, /trigger/i);
 });
 
 test('PostToolUse and Stop hooks request evidence when workflow quality is at risk', () => {
@@ -99,6 +102,32 @@ test('PostToolUse and Stop hooks request evidence when workflow quality is at ri
   });
   assert.equal(stop.decision, 'block');
   assert.match(stop.reason, /ledger|validation|dashboard/i);
+});
+
+test('Stop hook blocks feature-chat endings that skip automation handoff', () => {
+  const scriptPath = join(templateRoot, 'hooks', 'lambchop_stop.py');
+  const queuedOnly = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    last_assistant_message: 'Queued TASK-123 for the automation.',
+  });
+  assert.equal(queuedOnly.decision, 'block');
+  assert.match(queuedOnly.reason, /trigger/i);
+
+  const implementedInChat = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    last_assistant_message: 'Implemented the requested feature and updated the tests.',
+  });
+  assert.equal(implementedInChat.decision, 'block');
+  assert.match(implementedInChat.reason, /intake|automation/i);
+
+  const handedOff = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    last_assistant_message: 'Queued TASK-123, unpaused the automation, triggered scheduler-visible run-now, and recorded progress/dashboard evidence.',
+  });
+  assert.equal(handedOff.continue, true);
 });
 
 test('repo hook installer preserves unrelated hooks and replaces stale Lambchop hooks', () => {

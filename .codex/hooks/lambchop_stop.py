@@ -8,6 +8,18 @@ EVIDENCE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+QUEUED_PATTERN = re.compile(r"\b(queued|queue|todo|work item|task-[0-9a-z_-]+)\b", re.IGNORECASE)
+HANDOFF_PATTERN = re.compile(r"\b(triggered|trigger|run-now|scheduler-visible|next_run_at)\b", re.IGNORECASE)
+UNPAUSE_PATTERN = re.compile(r"\b(unpaused|already active|active automation|automation active)\b", re.IGNORECASE)
+IMPLEMENTED_CHAT_PATTERN = re.compile(
+    r"\b(implemented|fixed|added|changed|updated the code|patched|refactored)\b",
+    re.IGNORECASE,
+)
+AUTOMATION_CONTEXT_PATTERN = re.compile(
+    r"\b(automation run|scheduled run|work item|queued|intake|run-now|scheduler-visible|explicit override)\b",
+    re.IGNORECASE,
+)
+
 
 def main():
     try:
@@ -20,6 +32,37 @@ def main():
         return
 
     message = str(payload.get("last_assistant_message") or "")
+    if QUEUED_PATTERN.search(message) and not HANDOFF_PATTERN.search(message):
+        print(json.dumps({
+            "decision": "block",
+            "reason": (
+                "Feature/bug intake must not stop after only queuing work. Record the queued task, "
+                "unpause the project automation if needed, trigger a scheduler-visible run-now handoff, "
+                "and record progress/dashboard/backoff evidence."
+            ),
+        }))
+        return
+
+    if QUEUED_PATTERN.search(message) and not UNPAUSE_PATTERN.search(message):
+        print(json.dumps({
+            "decision": "block",
+            "reason": (
+                "Feature/bug intake handoff must record whether the automation was unpaused or already active "
+                "before the scheduler-visible trigger."
+            ),
+        }))
+        return
+
+    if IMPLEMENTED_CHAT_PATTERN.search(message) and not AUTOMATION_CONTEXT_PATTERN.search(message):
+        print(json.dumps({
+            "decision": "block",
+            "reason": (
+                "This looks like implementation work in an ordinary chat. Lambchop feature/bug chats "
+                "should act as intake: create tasks, hand off to automation, or state an explicit user override."
+            ),
+        }))
+        return
+
     if EVIDENCE_PATTERN.search(message):
         print(json.dumps({"continue": True}))
         return
