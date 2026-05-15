@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-05-15T18:33:00.000Z"
+    "updated_at": "2026-05-15T21:31:00.000Z"
   },
   "summary": {
     "todo": 0,
@@ -279,7 +279,8 @@
         "JSON parse passed for live state/backoff/dashboard/control files and template control file.",
         "git diff --check passed with line-ending warnings only.",
         "Docker smoke on alternate ports 18965/18966 verified /api/projects returns live/stale health and POST /api/project-command/lambchop queues a dashboard-control request.",
-        "node --test tests/lambchop-hooks.test.mjs passed after adding GitHub commit/push Stop-hook evidence gate."
+        "node --test tests/lambchop-hooks.test.mjs passed after adding GitHub commit/push Stop-hook evidence gate.",
+        "Operational dashboard incident: NOPE data appeared missing because a stale Windows node --test tests/dashboard-registry.test.mjs process owned 0.0.0.0:8766 and returned placeholder dashboard data. Stopped only that stale test process; host 127.0.0.1:8766/api/status now returns NOPE with todo=3, done=45, proposals=1, latest_count=8. Lambchop automation remained ACTIVE; parked RRULE preserved; no pause/unpause or run-now was performed."
       ],
       "blocker": null,
       "next_step": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor."
@@ -364,7 +365,8 @@
     "maintenance unpause verified: lambchop-autonomous-coding-team ACTIVE, BYDAY=WE, next normal run 2026-05-20 12:00 America/Chicago",
     "dashboard registry stability/control API validated: stale projects remain visible, partial registry files are ignored, atomic writes are used, and dashboard update requests queue automation-only commands",
     "GitHub Stop hook validated: completion is blocked until commit and push evidence is present when push is enabled or requested.",
-    "automation maintenance finalized: lambchop-autonomous-coding-team ACTIVE, parked BYDAY=TH anchor preserved, no run-now triggered."
+    "automation maintenance finalized: lambchop-autonomous-coding-team ACTIVE, parked BYDAY=TH anchor preserved, no run-now triggered.",
+    "Operational dashboard incident: NOPE data appeared missing because a stale Windows node --test tests/dashboard-registry.test.mjs process owned 0.0.0.0:8766 and returned placeholder dashboard data. Stopped only that stale test process; host 127.0.0.1:8766/api/status now returns NOPE with todo=3, done=45, proposals=1, latest_count=8. Lambchop automation remained ACTIVE; parked RRULE preserved; no pause/unpause or run-now was performed."
   ],
   "commits": [
     "47d6927",
@@ -378,10 +380,10 @@
     "work_item_key": "task-15-dashboard-registry-stability-and-control-api",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-15T18:33:00.000Z",
+    "dashboard_updated_at": "2026-05-15T21:31:00.000Z",
     "next_action": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor.",
-    "timestamp": "2026-05-15T18:33:00.000Z",
-    "summary": "Dashboard registry stability, queued update control API, and GitHub commit/push Stop-hook evidence gate added.",
+    "timestamp": "2026-05-15T21:31:00.000Z",
+    "summary": "Dashboard stack remained healthy; NOPE missing data incident traced to stale local test process on port 8766 and resolved operationally.",
     "active_work_item": "task-15-dashboard-registry-stability-and-control-api"
   },
   "hooks": {

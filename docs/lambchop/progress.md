@@ -790,3 +790,10 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - The hook does not blindly publish when workflow safety still forbids push; it requires recording that blocker instead.
 - Validation: `node --test tests/lambchop-hooks.test.mjs` passed after the new RED/GREEN test.
 - Maintenance finalization: `lambchop-autonomous-coding-team` was unpaused to ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH`; no run-now was triggered.
+
+### Follow-up: NOPE dashboard data restored
+- Symptom: selecting NOPE in the Lambchop dashboard showed placeholder/empty data even though the hub registry listed NOPE as live.
+- Root cause: a stale Windows `node --test tests\dashboard-registry.test.mjs` process was still listening on `0.0.0.0:8766` and returned `{PROJECT_SLUG}` / `{PROJECT_NAME}` placeholder status to the browser and hub host path.
+- Evidence: inside `nope-lambchop-project-api-1`, `/api/status` returned real NOPE data (`done=45`, `todo=3`, `latest_count=8`), while host `127.0.0.1:8766/api/status` returned placeholder data until the stale test process was stopped.
+- Resolution: stopped only the stale local test process. Host `127.0.0.1:8766/api/status` now returns NOPE with `todo=3`, `done=45`, `proposals=1`, and `latest_count=8`; the hub registry still lists NOPE as live.
+- Scheduler: no automation pause/unpause or run-now was performed. `lambchop-autonomous-coding-team` remains ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH`.

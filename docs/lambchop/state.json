@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-15T18:33:00.000Z",
+    "updated_at": "2026-05-15T21:31:00.000Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -1222,7 +1222,8 @@
         "git diff --check passed with line-ending warnings only.",
         "Docker smoke on alternate ports 18965/18966 verified /api/projects returns live/stale health and POST /api/project-command/lambchop queues a dashboard-control request.",
         "node --test tests/lambchop-hooks.test.mjs passed after adding GitHub commit/push Stop-hook evidence gate.",
-        "Lambchop automation unpaused to ACTIVE after validation with parked weekly anchor preserved; no run-now triggered."
+        "Lambchop automation unpaused to ACTIVE after validation with parked weekly anchor preserved; no run-now triggered.",
+        "Operational dashboard incident: NOPE data appeared missing because a stale Windows node --test tests/dashboard-registry.test.mjs process owned 0.0.0.0:8766 and returned placeholder dashboard data. Stopped only that stale test process; host 127.0.0.1:8766/api/status now returns NOPE with todo=3, done=45, proposals=1, latest_count=8. Lambchop automation remained ACTIVE; parked RRULE preserved; no pause/unpause or run-now was performed."
       ],
       "branch": "main",
       "worktree": "REPO_ROOT",
@@ -1255,7 +1256,7 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "ready",
       "completed_at": "2026-05-15T18:15:00.000Z",
-      "updated_at": "2026-05-15T18:33:00.000Z"
+      "updated_at": "2026-05-15T21:31:00.000Z"
     }
   ],
   "proposal_backlog": [
@@ -1317,10 +1318,10 @@
     "work_item_key": "task-15-dashboard-registry-stability-and-control-api",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-15T18:33:00.000Z",
+    "dashboard_updated_at": "2026-05-15T21:31:00.000Z",
     "next_action": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor.",
-    "timestamp": "2026-05-15T18:33:00.000Z",
-    "summary": "Dashboard registry stability, queued update control API, and GitHub commit/push Stop-hook evidence gate added.",
+    "timestamp": "2026-05-15T21:31:00.000Z",
+    "summary": "Dashboard stack remained healthy; NOPE missing data incident traced to stale local test process on port 8766 and resolved operationally.",
     "active_work_item": "task-15-dashboard-registry-stability-and-control-api"
   }
 }
