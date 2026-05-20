@@ -846,3 +846,6 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - `task-18-reconcile-trigger-afterwork-ledger-drift` (todo): repair evidence so handoff entries are terminal and counts/next_action match reality.
 - Scheduler status:
   - automation_runs shows thread_id `019e4695-2d61-75c3-b257-e3cb5bdc06cf` is still `IN_PROGRESS`; no new run-now trigger was requested in this intake.
+
+
+- Clarification (Bill): after a scheduler-visible run-now handoff, log only that the run was initiated. Do not log whether it actually ran; the next automation run confirms execution by recognizing itself. (2026-05-20T18:39:45Z)

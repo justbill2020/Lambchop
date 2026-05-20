@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-05-20T18:33:59Z"
+    "updated_at": "2026-05-20T18:39:45Z"
   },
   "summary": {
     "todo": 2,
@@ -16,7 +16,7 @@
     "skipped": 0,
     "proposals_need_review": 3,
     "active_parallel_lanes": 0,
-    "next_action": "Automation run is already IN_PROGRESS; next fresh run should execute task-17."
+    "next_action": "Automation run is already IN_PROGRESS; next fresh run should execute task-17 (initiation-only logging contract)."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -649,10 +649,12 @@
       "worktree": ".worktrees/task-17-trigger-terminalization-guardrail",
       "validation": [
         "Evidence: 2026-05-20 progress/backoff notes show post-trigger work occurred after run-now.",
-        "Automation status: automation_runs has thread_id 019e4695-2d61-75c3-b257-e3cb5bdc06cf still IN_PROGRESS; do not trigger additional run-now until it completes."
+        "Automation status: automation_runs has thread_id 019e4695-2d61-75c3-b257-e3cb5bdc06cf still IN_PROGRESS; do not trigger additional run-now until it completes.",
+        "Contract: initiating turn logs run-now initiation only; next run confirms via self-recognition."
       ],
       "implementation_notes": [
-        "Update workflow/hook/test so run-now is terminal and evidence is committed before triggering."
+        "Update workflow/hook/test so run-now is terminal and evidence is committed before triggering.",
+        "Bill clarified that handoff logging must record initiation only; do not log scheduler DB verification as completion evidence in the same turn."
       ],
       "commit": null,
       "blocker": null,
@@ -665,7 +667,7 @@
         "heartbeat_at": null
       },
       "created_at": "2026-05-20T18:32:38Z",
-      "updated_at": "2026-05-20T18:33:59Z"
+      "updated_at": "2026-05-20T18:39:45Z"
     },
     {
       "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
@@ -801,14 +803,14 @@
   ],
   "last_run": {
     "run_id": "manual-20260520-trigger-terminalization-intake",
-    "started_at": "2026-05-20T18:32:38Z",
+    "started_at": "2026-05-20T18:39:45Z",
     "work_item_key": "task-17-trigger-terminalization-guardrail",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-20T18:32:38Z",
+    "dashboard_updated_at": "2026-05-20T18:39:45Z",
     "next_action": "Let the existing IN_PROGRESS automation run finish; next fresh run should take task-17.",
-    "timestamp": "2026-05-20T18:32:38Z",
-    "summary": "Queued task-17/task-18 to enforce terminal run-now handoff and reconcile evidence; did not trigger a new run-now because an automation run is already IN_PROGRESS.",
+    "timestamp": "2026-05-20T18:39:45Z",
+    "summary": "Queued task-17/task-18 to enforce terminal run-now handoff and update evidence to log initiation-only (verification deferred to next run).",
     "active_work_item": "task-17-trigger-terminalization-guardrail"
   },
   "hooks": {
