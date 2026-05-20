@@ -112,7 +112,7 @@ By default, automation may:
 ## Forbidden Actions
 Automation must not:
 
-- publish branches unless `docs/<project-slug>/state.json` sets `project.autonomy_policy.may_push=true` and the operator explicitly requested publishing for the current run
+- publish branches unless `docs/<project-slug>/state.json` sets `project.autonomy_policy.may_push=true`
 - open pull requests
 - deploy
 - modify production configuration
@@ -122,7 +122,7 @@ Automation must not:
 - overwrite another live lease
 - mark work done without validation evidence
 
-These actions require explicit user permission, and some may also require a workflow update depending on the repo.
+When `may_push=true`, publishing is expected after each coherent local commit for completed work items (unless validation is failing or workflow safety blocks publishing for another reason). Some actions above still require explicit user permission or a workflow update depending on the repo.
 
 ## Project Chat Intake
 When the user reports a new need, feature request, bug, regression, vague problem, or "this is broken" issue in an ordinary project chat, that chat session must act as an intake agent, not an implementation agent.

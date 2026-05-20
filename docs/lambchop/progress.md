@@ -879,3 +879,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Evidence:
   - Push: `git push origin main` completed.
   - Remote head: `origin/main` is now at `c461703` (matches local `main`).
+
+## 2026-05-20 15:10 - workflow change: auto-push when may_push=true
+- Clarification (Bill): the publish directive should be automatic; if `project.autonomy_policy.may_push=true`, automation should push by default at the end of completed work (unless blocked by validation or other safety).
+- Change: updated `WORKFLOW.md` and the reusable workflow template to reflect "may_push=true implies auto-push".

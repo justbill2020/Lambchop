@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-05-20T20:09:21Z"
+    "updated_at": "2026-05-20T20:12:16Z"
   },
   "summary": {
     "todo": 5,
@@ -597,7 +597,7 @@
         "Validation RED: node --test tests\\*.test.mjs failed after the automation-added two-phase contract test because WORKFLOW.md did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.",
         "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording.",
         "Commit evidence: ddbfd57 fix: enforce Lambchop two-phase automation loop.",
-        "Publishing policy update: project.autonomy_policy.may_push is now true (per Bill, 2026-05-20). No push was performed in the earlier task-16 run; main may still be ahead of origin/main until pushed.",
+        "Publishing policy update: project.autonomy_policy.may_push is now true (per Bill, 2026-05-20). Workflow now treats may_push=true as auto-push for completed work (unless blocked by validation/safety).",
         "Compliance issue discovered: work continued after scheduler-visible run-now trigger; scheduled remediation as task-17 to ensure run-now is terminal and evidence is recorded before triggering."
       ],
       "implementation_notes": [
@@ -893,7 +893,7 @@
     "Validation RED: node --test tests\\*.test.mjs failed after the automation-added two-phase contract test because WORKFLOW.md did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.",
     "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording.",
     "Commit evidence: ddbfd57 fix: enforce Lambchop two-phase automation loop.",
-    "Publishing policy update: project.autonomy_policy.may_push is now true (per Bill, 2026-05-20). No push was performed in the earlier task-16 run; main may still be ahead of origin/main until pushed."
+    "Publishing policy update: project.autonomy_policy.may_push is now true (per Bill, 2026-05-20). Workflow now treats may_push=true as auto-push for completed work (unless blocked by validation/safety)."
   ],
   "commits": [
     "ddbfd57",
