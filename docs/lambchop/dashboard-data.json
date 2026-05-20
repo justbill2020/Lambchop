@@ -6,17 +6,17 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-05-20T18:39:45Z"
+    "updated_at": "2026-05-20T18:53:45Z"
   },
   "summary": {
-    "todo": 2,
+    "todo": 5,
     "in_progress": 0,
     "blocked": 0,
     "done": 18,
     "skipped": 0,
-    "proposals_need_review": 3,
+    "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Automation run is already IN_PROGRESS; next fresh run should execute task-17 (initiation-only logging contract)."
+    "next_action": "Tasks 19-21 are scheduled; initiate run-now after commit so task-17 remains next executable work."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -56,6 +56,16 @@
       "integration_status": "ready",
       "branch": "master",
       "worktree": "REPO_ROOT",
+      "validation": [
+        "state.json template parsed as JSON",
+        "backoff.json template parsed as JSON",
+        "non-template docs scanned clean for angle-bracket placeholders",
+        "skill and references include local-only safety defaults",
+        "git preflight branch/worktree create/delete passed"
+      ],
+      "implementation_notes": [
+        "Initial setup was performed in the main checkout because the repository had no prior autonomous workflow or commits."
+      ],
       "commit": "533fb36",
       "blocker": null,
       "next_step": "Continue with pressure-test validation.",
@@ -66,18 +76,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "validation": [
-        "state.json template parsed as JSON",
-        "backoff.json template parsed as JSON",
-        "non-template docs scanned clean for angle-bracket placeholders",
-        "skill and references include local-only safety defaults",
-        "git preflight branch/worktree create/delete passed"
-      ],
-      "implementation_notes": [
-        "Initial setup was performed in the main checkout because the repository had no prior autonomous workflow or commits."
-      ]
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
     },
     {
       "key": "task-02-fully-autonomous-planner-loop",
@@ -90,6 +89,15 @@
       "integration_status": "ready",
       "branch": "master",
       "worktree": "REPO_ROOT",
+      "validation": [
+        "state and backoff JSON parsed after planner updates",
+        "automation updated through Codex app tooling",
+        "automation config re-read after update",
+        "automation registry audit ran and reported pre-existing run_thread_missing failures outside Lambchop"
+      ],
+      "implementation_notes": [
+        "This task was created from Bill's request that the system plan the next task after completing the previous task."
+      ],
       "commit": "7281b2f",
       "blocker": null,
       "next_step": "Continue with pressure-test validation.",
@@ -100,17 +108,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "validation": [
-        "state and backoff JSON parsed after planner updates",
-        "automation updated through Codex app tooling",
-        "automation config re-read after update",
-        "automation registry audit ran and reported pre-existing run_thread_missing failures outside Lambchop"
-      ],
-      "implementation_notes": [
-        "This task was created from Bill's request that the system plan the next task after completing the previous task."
-      ]
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
     },
     {
       "key": "task-02-pressure-test-empty-repo-setup",
@@ -123,18 +121,6 @@
       "integration_status": "not_ready",
       "branch": "codex/lambchop-task-02-pressure-test-empty-repo-setup",
       "worktree": ".worktrees\\task-02-pressure-test-empty-repo-setup",
-      "commit": null,
-      "blocker": null,
-      "next_step": "Run task-03-pressure-test-existing-repo-setup.",
-      "lease": {
-        "run_id": null,
-        "owner": null,
-        "claimed_at": null,
-        "expires_at": null,
-        "heartbeat_at": null
-      },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
       "validation": [
         "Expanded empty-repo pressure checklist in validation-checklist.md",
         "Generated empty-repo fixture from templates and verified ledgers are placeholder-free",
@@ -145,7 +131,18 @@
       ],
       "implementation_notes": [
         "Use a temporary local fixture repo or a fresh subagent scenario. Do not require the user to run scripts."
-      ]
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Run task-03-pressure-test-existing-repo-setup.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-05-05T09:35:47.245-05:00"
     },
     {
       "key": "task-03-github-repo-deployment-method",
@@ -158,6 +155,13 @@
       "integration_status": "ready",
       "branch": "master",
       "worktree": "REPO_ROOT",
+      "validation": [
+        "state and backoff JSON parsed after deployment-method update",
+        "non-template files scanned clean for angle-bracket placeholders"
+      ],
+      "implementation_notes": [
+        "Added in response to Bill's requirement that Lambchop be applicable to another GitHub repo as a full project-specific autonomous coding team."
+      ],
       "commit": null,
       "blocker": null,
       "next_step": "Continue validation scenarios.",
@@ -168,15 +172,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "validation": [
-        "state and backoff JSON parsed after deployment-method update",
-        "non-template files scanned clean for angle-bracket placeholders"
-      ],
-      "implementation_notes": [
-        "Added in response to Bill's requirement that Lambchop be applicable to another GitHub repo as a full project-specific autonomous coding team."
-      ]
+      "updated_at": "2026-05-05T09:11:11.5771114-05:00"
     },
     {
       "key": "task-03-pressure-test-existing-repo-setup",
@@ -189,6 +185,10 @@
       "integration_status": "not_ready",
       "branch": "codex/lambchop-task-03-pressure-test-existing-repo-setup",
       "worktree": ".worktrees\\task-03-pressure-test-existing-repo-setup",
+      "validation": [],
+      "implementation_notes": [
+        "Prefer a temporary fixture or a safe local sample. Do not mutate unrelated user projects without explicit instruction."
+      ],
       "commit": null,
       "blocker": null,
       "next_step": "Run an existing-repo setup scenario and record proof.",
@@ -199,12 +199,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "validation": [],
-      "implementation_notes": [
-        "Prefer a temporary fixture or a safe local sample. Do not mutate unrelated user projects without explicit instruction."
-      ]
+      "updated_at": "2026-05-05T09:56:35.517-05:00"
     },
     {
       "key": "task-04-install-and-deploy-skill-locally",
@@ -223,9 +218,12 @@
         "pwsh: install-skill.ps1 junction install to C:\\tmp\\codex-skills-sandbox-junction",
         "git: merged codex/lambchop-task-04-install-and-deploy-skill-locally into master (c014f90)"
       ],
+      "implementation_notes": [
+        "Keep deployment Codex-first. Cursor support is a later phase."
+      ],
+      "commit": "c014f90",
       "blocker": null,
       "next_step": "Pressure-test the install helper in a sandbox destination and record proof.",
-      "commit": "c014f90",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -233,11 +231,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "implementation_notes": [
-        "Keep deployment Codex-first. Cursor support is a later phase."
-      ]
+      "updated_at": "2026-05-05T11:46:39.956-05:00"
     },
     {
       "key": "task-05-pressure-test-local-skill-install",
@@ -254,9 +248,13 @@
         "pwsh -NoProfile -ExecutionPolicy Bypass -File autonomous-coding-team\\tools\\install-skill.ps1 -Destination C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543 -Force",
         "Verify C:\\tmp\\codex-skills-sandbox-run-20260505T162913939Z-0ae543\\autonomous-coding-team\\SKILL.md exists"
       ],
+      "implementation_notes": [
+        "Codex-first; do not require Cursor/Claude.",
+        "Prefer a sandbox destination (C:\\tmp) to avoid touching real Codex home if restricted."
+      ],
+      "commit": "edeb2ff",
       "blocker": null,
       "next_step": "Proceed to task-06-cursor-claude-compat-notes.",
-      "commit": "edeb2ff",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -264,12 +262,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "implementation_notes": [
-        "Codex-first; do not require Cursor/Claude.",
-        "Prefer a sandbox destination (C:\\tmp) to avoid touching real Codex home if restricted."
-      ]
+      "updated_at": "2026-05-05T11:56:03-05:00"
     },
     {
       "key": "task-06-cursor-claude-compat-notes",
@@ -286,9 +279,12 @@
         "Manual read-through: notes are accurate and do not change the Codex-first flow",
         "git: merged codex/lambchop-task-06-cursor-claude-compat-notes into master (1753bf1)"
       ],
+      "implementation_notes": [
+        "Keep this informational; do not add new install steps requiring non-Codex tools."
+      ],
+      "commit": "1753bf1",
       "blocker": null,
       "next_step": "Draft a short compatibility note section and link from SKILL.md.",
-      "commit": "1753bf1",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -296,11 +292,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "implementation_notes": [
-        "Keep this informational; do not add new install steps requiring non-Codex tools."
-      ]
+      "updated_at": "2026-05-05T12:03:12.834-05:00"
     },
     {
       "key": "task-07-anonymize-target-project-lessons",
@@ -320,9 +312,12 @@
         "Reference scan found no target project product name",
         "Weekly anchor plus completion-trigger contract added after comparing target-project-automation and game-engine automation prompts"
       ],
+      "implementation_notes": [
+        "Anonymized lessons: blocked work remains visible, review consolidation needs fresh validation, private operator-owned inputs require ignored/local-only proof, and milestone packets need explicit ownership."
+      ],
+      "commit": null,
       "blocker": null,
       "next_step": "Use the updated README prompt to install Lambchop into a fresh target project.",
-      "commit": null,
       "lease": {
         "run_id": null,
         "owner": null,
@@ -330,11 +325,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "implementation_notes": [
-        "Anonymized lessons: blocked work remains visible, review consolidation needs fresh validation, private operator-owned inputs require ignored/local-only proof, and milestone packets need explicit ownership."
-      ]
+      "updated_at": "2026-05-08T14:55:00-05:00"
     },
     {
       "key": "task-08-parallel-sprint-dashboard",
@@ -356,9 +347,12 @@
         "Codex browser loaded Lambchop Live Dashboard through the Dockerized status server",
         "single-item wording and old concurrency cap scan passed"
       ],
+      "implementation_notes": [
+        "Implemented in response to Bill request for faster parallel development cycles and actionable visual roadmap/status reporting."
+      ],
+      "commit": null,
       "blocker": null,
       "next_step": "Run docker compose from docs/lambchop to view live automation status while the workflow updates state/progress/backoff files.",
-      "commit": null,
       "lease": {
         "run_id": null,
         "owner": null,
@@ -366,11 +360,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "implementation_notes": [
-        "Implemented in response to Bill request for faster parallel development cycles and actionable visual roadmap/status reporting."
-      ]
+      "updated_at": "2026-05-11T14:05:00-05:00"
     },
     {
       "key": "task-09-dashboard-usability-pass",
@@ -389,9 +379,12 @@
         "node --check passed for docs and template dashboard-server/server.mjs",
         "placeholder scan: <PLACEHOLDER_*> outside templates OK"
       ],
+      "implementation_notes": [
+        "Reconciled and committed the dashboard usability improvements into Lambchop docs and reusable templates."
+      ],
+      "commit": "7ce826a",
       "blocker": null,
       "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items.",
-      "commit": "7ce826a",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -399,11 +392,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "implementation_notes": [
-        "Reconciled and committed the dashboard usability improvements into Lambchop docs and reusable templates."
-      ]
+      "updated_at": "2026-05-14T12:02:37.4491456-05:00"
     },
     {
       "key": "task-10-scheduler-guardrails",
@@ -412,19 +401,15 @@
       "priority": 30,
       "parallel_group": null,
       "assigned_subagent": null,
-      "dispatch_status": "not_useful",
-      "integration_status": "ready",
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
       "branch": "codex/lambchop-task-10-scheduler-guardrails",
       "worktree": ".worktrees/task-10-scheduler-guardrails",
-      "validation": [
-        "docs and template JSON parse checks passed (state/backoff/dashboard-data)",
-        "node --check passed for docs and template dashboard-server/server.mjs",
-        "placeholder scan passed: no <PLACEHOLDER_*> tokens outside templates",
-        "scheduler DB check: status ACTIVE, rrule BYDAY=WE, next normal run 2026-05-20 12:00 America/Chicago"
-      ],
+      "validation": [],
+      "implementation_notes": [],
+      "commit": "47d6927",
       "blocker": null,
       "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items.",
-      "commit": "47d6927",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -432,8 +417,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z"
+      "updated_at": "2026-05-14T12:19:02.021-05:00"
     },
     {
       "key": "task-11-ledger-reconcile-dashboard-commits",
@@ -442,16 +426,15 @@
       "priority": 15,
       "parallel_group": null,
       "assigned_subagent": null,
-      "dispatch_status": "not_useful",
-      "integration_status": "ready",
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
       "branch": "codex/lambchop-task-11-ledger-reconcile-dashboard-commits",
       "worktree": ".worktrees/task-11-ledger-reconcile",
-      "validation": [
-        "docs/lambchop/{state,backoff,dashboard-data} parse as JSON"
-      ],
+      "validation": [],
+      "implementation_notes": [],
+      "commit": null,
       "blocker": null,
       "next_step": "Review proposal backlog entries and approve the next feature set before converting it into executable work items.",
-      "commit": null,
       "lease": {
         "run_id": null,
         "owner": null,
@@ -459,8 +442,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z"
+      "updated_at": "2026-05-14T12:34:57.466-05:00"
     },
     {
       "key": "task-12-repo-local-hooks-upgrade",
@@ -481,18 +463,17 @@
         "git diff --check passed with line-ending warnings only.",
         "automation-store audit found pre-existing unrelated active folders missing automation.toml; Lambchop automation itself remained parseable and was updated through app tooling."
       ],
+      "implementation_notes": [],
+      "commit": null,
       "blocker": null,
       "next_step": "Review proposals or run a target-repo in-place upgrade pressure test that verifies hook merge behavior in a real Lambchop-managed project.",
-      "commit": null,
       "lease": {
         "owner": null,
         "run_id": null,
         "claimed_at": null,
         "expires_at": null,
         "heartbeat_at": null
-      },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z"
+      }
     },
     {
       "key": "task-13-intake-automation-handoff-guardrail",
@@ -511,18 +492,17 @@
         "python -m py_compile passed for updated template and installed hook scripts.",
         "hook JSON parse passed for installed and template hook configs."
       ],
+      "implementation_notes": [],
+      "commit": null,
       "blocker": null,
       "next_step": "Apply an in-place upgrade to a target Lambchop-managed repo such as DM4me so its hooks enforce intake plus automation handoff.",
-      "commit": null,
       "lease": {
         "owner": null,
         "run_id": null,
         "claimed_at": null,
         "expires_at": null,
         "heartbeat_at": null
-      },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z"
+      }
     },
     {
       "key": "task-14-shared-capabilities-and-source-checkin",
@@ -536,11 +516,17 @@
       "branch": "main",
       "worktree": null,
       "validation": [
-        "node --test tests/shared-capabilities.test.mjs passed"
+        "node --test tests/shared-capabilities.test.mjs passed",
+        "shared bootstrapper installed superpowers@f2cbfbefebbfef77321e4c9abc9e949826bea9d7",
+        "shared bootstrapper installed huashu-design@8e25b23709747a747b80bf4d3820def8f8054a4e"
       ],
+      "implementation_notes": [
+        "Added PowerShell bootstrapper with local-source override support for tests.",
+        "Installed Superpowers and Huashu Design into the shared Codex skills area for this machine."
+      ],
+      "commit": "c52a31918d91ee991478bc15eb2b73c047edc883",
       "blocker": null,
       "next_step": "Use this shared capability contract when upgrading Lambchop-managed repos such as DM4me.",
-      "commit": "c52a31918d91ee991478bc15eb2b73c047edc883",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -548,12 +534,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "implementation_notes": [
-        "Added PowerShell bootstrapper with local-source override support for tests.",
-        "Installed Superpowers and Huashu Design into the shared Codex skills area for this machine."
-      ]
+      "updated_at": "2026-05-15T17:36:56.392Z"
     },
     {
       "key": "task-15-dashboard-registry-stability-and-control-api",
@@ -573,11 +554,17 @@
         "git diff --check passed with line-ending warnings only.",
         "Docker smoke on alternate ports 18965/18966 verified /api/projects returns live/stale health and POST /api/project-command/lambchop queues a dashboard-control request.",
         "node --test tests/lambchop-hooks.test.mjs passed after adding GitHub commit/push Stop-hook evidence gate.",
+        "Lambchop automation unpaused to ACTIVE after validation with parked weekly anchor preserved; no run-now triggered.",
         "Operational dashboard incident: NOPE data appeared missing because a stale Windows node --test tests/dashboard-registry.test.mjs process owned 0.0.0.0:8766 and returned placeholder dashboard data. Stopped only that stale test process; host 127.0.0.1:8766/api/status now returns NOPE with todo=3, done=45, proposals=1, latest_count=8. Lambchop automation remained ACTIVE; parked RRULE preserved; no pause/unpause or run-now was performed."
       ],
+      "implementation_notes": [
+        "Root cause validated from the running dashboard hub: a 20 second live-only filter hid slow projects, and a zero-byte registry file proved non-atomic registration writes could make valid projects disappear.",
+        "Hub forwarding uses host-gateway fallback for localhost project API URLs when the hub runs inside Docker.",
+        "Stop hook now blocks completion for GitHub repos with push enabled or requested unless the final evidence includes both commit and push."
+      ],
+      "commit": null,
       "blocker": null,
       "next_step": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor.",
-      "commit": null,
       "lease": {
         "run_id": null,
         "owner": null,
@@ -585,13 +572,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:33:59Z",
-      "updated_at": "2026-05-20T18:33:59Z",
-      "implementation_notes": [
-        "Root cause validated from the running dashboard hub: a 20 second live-only filter hid slow projects, and a zero-byte registry file proved non-atomic registration writes could make valid projects disappear.",
-        "Hub forwarding uses host-gateway fallback for localhost project API URLs when the hub runs inside Docker.",
-        "Stop hook now blocks completion for GitHub repos with push enabled or requested unless the final evidence includes both commit and push."
-      ]
+      "updated_at": "2026-05-15T21:31:00.000Z"
     },
     {
       "key": "task-16-two-phase-planning-execution-loop",
@@ -601,11 +582,12 @@
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
+      "integration_status": "ready",
       "branch": "main",
       "worktree": "REPO_ROOT",
       "validation": [
         "Intake evidence: prior assistant response stopped at interpretation and did not update state/progress/dashboard/backoff or queue a task; this task corrects that omission.",
+        "Queued task and handed off to active Lambchop automation via scheduler-visible run-now.",
         "Scheduler-visible run-now verified: after DB backup and next_run_at nudge, automation_runs contains new Lambchop row thread_id=019e4695-2d61-75c3-b257-e3cb5bdc06cf status=IN_PROGRESS created_at=1779300636527. Automation remains ACTIVE and parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU.",
         "TDD requirement recorded after Bill explicitly requested use of the tdd skill for Lambchop and all Lambchop-enabled project coding.",
         "TDD contract validation: tests/workflow-contract.test.mjs failed first because the workflow did not explicitly require the tdd skill contract, then passed after updating WORKFLOW.md, the target-repo workflow template, and the automation prompt.",
@@ -615,12 +597,18 @@
         "Validation RED: node --test tests\\*.test.mjs failed after the automation-added two-phase contract test because WORKFLOW.md did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.",
         "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording.",
         "Commit evidence: ddbfd57 fix: enforce Lambchop two-phase automation loop.",
-        "Push blocker: workflow autonomy_policy.may_push is false, so this chat did not push; local branch main is ahead of origin/main and needs explicit push permission or workflow update to publish."
+        "Push blocker: workflow autonomy_policy.may_push is false, so this chat did not push; local branch main is ahead of origin/main and needs explicit push permission or workflow update to publish.",
+        "Compliance issue discovered: work continued after scheduler-visible run-now trigger; scheduled remediation as task-17 to ensure run-now is terminal and evidence is recorded before triggering."
       ],
+      "implementation_notes": [
+        "Bill described Lambchop as a two-part process loop: post-automation chats plan/schedule; fresh automation turns execute scheduled tasks, or plan/schedule work when none are runnable, then trigger a new turn if runnable work was created.",
+        "Do not preserve the ambiguous current behavior where a single context can plan new work and immediately implement that same work.",
+        "Intake correction after Bill flagged that the prior response only described the two-phase loop and did not queue work. The new task schedules implementation of a strict planning/scheduling versus execution loop for Lambchop-enabled projects.",
+        "Bill explicitly requested the tdd skill for coding now and in the future for this and all Lambchop-enabled projects. Implement task-16 test-first, and update Lambchop workflow/templates so target projects inherit that expectation."
+      ],
+      "commit": "ddbfd57",
       "blocker": null,
       "next_step": "Address the trigger-terminal compliance gap via task-17 so no work occurs after scheduler-visible run-now handoff.",
-      "commit": "ddbfd57",
-      "updated_at": "2026-05-20T18:33:59Z",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -629,12 +617,7 @@
         "heartbeat_at": null
       },
       "created_at": "2026-05-20T17:00:00.000Z",
-      "implementation_notes": [
-        "Bill described Lambchop as a two-part process loop: post-automation chats plan/schedule; fresh automation turns execute scheduled tasks, or plan/schedule work when none are runnable, then trigger a new turn if runnable work was created.",
-        "Do not preserve the ambiguous current behavior where a single context can plan new work and immediately implement that same work.",
-        "Intake correction after Bill flagged that the prior response only described the two-phase loop and did not queue work. The new task schedules implementation of a strict planning/scheduling versus execution loop for Lambchop-enabled projects.",
-        "Bill explicitly requested the tdd skill for coding now and in the future for this and all Lambchop-enabled projects. Implement task-16 test-first, and update Lambchop workflow/templates so target projects inherit that expectation."
-      ]
+      "updated_at": "2026-05-20T18:32:38Z"
     },
     {
       "key": "task-17-trigger-terminalization-guardrail",
@@ -648,12 +631,12 @@
       "branch": "codex/lambchop-task-17-trigger-terminalization-guardrail",
       "worktree": ".worktrees/task-17-trigger-terminalization-guardrail",
       "validation": [
-        "Evidence: 2026-05-20 progress/backoff notes show post-trigger work occurred after run-now.",
-        "Automation status: automation_runs has thread_id 019e4695-2d61-75c3-b257-e3cb5bdc06cf still IN_PROGRESS; do not trigger additional run-now until it completes.",
-        "Contract: initiating turn logs run-now initiation only; next run confirms via self-recognition."
+        "node --test tests\\*.test.mjs passes.",
+        "JSON parse passes for docs/lambchop/*.json."
       ],
       "implementation_notes": [
-        "Update workflow/hook/test so run-now is terminal and evidence is committed before triggering.",
+        "Root cause: the 2026-05-20 intake entry triggered run-now and then continued with additional edits/validation/commits, which violates the contract that handoff must be terminal.",
+        "This guardrail should be a workflow + hook + test triple: explicit ordering rules, completion enforcement, and a failing test that proves the enforcement.",
         "Bill clarified that handoff logging must record initiation only; do not log scheduler DB verification as completion evidence in the same turn."
       ],
       "commit": null,
@@ -681,10 +664,11 @@
       "branch": "codex/lambchop-task-18-reconcile-trigger-afterwork-ledger-drift",
       "worktree": ".worktrees/task-18-reconcile-trigger-afterwork-ledger-drift",
       "validation": [
-        "Reconcile 2026-05-20 progress/backoff/state/dashboard evidence so trigger handoff is terminal."
+        "JSON parse passes for docs/lambchop/*.json."
       ],
       "implementation_notes": [
-        "Documentation/evidence repair after task-17; keep factual timestamps and thread ids."
+        "This is a documentation/evidence repair task: do not change workflow semantics here; task-17 enforces future behavior.",
+        "Adjust the 2026-05-20 entry to record that additional work after trigger was a compliance issue and that new tasks were queued to correct it."
       ],
       "commit": null,
       "blocker": null,
@@ -697,14 +681,119 @@
         "heartbeat_at": null
       },
       "created_at": "2026-05-20T18:32:38Z",
-      "updated_at": "2026-05-20T18:33:59Z"
+      "updated_at": "2026-05-20T18:39:45Z"
+    },
+    {
+      "key": "task-19-dashboard-proposal-review-ui",
+      "title": "Show proposal review needs in the dashboard",
+      "status": "todo",
+      "priority": 24,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "codex/lambchop-task-19-dashboard-proposal-review-ui",
+      "worktree": ".worktrees/dashboard-proposal-review-ui",
+      "validation": [
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json.",
+        "Dashboard counts match state work item counts after scheduling."
+      ],
+      "implementation_notes": [
+        "Scheduled from proposal-03-dashboard-proposal-review-ui after Bill approved \"Schedule all\" on 2026-05-20.",
+        "Make future review-needed proposals visible in the dashboard instead of hiding them in JSON.",
+        "Proposal backlog entries should be visible where the user monitors automation status, so review-needed work does not hide in JSON.",
+        "Risk notes from proposal: Approval actions should remain manual for now; the dashboard should not mutate project state.",
+        "Parallelization notes from proposal: Small UI/API task, likely single-lane unless paired with docs."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Use Huashu Design, then implement read-only dashboard/API proposal visibility with focused tests.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "created_at": "2026-05-20T18:52:24Z",
+      "updated_at": "2026-05-20T18:52:24Z"
+    },
+    {
+      "key": "task-20-target-repo-upgrade-fixture",
+      "title": "Prove target repo upgrade with a safe fixture",
+      "status": "todo",
+      "priority": 18,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "codex/lambchop-task-20-target-repo-upgrade-fixture",
+      "worktree": ".worktrees/target-repo-upgrade-fixture",
+      "validation": [
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json.",
+        "Dashboard counts match state work item counts after scheduling."
+      ],
+      "implementation_notes": [
+        "Scheduled from proposal-02-target-repo-upgrade-fixture after Bill approved \"Schedule all\" on 2026-05-20.",
+        "Prove in-place Lambchop upgrade behavior with a reusable fixture instead of a private repo.",
+        "Lambchop now supports upgrading existing installs; a reusable fixture would prove the migration path without touching private projects.",
+        "Risk notes from proposal: Fixture design should avoid embedding any private repo details.",
+        "Parallelization notes from proposal: Can split into fixture creation, migration validation, and docs update."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Build an older-install fixture, run upgrade validation, and record proof without private repo details.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "created_at": "2026-05-20T18:52:24Z",
+      "updated_at": "2026-05-20T18:52:24Z"
+    },
+    {
+      "key": "task-21-public-release-readiness",
+      "title": "Prepare Lambchop public release readiness",
+      "status": "todo",
+      "priority": 12,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "codex/lambchop-task-21-public-release-readiness",
+      "worktree": ".worktrees/public-release-readiness",
+      "validation": [
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json.",
+        "Dashboard counts match state work item counts after scheduling."
+      ],
+      "implementation_notes": [
+        "Scheduled from proposal-01-public-release-readiness after Bill approved \"Schedule all\" on 2026-05-20.",
+        "Prepare Lambchop for public-facing use after upgrade proof is in place.",
+        "The repo is intended to become public, so Lambchop should verify public-facing docs, privacy scans, install instructions, and dashboard onboarding before wider use.",
+        "Risk notes from proposal: Requires user approval because public release scope and acceptable history-scrubbing depth are product decisions.",
+        "Parallelization notes from proposal: Can split into docs polish, validation gate, and dashboard onboarding tasks."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Review public-facing docs and release gates after task-20 proves upgrade behavior.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "created_at": "2026-05-20T18:52:24Z",
+      "updated_at": "2026-05-20T18:52:24Z"
     }
   ],
   "proposal_backlog": [
     {
       "key": "proposal-01-public-release-readiness",
       "title": "Public release readiness pass",
-      "status": "needs_user_review",
+      "status": "scheduled",
       "rationale": "The repo is intended to become public, so Lambchop should verify public-facing docs, privacy scans, install instructions, and dashboard onboarding before wider use.",
       "source_refs": [
         "README.md",
@@ -716,12 +805,16 @@
         "Dashboard hub/API setup is understandable from a fresh checkout."
       ],
       "risk_notes": "Requires user approval because public release scope and acceptable history-scrubbing depth are product decisions.",
-      "parallelization_notes": "Can split into docs polish, validation gate, and dashboard onboarding tasks."
+      "parallelization_notes": "Can split into docs polish, validation gate, and dashboard onboarding tasks.",
+      "linked_work_item": "task-21-public-release-readiness",
+      "scheduled_at": "2026-05-20T18:52:24Z",
+      "approved_by": "Bill",
+      "approval_note": "Bill chose Schedule all on 2026-05-20 after proposals were surfaced in chat."
     },
     {
       "key": "proposal-02-target-repo-upgrade-fixture",
       "title": "Target repo upgrade fixture and proof",
-      "status": "needs_user_review",
+      "status": "scheduled",
       "rationale": "Lambchop now supports upgrading existing installs; a reusable fixture would prove the migration path without touching private projects.",
       "source_refs": [
         "README.md#updating-a-repo-that-already-has-lambchop",
@@ -733,12 +826,16 @@
         "Validation evidence is recorded in progress."
       ],
       "risk_notes": "Fixture design should avoid embedding any private repo details.",
-      "parallelization_notes": "Can split into fixture creation, migration validation, and docs update."
+      "parallelization_notes": "Can split into fixture creation, migration validation, and docs update.",
+      "linked_work_item": "task-20-target-repo-upgrade-fixture",
+      "scheduled_at": "2026-05-20T18:52:24Z",
+      "approved_by": "Bill",
+      "approval_note": "Bill chose Schedule all on 2026-05-20 after proposals were surfaced in chat."
     },
     {
       "key": "proposal-03-dashboard-proposal-review-ui",
       "title": "Dashboard proposal review visibility",
-      "status": "needs_user_review",
+      "status": "scheduled",
       "rationale": "Proposal backlog entries should be visible where the user monitors automation status, so review-needed work does not hide in JSON.",
       "source_refs": [
         "docs/lambchop/dashboard.html",
@@ -750,7 +847,11 @@
         "Empty proposal state is clearly rendered."
       ],
       "risk_notes": "Approval actions should remain manual for now; the dashboard should not mutate project state.",
-      "parallelization_notes": "Small UI/API task, likely single-lane unless paired with docs."
+      "parallelization_notes": "Small UI/API task, likely single-lane unless paired with docs.",
+      "linked_work_item": "task-19-dashboard-proposal-review-ui",
+      "scheduled_at": "2026-05-20T18:52:24Z",
+      "approved_by": "Bill",
+      "approval_note": "Bill chose Schedule all on 2026-05-20 after proposals were surfaced in chat."
     }
   ],
   "blocked": [],
@@ -802,16 +903,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "manual-20260520-trigger-terminalization-intake",
-    "started_at": "2026-05-20T18:39:45Z",
-    "work_item_key": "task-17-trigger-terminalization-guardrail",
+    "run_id": "manual-20260520-schedule-review-proposals",
+    "started_at": "2026-05-20T18:52:24Z",
+    "work_item_key": "task-19-dashboard-proposal-review-ui",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-20T18:39:45Z",
-    "next_action": "Let the existing IN_PROGRESS automation run finish; next fresh run should take task-17.",
-    "timestamp": "2026-05-20T18:39:45Z",
-    "summary": "Queued task-17/task-18 to enforce terminal run-now handoff and update evidence to log initiation-only (verification deferred to next run).",
-    "active_work_item": "task-17-trigger-terminalization-guardrail"
+    "dashboard_updated_at": "2026-05-20T18:52:24Z",
+    "next_action": "Scheduler-visible run-now should be initiated after this scheduling commit so automation can continue with task-17 first.",
+    "timestamp": "2026-05-20T18:52:24Z",
+    "summary": "Scheduled all three user-approved proposal backlog entries as task-19 through task-21 while preserving task-17/task-18 queue priority.",
+    "active_work_item": "task-19-dashboard-proposal-review-ui",
+    "validation_note": "Validation command correction: PowerShell rejected Bash heredoc syntax for node consistency check; rerun with node -e.",
+    "validation": "Validation passed: JSON parse for state/dashboard/backoff/control requests; state/dashboard counts match (todo=5, done=18); proposal backlog has 0 needs_user_review and 3 scheduled entries; git diff --check passed with line-ending warnings only."
   },
   "hooks": {
     "mode": "repo-local",

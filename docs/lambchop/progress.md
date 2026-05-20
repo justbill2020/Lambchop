@@ -849,3 +849,16 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 
 
 - Clarification (Bill): after a scheduler-visible run-now handoff, log only that the run was initiated. Do not log whether it actually ran; the next automation run confirms execution by recognizing itself. (2026-05-20T18:39:45Z)
+
+
+## 2026-05-20 13:50 - schedule all user-reviewed proposals
+- Approval: Bill explicitly chose `Schedule all` on 2026-05-20 after the hidden `needs_user_review` proposals were surfaced in chat.
+- Scheduled work:
+  - `task-19-dashboard-proposal-review-ui` from `proposal-03-dashboard-proposal-review-ui`; depends on `task-18-reconcile-trigger-afterwork-ledger-drift`.
+  - `task-20-target-repo-upgrade-fixture` from `proposal-02-target-repo-upgrade-fixture`; depends on `task-19-dashboard-proposal-review-ui`.
+  - `task-21-public-release-readiness` from `proposal-01-public-release-readiness`; depends on `task-20-target-repo-upgrade-fixture`.
+- Queue order: `task-17` and `task-18` remain ahead of the new tasks because they repair the automation handoff contract.
+- Shared capability evidence: Huashu Design and Superpowers are installed in `$CODEX_HOME/lambchop/shared-capabilities.json`; task-19 requires Huashu before dashboard UI changes.
+- Scheduler handoff plan: automation is already ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`; run-now initiation must happen after this scheduling commit and should be logged as initiation only.
+- Validation correction: PowerShell rejected Bash heredoc syntax (`node - <<'NODE'`) during the state/dashboard consistency check; rerun with PowerShell-compatible `node -e` before completion. (2026-05-20T18:53:03Z)
+- Validation: Validation passed: JSON parse for state/dashboard/backoff/control requests; state/dashboard counts match (todo=5, done=18); proposal backlog has 0 needs_user_review and 3 scheduled entries; git diff --check passed with line-ending warnings only. (2026-05-20T18:53:45Z)

@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-20T18:39:45Z",
+    "updated_at": "2026-05-20T18:53:45Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -1469,13 +1469,198 @@
       "integration_status": "not_ready",
       "created_at": "2026-05-20T18:32:38Z",
       "updated_at": "2026-05-20T18:39:45Z"
+    },
+    {
+      "key": "task-19-dashboard-proposal-review-ui",
+      "title": "Show proposal review needs in the dashboard",
+      "type": "dashboard-proposal-visibility",
+      "status": "todo",
+      "priority": 24,
+      "dependencies": [
+        "task-18-reconcile-trigger-afterwork-ledger-drift"
+      ],
+      "source_refs": [
+        "docs/lambchop/dashboard.html",
+        "docs/lambchop/dashboard-server/server.mjs"
+      ],
+      "acceptance_criteria": [
+        "Dashboard shows proposal title, rationale, status, and review need.",
+        "Status API returns proposal_backlog from state or dashboard data.",
+        "Empty proposal state is clearly rendered.",
+        "Dashboard remains read-only for proposal review; approval actions stay manual for now.",
+        "Huashu Design is checked/used before changing the user-facing dashboard UI."
+      ],
+      "implementation_notes": [
+        "Scheduled from proposal-03-dashboard-proposal-review-ui after Bill approved \"Schedule all\" on 2026-05-20.",
+        "Make future review-needed proposals visible in the dashboard instead of hiding them in JSON.",
+        "Proposal backlog entries should be visible where the user monitors automation status, so review-needed work does not hide in JSON.",
+        "Risk notes from proposal: Approval actions should remain manual for now; the dashboard should not mutate project state.",
+        "Parallelization notes from proposal: Small UI/API task, likely single-lane unless paired with docs."
+      ],
+      "validation": [
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json.",
+        "Dashboard counts match state work item counts after scheduling."
+      ],
+      "branch": "codex/lambchop-task-19-dashboard-proposal-review-ui",
+      "worktree": ".worktrees/dashboard-proposal-review-ui",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "docs/lambchop/dashboard.html",
+        "docs/lambchop/dashboard-server/",
+        "autonomous-coding-team/assets/templates/dashboard.html",
+        "autonomous-coding-team/assets/templates/dashboard-server/",
+        "tests/dashboard-registry.test.mjs"
+      ],
+      "shared_scope": [
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/backoff.json",
+        "C:/Users/BillMartin/.codex/lambchop/shared-capabilities.json"
+      ],
+      "next_step": "Use Huashu Design, then implement read-only dashboard/API proposal visibility with focused tests.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "created_at": "2026-05-20T18:52:24Z",
+      "updated_at": "2026-05-20T18:52:24Z"
+    },
+    {
+      "key": "task-20-target-repo-upgrade-fixture",
+      "title": "Prove target repo upgrade with a safe fixture",
+      "type": "target-repo-upgrade-fixture",
+      "status": "todo",
+      "priority": 18,
+      "dependencies": [
+        "task-19-dashboard-proposal-review-ui"
+      ],
+      "source_refs": [
+        "README.md#updating-a-repo-that-already-has-lambchop",
+        "autonomous-coding-team/references/target-project-deployment-checklist.md"
+      ],
+      "acceptance_criteria": [
+        "A fixture simulates an older Lambchop install.",
+        "Upgrade steps preserve history while adding proposal backlog and dashboard API fields.",
+        "Validation evidence is recorded in progress.",
+        "Fixture data avoids embedding private repo details."
+      ],
+      "implementation_notes": [
+        "Scheduled from proposal-02-target-repo-upgrade-fixture after Bill approved \"Schedule all\" on 2026-05-20.",
+        "Prove in-place Lambchop upgrade behavior with a reusable fixture instead of a private repo.",
+        "Lambchop now supports upgrading existing installs; a reusable fixture would prove the migration path without touching private projects.",
+        "Risk notes from proposal: Fixture design should avoid embedding any private repo details.",
+        "Parallelization notes from proposal: Can split into fixture creation, migration validation, and docs update."
+      ],
+      "validation": [
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json.",
+        "Dashboard counts match state work item counts after scheduling."
+      ],
+      "branch": "codex/lambchop-task-20-target-repo-upgrade-fixture",
+      "worktree": ".worktrees/target-repo-upgrade-fixture",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "autonomous-coding-team/references/target-project-deployment-checklist.md",
+        "autonomous-coding-team/tools/",
+        "tests/",
+        "README.md"
+      ],
+      "shared_scope": [
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/backoff.json"
+      ],
+      "next_step": "Build an older-install fixture, run upgrade validation, and record proof without private repo details.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "created_at": "2026-05-20T18:52:24Z",
+      "updated_at": "2026-05-20T18:52:24Z"
+    },
+    {
+      "key": "task-21-public-release-readiness",
+      "title": "Prepare Lambchop public release readiness",
+      "type": "public-release-readiness",
+      "status": "todo",
+      "priority": 12,
+      "dependencies": [
+        "task-20-target-repo-upgrade-fixture"
+      ],
+      "source_refs": [
+        "README.md",
+        "autonomous-coding-team/references/validation-checklist.md"
+      ],
+      "acceptance_criteria": [
+        "README gives a concise public install path.",
+        "Privacy and secret scans are documented as a release gate.",
+        "Dashboard hub/API setup is understandable from a fresh checkout.",
+        "History-scrubbing depth is recorded as a user-reviewed release decision if it cannot be inferred safely."
+      ],
+      "implementation_notes": [
+        "Scheduled from proposal-01-public-release-readiness after Bill approved \"Schedule all\" on 2026-05-20.",
+        "Prepare Lambchop for public-facing use after upgrade proof is in place.",
+        "The repo is intended to become public, so Lambchop should verify public-facing docs, privacy scans, install instructions, and dashboard onboarding before wider use.",
+        "Risk notes from proposal: Requires user approval because public release scope and acceptable history-scrubbing depth are product decisions.",
+        "Parallelization notes from proposal: Can split into docs polish, validation gate, and dashboard onboarding tasks."
+      ],
+      "validation": [
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json.",
+        "Dashboard counts match state work item counts after scheduling."
+      ],
+      "branch": "codex/lambchop-task-21-public-release-readiness",
+      "worktree": ".worktrees/public-release-readiness",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "README.md",
+        "autonomous-coding-team/references/validation-checklist.md",
+        "autonomous-coding-team/references/"
+      ],
+      "shared_scope": [
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/backoff.json"
+      ],
+      "next_step": "Review public-facing docs and release gates after task-20 proves upgrade behavior.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "created_at": "2026-05-20T18:52:24Z",
+      "updated_at": "2026-05-20T18:52:24Z"
     }
   ],
   "proposal_backlog": [
     {
       "key": "proposal-01-public-release-readiness",
       "title": "Public release readiness pass",
-      "status": "needs_user_review",
+      "status": "scheduled",
       "rationale": "The repo is intended to become public, so Lambchop should verify public-facing docs, privacy scans, install instructions, and dashboard onboarding before wider use.",
       "source_refs": [
         "README.md",
@@ -1487,12 +1672,16 @@
         "Dashboard hub/API setup is understandable from a fresh checkout."
       ],
       "risk_notes": "Requires user approval because public release scope and acceptable history-scrubbing depth are product decisions.",
-      "parallelization_notes": "Can split into docs polish, validation gate, and dashboard onboarding tasks."
+      "parallelization_notes": "Can split into docs polish, validation gate, and dashboard onboarding tasks.",
+      "linked_work_item": "task-21-public-release-readiness",
+      "scheduled_at": "2026-05-20T18:52:24Z",
+      "approved_by": "Bill",
+      "approval_note": "Bill chose Schedule all on 2026-05-20 after proposals were surfaced in chat."
     },
     {
       "key": "proposal-02-target-repo-upgrade-fixture",
       "title": "Target repo upgrade fixture and proof",
-      "status": "needs_user_review",
+      "status": "scheduled",
       "rationale": "Lambchop now supports upgrading existing installs; a reusable fixture would prove the migration path without touching private projects.",
       "source_refs": [
         "README.md#updating-a-repo-that-already-has-lambchop",
@@ -1504,12 +1693,16 @@
         "Validation evidence is recorded in progress."
       ],
       "risk_notes": "Fixture design should avoid embedding any private repo details.",
-      "parallelization_notes": "Can split into fixture creation, migration validation, and docs update."
+      "parallelization_notes": "Can split into fixture creation, migration validation, and docs update.",
+      "linked_work_item": "task-20-target-repo-upgrade-fixture",
+      "scheduled_at": "2026-05-20T18:52:24Z",
+      "approved_by": "Bill",
+      "approval_note": "Bill chose Schedule all on 2026-05-20 after proposals were surfaced in chat."
     },
     {
       "key": "proposal-03-dashboard-proposal-review-ui",
       "title": "Dashboard proposal review visibility",
-      "status": "needs_user_review",
+      "status": "scheduled",
       "rationale": "Proposal backlog entries should be visible where the user monitors automation status, so review-needed work does not hide in JSON.",
       "source_refs": [
         "docs/lambchop/dashboard.html",
@@ -1521,19 +1714,25 @@
         "Empty proposal state is clearly rendered."
       ],
       "risk_notes": "Approval actions should remain manual for now; the dashboard should not mutate project state.",
-      "parallelization_notes": "Small UI/API task, likely single-lane unless paired with docs."
+      "parallelization_notes": "Small UI/API task, likely single-lane unless paired with docs.",
+      "linked_work_item": "task-19-dashboard-proposal-review-ui",
+      "scheduled_at": "2026-05-20T18:52:24Z",
+      "approved_by": "Bill",
+      "approval_note": "Bill chose Schedule all on 2026-05-20 after proposals were surfaced in chat."
     }
   ],
   "last_run": {
-    "run_id": "manual-20260520-trigger-terminalization-intake",
-    "started_at": "2026-05-20T18:39:45Z",
-    "work_item_key": "task-17-trigger-terminalization-guardrail",
+    "run_id": "manual-20260520-schedule-review-proposals",
+    "started_at": "2026-05-20T18:52:24Z",
+    "work_item_key": "task-19-dashboard-proposal-review-ui",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-20T18:39:45Z",
-    "next_action": "Let the existing IN_PROGRESS automation run finish; next fresh run should take task-17.",
-    "timestamp": "2026-05-20T18:39:45Z",
-    "summary": "Queued task-17/task-18 to enforce terminal run-now handoff and update evidence to log initiation-only (verification deferred to next run).",
-    "active_work_item": "task-17-trigger-terminalization-guardrail"
+    "dashboard_updated_at": "2026-05-20T18:52:24Z",
+    "next_action": "Scheduler-visible run-now should be initiated after this scheduling commit so automation can continue with task-17 first.",
+    "timestamp": "2026-05-20T18:52:24Z",
+    "summary": "Scheduled all three user-approved proposal backlog entries as task-19 through task-21 while preserving task-17/task-18 queue priority.",
+    "active_work_item": "task-19-dashboard-proposal-review-ui",
+    "validation_note": "Validation command correction: PowerShell rejected Bash heredoc syntax for node consistency check; rerun with node -e.",
+    "validation": "Validation passed: JSON parse for state/dashboard/backoff/control requests; state/dashboard counts match (todo=5, done=18); proposal backlog has 0 needs_user_review and 3 scheduled entries; git diff --check passed with line-ending warnings only."
   }
 }
