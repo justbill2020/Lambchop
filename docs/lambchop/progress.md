@@ -797,3 +797,36 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Evidence: inside `nope-lambchop-project-api-1`, `/api/status` returned real NOPE data (`done=45`, `todo=3`, `latest_count=8`), while host `127.0.0.1:8766/api/status` returned placeholder data until the stale test process was stopped.
 - Resolution: stopped only the stale local test process. Host `127.0.0.1:8766/api/status` now returns NOPE with `todo=3`, `done=45`, `proposals=1`, and `latest_count=8`; the hub registry still lists NOPE as live.
 - Scheduler: no automation pause/unpause or run-now was performed. `lambchop-autonomous-coding-team` remains ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH`.
+
+## 2026-05-20 12:00 - two-phase loop intake correction
+- Status: queued
+- Run id: `manual-20260520-two-phase-loop-intake`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Work item: `task-16-two-phase-planning-execution-loop` (todo)
+- Failure corrected:
+  - Bill reported that the previous response only updated status text and did not actually schedule work.
+  - Confirmed: no work item had been created for the two-phase planning/scheduling versus execution loop.
+- Queued work:
+  - Added `task-16-two-phase-planning-execution-loop` to `docs/lambchop/state.json`.
+  - Refreshed `docs/lambchop/dashboard-data.json` so the dashboard shows one todo item and points to task-16 as the next action.
+  - Updated `docs/lambchop/backoff.json` to record real intake work, pause/unpause evidence, parked RRULE repair, and scheduler-visible run-now handoff.
+- Requested behavior captured:
+  - Completed automation chat windows become planning/scheduling-only contexts.
+  - Fresh automation turns execute already-scheduled runnable tasks first.
+  - If no runnable tasks exist, a fresh automation turn plans unscheduled issues/user needs, schedules ready plans as tasks, records evidence, and ends.
+  - If planning creates runnable tasks, the turn triggers a fresh automation turn instead of executing those newly-created tasks in the same context.
+- Scheduler handoff:
+  - On Wednesday, May 20, 2026, the parked weekly anchor should be Tuesday at noon: `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
+  - Paused `lambchop-autonomous-coding-team` through Codex app automation tooling and repaired the app-visible parked anchor to `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
+  - Unpaused `lambchop-autonomous-coding-team` through Codex app automation tooling; status is ACTIVE.
+  - Backed up scheduler DB to `C:\Users\BillMartin\.codex\backups\automation-run-now-lambchop-20260520T1705\codex-dev.db`, nudged `next_run_at`, and verified new automation run `019e4695-2d61-75c3-b257-e3cb5bdc06cf` with status `IN_PROGRESS`.
+  - After the scheduler-visible run-now trigger, the persisted automation remains ACTIVE and parked at `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
+- TDD requirement:
+  - Bill explicitly requested the `tdd` skill for coding now and in the future for this and all Lambchop-enabled projects.
+  - Added `tests/workflow-contract.test.mjs`; RED confirmed the workflow did not explicitly require the `tdd` skill contract, then GREEN after updating `WORKFLOW.md`, the target-repo `WORKFLOW.md` template, and the automation prompt.
+  - Validation correction: `node --test tests` failed on Windows because Node tried to load the `tests` directory as a module; use explicit test file globs instead.
+  - Ledger update correction: the first structured JSON update failed because `state.json` uses `project.scheduling_policy` rather than a top-level `automation` object; corrected using the actual state schema.
+  - Validation RED: `node --test tests\*.test.mjs` failed after the automation-added two-phase contract test because `WORKFLOW.md` did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.
+  - Validation RED: `node --test tests\*.test.mjs` failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording.
+  - Final validation: `node --test tests\*.test.mjs` passed with 20 tests; JSON parse validation passed for state, dashboard data, and backoff.

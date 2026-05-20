@@ -48,18 +48,19 @@ Every automation run:
 7. Recheck blocked items whose next step is testable in the current environment.
 8. Consolidate review items only after fresh validation evidence.
 9. Build an adaptive sprint packet of 2 to 5 independent eligible work items when possible, create the next source-backed item from the scheduled work plan, or generate proposal backlog entries for user review when PRD/spec evidence suggests possible next advances.
-10. Claim each selected item with a lease.
-11. Work in isolated worktrees and local branches.
-12. Dispatch bounded Superpowers subagents for independent parallel lanes when available; otherwise record why parallelism was not useful and work the single eligible item.
-13. Use TDD for production behavior.
-14. Integrate subagent results one at a time, resolve shared-scope risks, and run relevant checks.
-15. Commit coherent completed changes locally.
-16. After completion, plan or select the next item before schedule finalization; if the queue is exhausted, create PRD/spec-backed proposals with `needs_user_review` instead of merely reporting all tasks complete.
-17. Keep dashboard data current from real workflow evidence so the Dockerized dashboard server shows live status.
-18. Update state, progress, shared capability evidence, schedule/trigger ledger, and automation memory.
-19. Apply the no-progress pause guard before triggering: reset the counter after real work, increment it after no-progress, and pause the automation after 3 consecutive no-progress runs.
-20. If the automation is ACTIVE and the no-progress guard did not pause or block triggering, first repair the parked weekly anchor to yesterday's weekday at noon, then trigger the next scheduler-visible run; if PAUSED or inactive, skip the trigger and record why.
-21. Stop safely if blocked.
+10. Enforce a two-phase loop: if the run creates runnable new work items during planning, record the scheduling evidence and stop; do not implement newly created tasks in the same automation turn.
+11. Claim each selected item with a lease.
+12. Work in isolated worktrees and local branches.
+13. Dispatch bounded Superpowers subagents for independent parallel lanes when available; otherwise record why parallelism was not useful and work the single eligible item.
+14. Use the `tdd` skill for production behavior: one public-behavior test first, minimal implementation to green, repeat, then refactor while green.
+15. Integrate subagent results one at a time, resolve shared-scope risks, and run relevant checks.
+16. Commit coherent completed changes locally.
+17. After completion, plan or select the next item before schedule finalization; if the queue is exhausted, create PRD/spec-backed proposals with `needs_user_review` instead of merely reporting all tasks complete.
+18. Keep dashboard data current from real workflow evidence so the Dockerized dashboard server shows live status.
+19. Update state, progress, shared capability evidence, schedule/trigger ledger, and automation memory.
+20. Apply the no-progress pause guard before triggering: reset the counter after real work, increment it after no-progress, and pause the automation after 3 consecutive no-progress runs.
+21. If the automation is ACTIVE and the no-progress guard did not pause or block triggering, first repair the parked weekly anchor to yesterday's weekday at noon, then trigger the next scheduler-visible run; if PAUSED or inactive, skip the trigger and record why.
+22. Stop safely if blocked.
 
 ## Project Chat Intake
 Interactive project chats are intake sessions by default when the user says they need something, reports a bug, or says something is broken. They investigate and document; they do not implement.

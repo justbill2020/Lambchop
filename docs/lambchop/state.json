@@ -34,7 +34,7 @@
     },
     "scheduling_policy": {
       "mode": "parked_weekly_anchor_with_completion_trigger",
-      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
+      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU",
       "parked_anchor_policy": {
         "mode": "yesterday_at_noon",
         "timezone": "operator_local",
@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-15T21:31:00.000Z",
+    "updated_at": "2026-05-20T17:07:00.000Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -1257,6 +1257,88 @@
       "integration_status": "ready",
       "completed_at": "2026-05-15T18:15:00.000Z",
       "updated_at": "2026-05-15T21:31:00.000Z"
+    },
+    {
+      "key": "task-16-two-phase-planning-execution-loop",
+      "title": "Enforce two-phase planning/scheduling and execution automation loop",
+      "type": "workflow-automation-contract",
+      "status": "todo",
+      "priority": 35,
+      "dependencies": [
+        "task-13-intake-automation-handoff-guardrail",
+        "task-15-dashboard-registry-stability-and-control-api"
+      ],
+      "source_refs": [
+        "WORKFLOW.md#Project Chat Intake",
+        "WORKFLOW.md#Run Loop",
+        "WORKFLOW.md#Shared Capabilities And Upstream Skills",
+        "autonomous-coding-team/references/automation-prompt.md",
+        "autonomous-coding-team/assets/templates/WORKFLOW.md",
+        ".codex/hooks/lambchop_stop.py"
+      ],
+      "acceptance_criteria": [
+        "Completed automation-run chat windows become planning/scheduling-only contexts unless the user explicitly overrides execution mode.",
+        "Fresh automation turns execute only already-scheduled runnable tasks first.",
+        "When no scheduled runnable tasks exist, a fresh automation turn plans unscheduled issues or user needs, schedules ready plans as tasks, records evidence, and ends its own turn.",
+        "If planning creates runnable scheduled tasks, the turn records closure evidence and triggers the next scheduler-visible automation turn instead of implementing those newly-created tasks in the same context.",
+        "Workflow, reusable templates, automation prompt guidance, hooks, validation checklist, state/progress/dashboard/backoff evidence, and target-repo upgrade guidance consistently describe the two-phase loop.",
+        "Coding tasks in Lambchop and Lambchop-enabled projects require the tdd skill contract: one public-behavior test first, minimal implementation to green, repeat, then refactor only while green.",
+        "Validation covers the failure mode where a chat only summarizes the loop without queuing work, and the failure mode where an automation both creates and executes the same task in one turn."
+      ],
+      "implementation_notes": [
+        "Bill described Lambchop as a two-part process loop: post-automation chats plan/schedule; fresh automation turns execute scheduled tasks, or plan/schedule work when none are runnable, then trigger a new turn if runnable work was created.",
+        "Do not preserve the ambiguous current behavior where a single context can plan new work and immediately implement that same work.",
+        "Intake correction after Bill flagged that the prior response only described the two-phase loop and did not queue work. The new task schedules implementation of a strict planning/scheduling versus execution loop for Lambchop-enabled projects.",
+        "Bill explicitly requested the tdd skill for coding now and in the future for this and all Lambchop-enabled projects. Implement task-16 test-first, and update Lambchop workflow/templates so target projects inherit that expectation."
+      ],
+      "validation": [
+        "Intake evidence: prior assistant response stopped at interpretation and did not update state/progress/dashboard/backoff or queue a task; this task corrects that omission.",
+        "Queued task and handed off to active Lambchop automation via scheduler-visible run-now.",
+        "Scheduler-visible run-now verified: after DB backup and next_run_at nudge, automation_runs contains new Lambchop row thread_id=019e4695-2d61-75c3-b257-e3cb5bdc06cf status=IN_PROGRESS created_at=1779300636527. Automation remains ACTIVE and parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU.",
+        "TDD requirement recorded after Bill explicitly requested use of the tdd skill for Lambchop and all Lambchop-enabled project coding.",
+        "TDD contract validation: tests/workflow-contract.test.mjs failed first because the workflow did not explicitly require the tdd skill contract, then passed after updating WORKFLOW.md, the target-repo workflow template, and the automation prompt.",
+        "Validation correction: node --test tests failed because Node tried to load the tests directory as a module on Windows; rerun with explicit test file globs.",
+        "Ledger update correction: first structured JSON update failed because state.json uses project.scheduling_policy rather than a top-level automation object; corrected using the actual state schema.",
+        "Final validation: node --test tests\\*.test.mjs passed with 20 tests; JSON parse validation passed for state, dashboard data, and backoff.",
+        "Validation RED: node --test tests\\*.test.mjs failed after the automation-added two-phase contract test because WORKFLOW.md did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.",
+        "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording."
+      ],
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "autonomous-coding-team/assets/templates/WORKFLOW.md",
+        "autonomous-coding-team/references/automation-prompt.md",
+        "autonomous-coding-team/references/workflow-architecture.md",
+        "autonomous-coding-team/references/validation-checklist.md",
+        ".codex/hooks/",
+        "autonomous-coding-team/assets/templates/.codex/hooks/",
+        "tests/lambchop-hooks.test.mjs",
+        "tests/workflow-contract.test.mjs"
+      ],
+      "shared_scope": [
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/backoff.json",
+        "Codex app automation status/prompt/rrule"
+      ],
+      "next_step": "Automation should implement the two-phase loop contract, then validate hooks and workflow templates prevent same-context plan-and-execute behavior.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "created_at": "2026-05-20T17:00:00.000Z",
+      "updated_at": "2026-05-20T17:07:00.000Z"
     }
   ],
   "proposal_backlog": [
@@ -1313,15 +1395,15 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-20260515-dashboard-control-api",
-    "started_at": "2026-05-15T18:15:00.000Z",
-    "work_item_key": "task-15-dashboard-registry-stability-and-control-api",
+    "run_id": "manual-20260520-two-phase-loop-intake",
+    "started_at": "2026-05-20T17:00:00.000Z",
+    "work_item_key": "task-16-two-phase-planning-execution-loop",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-15T21:31:00.000Z",
-    "next_action": "Use the dashboard Request update control to queue target-repo Lambchop updates; automation remains the executor.",
-    "timestamp": "2026-05-15T21:31:00.000Z",
-    "summary": "Dashboard stack remained healthy; NOPE missing data incident traced to stale local test process on port 8766 and resolved operationally.",
-    "active_work_item": "task-15-dashboard-registry-stability-and-control-api"
+    "dashboard_updated_at": "2026-05-20T17:07:00.000Z",
+    "next_action": "Fresh automation run 019e4695-2d61-75c3-b257-e3cb5bdc06cf is in progress and should implement task-16.",
+    "timestamp": "2026-05-20T17:07:00.000Z",
+    "summary": "Queued task-16, made the tdd skill contract explicit, and triggered a fresh Lambchop automation run for the two-phase loop implementation.",
+    "active_work_item": "task-16-two-phase-planning-execution-loop"
   }
 }

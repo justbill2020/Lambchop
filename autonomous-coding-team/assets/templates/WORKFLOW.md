@@ -127,6 +127,8 @@ These actions require explicit user permission and a workflow update.
 ## Project Chat Intake
 When the user reports a new need, feature request, bug, regression, vague problem, or "this is broken" issue in an ordinary project chat, that chat session must act as an intake agent, not an implementation agent.
 
+Any chat context that is not a fresh scheduled automation run must behave as intake/planning-only unless the user explicitly overrides the execution mode for that chat.
+
 The intake chat may investigate enough to produce a useful task. It may inspect relevant files, run safe read-only or diagnostic checks, reproduce the issue when practical, identify likely ownership, and update workflow ledgers. It must not edit production code, implement the feature, fix the bug, refactor nearby code, or mark the work done. If documentation-only clarification is required to make the task understandable, keep it limited to the work item/progress/dashboard ledgers.
 
 The intake chat must create a brief task-creation plan, then create or update one or more bounded work items in `docs/<PROJECT_SLUG>/state.json` with source references, acceptance criteria, implementation notes, validation expectations, exclusive scope, shared scope, blockers if any, and a clear `next_step`. It must append an intake entry to `docs/<PROJECT_SLUG>/progress.md`, refresh `docs/<PROJECT_SLUG>/dashboard-data.json` when applicable, and set status to `todo` unless the item is blocked by a missing decision or unavailable local input.
@@ -154,6 +156,8 @@ Every Lambchop-managed repo must also record the Lambchop source commit used for
 
 For user-facing interface work, load Huashu Design before changing the dashboard or app UI. Use it as the design/prototype/critique layer, then implement the selected direction in the project code or Lambchop dashboard template.
 
+For coding work, load and follow the `tdd` skill. This repo must use one public-behavior test first, verify the expected failing result, make the minimal implementation needed to pass, repeat for the next behavior, and refactor while green. If a task cannot be tested first, record the reason, risk, and replacement validation evidence before implementation.
+
 ## First Run Discovery
 On the first run, or whenever required project details are missing, inspect before selecting work:
 
@@ -171,6 +175,8 @@ On the first run, or whenever required project details are missing, inspect befo
 Record the discovery result in `docs/<PROJECT_SLUG>/progress.md` and normalize `docs/<PROJECT_SLUG>/state.json`.
 
 ## Run Loop
+This is a two-phase loop: planning/scheduling and execution are separate automation turns.
+
 Every automation run must:
 
 1. Generate a unique `run_id`, such as `run-<yyyyMMdd-HHmmss>-<short-random>`.
@@ -194,12 +200,12 @@ Every automation run must:
 13. Use branch `codex/<PROJECT_SLUG>-<work-item-key>`.
 14. Work only the active item or sprint packet until complete or blocked.
 15. When a sprint packet has 2 or more independent items and subagents are available, the main automation run orchestrates bounded parallel subagents. It dispatches one self-contained task per work item, requires Superpowers `dispatching-parallel-agents`, TDD, and verification guidance, and keeps ownership of integration, state, progress, dashboard regeneration, commits, and scheduler finalization.
-16. Use TDD for production behavior: RED, GREEN, refactor when needed.
+16. Use the `tdd` skill for production behavior: write one public-behavior test first, verify RED, make the minimal implementation needed for GREEN, repeat, then refactor while green.
 17. Integrate subagent results one at a time, reconcile shared-scope risks, and mark each lane as completed, blocked, conflicted, failed_validation, or not_useful.
 18. Run relevant verification for the changed behavior.
 19. Update documentation when behavior, setup, commands, architecture, or limitations change.
 20. Commit coherent completed changes locally with validation details in the commit body.
-21. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review.
+21. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review. If the planner loop creates runnable new work items, schedule them, record the evidence, and stop; do not implement newly created tasks in the same run.
 22. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/<PROJECT_SLUG>/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
 23. Update state, progress, shared-capability evidence, and the schedule/trigger ledger.
 24. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.

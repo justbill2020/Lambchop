@@ -1,6 +1,6 @@
 {
   "schedule_mode": "parked-weekly-anchor-with-completion-trigger",
-  "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
+  "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU",
   "parked_anchor_policy": {
     "mode": "yesterday_at_noon",
     "timezone": "operator_local",
@@ -22,18 +22,18 @@
   "last_no_progress_reason": null,
   "pause_recommended": false,
   "pause_after_consecutive_no_progress_runs": 3,
-  "last_result": "dashboard_runtime_incident_resolved_nope_data_restored",
-  "last_trigger_result": "no_scheduler_change_operational_dashboard_process_cleanup",
-  "updated_at": "2026-05-15T21:31:00.000Z",
+  "last_result": "queued_two_phase_loop_task_and_added_tdd_contract_test",
+  "last_trigger_result": "scheduler_visible_run_now_verified_thread_019e4695_2d61_75c3_b257_e3cb5bdc06cf",
+  "updated_at": "2026-05-20T17:07:00.000Z",
   "scheduler_persistence": {
-    "desired_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
-    "actual_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH",
-    "status": "ACTIVE_no_scheduler_change_after_dashboard_runtime_incident",
+    "desired_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU",
+    "actual_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU",
+    "status": "ACTIVE_run_now_verified_for_task_16",
     "automation_id": "lambchop-autonomous-coding-team",
-    "last_checked_at": "2026-05-15T21:31:00.000Z",
-    "notes": "NOPE dashboard data issue was caused by a stale local node test process on port 8766, not by automation schedule state. Automation was not paused or unpaused; parked RRULE remained RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH; no run-now was triggered.",
-    "updated_at": "2026-05-15T21:31:00.000Z",
-    "rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TH"
+    "last_checked_at": "2026-05-20T17:07:00.000Z",
+    "notes": "Paused for anchor repair, unpaused to ACTIVE with Tuesday parked anchor, backed up scheduler DB to C:\\Users\\BillMartin\\.codex\\backups\\automation-run-now-lambchop-20260520T1705\\codex-dev.db, nudged next_run_at, and verified new automation_runs row thread_id=019e4695-2d61-75c3-b257-e3cb5bdc06cf status=IN_PROGRESS. TDD requirement recorded for Lambchop and Lambchop-enabled project coding; tests/workflow-contract.test.mjs failed first and then passed after workflow/template/prompt updates. Validation corrections recorded: node --test tests is the wrong Windows command here, and the first structured JSON update used the wrong state schema; both were corrected. Final validation passed: node --test tests\\*.test.mjs reported 20 passing tests and JSON parse validation passed. No blocker remains for handoff. Validation RED recorded: two-phase contract test failed until explicit two-phase loop wording was added to live and template workflows. Validation RED recorded: automation prompt used work items instead of tasks for same-turn implementation ban; corrected wording.",
+    "updated_at": "2026-05-20T17:07:00.000Z",
+    "rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU"
   },
   "audit_result": {
     "status": "failed_unrelated_registry_drift",

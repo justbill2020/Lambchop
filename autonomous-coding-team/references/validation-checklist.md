@@ -24,6 +24,7 @@ Before claiming a setup is complete, confirm:
 - The workflow states local-only safety defaults.
 - The workflow includes project chat intake rules: ordinary chats investigate user-reported needs or breakages, create/update queued work items and progress evidence, and do not implement unless explicitly overridden.
 - The workflow requires intake chats to hand off queued work by unpausing or confirming active automation status, triggering scheduler-visible run-now, and recording trigger evidence.
+- The workflow enforces a two-phase loop: automation turns execute only already-scheduled runnable work first; planning/scheduling that creates runnable new tasks records evidence and defers execution to the next scheduler-visible run instead of implementing newly created tasks in the same turn.
 - Push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts are forbidden by default.
 - Worktree root and branch naming are present.
 - Git write-access preflight is required before claiming work.

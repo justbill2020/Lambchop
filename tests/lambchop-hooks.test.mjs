@@ -122,6 +122,25 @@ test('Stop hook blocks feature-chat endings that skip automation handoff', () =>
   assert.equal(queuedOnly.decision, 'block');
   assert.match(queuedOnly.reason, /trigger/i);
 
+  const twoPhaseSummaryOnly = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    last_assistant_message: 'Two-phase loop: planning/scheduling only. Updated state.json and progress.md with notes.',
+  });
+  assert.equal(twoPhaseSummaryOnly.decision, 'block');
+  assert.match(twoPhaseSummaryOnly.reason, /queue/i);
+
+  const queuedAndImplementedSameTask = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    last_assistant_message: (
+      'Queued task-123, implemented task-123, unpaused the automation, triggered scheduler-visible run-now, '
+      + 'and recorded progress/dashboard evidence.'
+    ),
+  });
+  assert.equal(queuedAndImplementedSameTask.decision, 'block');
+  assert.match(queuedAndImplementedSameTask.reason, /two-phase|schedule|queue/i);
+
   const implementedInChat = runPython(scriptPath, {
     hook_event_name: 'Stop',
     stop_hook_active: false,

@@ -21,6 +21,18 @@ AUTOMATION_CONTEXT_PATTERN = re.compile(
     r"\b(automation run|scheduled run|work item|queued|intake|run-now|scheduler-visible|explicit override)\b",
     re.IGNORECASE,
 )
+TWO_PHASE_PATTERN = re.compile(
+    r"\b(two[- ]phase|planning\s*/\s*scheduling|planning-only|plan-and-execute|plan\s+and\s+execute)\b",
+    re.IGNORECASE,
+)
+QUEUED_TASK_CAPTURE_PATTERN = re.compile(
+    r"\b(?:queued|schedule(?:d)?|created|added)\s+`?(task-[0-9a-z_-]+)`?\b",
+    re.IGNORECASE,
+)
+IMPLEMENTED_TASK_CAPTURE_PATTERN = re.compile(
+    r"\b(?:implemented|fixed|patched|refactored|completed)\s+`?(task-[0-9a-z_-]+)`?\b",
+    re.IGNORECASE,
+)
 
 
 def main():
@@ -34,6 +46,8 @@ def main():
         return
 
     message = str(payload.get("last_assistant_message") or "")
+    queued_task_ids = {m.group(1).lower() for m in QUEUED_TASK_CAPTURE_PATTERN.finditer(message)}
+    implemented_task_ids = {m.group(1).lower() for m in IMPLEMENTED_TASK_CAPTURE_PATTERN.finditer(message)}
     github_publish_required = bool(payload.get("github_repo")) and (
         bool(payload.get("workflow_allows_push")) or bool(payload.get("user_requested_push"))
     )
@@ -46,6 +60,29 @@ def main():
                 "This is a GitHub repo with push enabled or requested. Before stopping, commit the completed "
                 "changes, push the branch to GitHub, and record commit/push evidence with validation and ledger updates. "
                 "Do not push if workflow safety still forbids publishing; record that blocker instead."
+            ),
+        }))
+        return
+
+    overlap = sorted(queued_task_ids.intersection(implemented_task_ids))
+    if overlap:
+        print(json.dumps({
+            "decision": "block",
+            "reason": (
+                "Two-phase contract: do not schedule/queue and implement the same work item in one turn. "
+                f"Detected queued+implemented overlap: {', '.join(overlap)}. Queue the runnable work, "
+                "record handoff evidence, and rely on a fresh scheduler-visible automation run to execute it."
+            ),
+        }))
+        return
+
+    if TWO_PHASE_PATTERN.search(message) and not QUEUED_PATTERN.search(message):
+        print(json.dumps({
+            "decision": "block",
+            "reason": (
+                "Two-phase loop explanations must not stop at a summary. Queue a concrete bounded work item, "
+                "record progress/dashboard/backoff evidence, unpause or confirm ACTIVE automation status, "
+                "and trigger a scheduler-visible run-now handoff (or record the exact blocker)."
             ),
         }))
         return
