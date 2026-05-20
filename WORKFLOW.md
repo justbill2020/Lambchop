@@ -94,7 +94,7 @@ When instructions conflict, follow explicit user intent first, then safety, then
 Automation may inspect the repo, create worktrees, create local `codex/lambchop-{work_item_key}` branches, edit skill/docs/templates for the active item, run validation commands, commit locally, and update state/progress/schedule ledgers.
 
 ## Forbidden Actions
-Automation must not publish branches, open pull requests, deploy, modify production configuration, use external trackers, delete or revert user work, do implementation work directly in the main checkout after setup, overwrite another live lease, or mark work done without validation evidence.
+Automation must not publish branches unless `docs/lambchop/state.json` explicitly sets `project.autonomy_policy.may_push=true` and Bill requested publishing for the current run. Automation must not open pull requests, deploy, modify production configuration, use external trackers, delete or revert user work, do implementation work directly in the main checkout after setup, overwrite another live lease, or mark work done without validation evidence.
 
 ## Project Chat Intake
 When Bill reports a new need, feature request, bug, regression, vague problem, or "this is broken" issue in an ordinary project chat, that chat session must act as an intake agent, not an implementation agent.

@@ -862,3 +862,14 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Scheduler handoff plan: automation is already ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`; run-now initiation must happen after this scheduling commit and should be logged as initiation only.
 - Validation correction: PowerShell rejected Bash heredoc syntax (`node - <<'NODE'`) during the state/dashboard consistency check; rerun with PowerShell-compatible `node -e` before completion. (2026-05-20T18:53:03Z)
 - Validation: Validation passed: JSON parse for state/dashboard/backoff/control requests; state/dashboard counts match (todo=5, done=18); proposal backlog has 0 needs_user_review and 3 scheduled entries; git diff --check passed with line-ending warnings only. (2026-05-20T18:53:45Z)
+
+
+## 2026-05-20 14:02 - enable publishing (may_push)
+- Request (Bill): set `project.autonomy_policy.may_push=true`.
+- Changes:
+  - Updated `docs/lambchop/state.json` and `autonomous-coding-team/assets/templates/state.json` to set `may_push=true`.
+  - Updated repo-local and template `.codex` PreToolUse guardrails to allow publishing only when `may_push=true`.
+  - Updated `WORKFLOW.md` and the reusable workflow template to make publishing conditional on `may_push=true` and an explicit operator request.
+  - Updated dashboard evidence to reflect the new publish policy.
+- Repo status:
+  - `main` is ahead of `origin/main` by 1 commit (`ec76be6`); working tree is clean.

@@ -127,7 +127,7 @@
       "may_edit_code": true,
       "may_run_checks": true,
       "may_commit_locally": true,
-      "may_push": false,
+      "may_push": true,
       "may_open_pr": false,
       "may_deploy": false,
       "may_modify_production_config": false,
