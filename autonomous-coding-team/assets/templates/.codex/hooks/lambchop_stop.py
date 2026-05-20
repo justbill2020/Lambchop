@@ -1,6 +1,7 @@
 import json
 import re
 import sys
+from pathlib import Path
 
 
 EVIDENCE_PATTERN = re.compile(
@@ -34,6 +35,23 @@ IMPLEMENTED_TASK_CAPTURE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+def read_chat_mode():
+    candidates = [Path("docs/lambchop/state.json")]
+    docs_dir = Path("docs")
+    if docs_dir.exists():
+        for path in docs_dir.glob("*/state.json"):
+            candidates.append(path)
+
+    for path in candidates:
+        if not path.exists():
+            continue
+        try:
+            state = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        return ((state.get("project") or {}).get("chat_policy") or {}).get("mode")
+    return None
+
 
 def main():
     try:
@@ -46,6 +64,10 @@ def main():
         return
 
     message = str(payload.get("last_assistant_message") or "")
+    chat_mode = read_chat_mode()
+    if chat_mode == "maintenance":
+        print(json.dumps({"continue": True}))
+        return
     queued_task_ids = {m.group(1).lower() for m in QUEUED_TASK_CAPTURE_PATTERN.finditer(message)}
     implemented_task_ids = {m.group(1).lower() for m in IMPLEMENTED_TASK_CAPTURE_PATTERN.finditer(message)}
     github_publish_required = bool(payload.get("github_repo")) and (

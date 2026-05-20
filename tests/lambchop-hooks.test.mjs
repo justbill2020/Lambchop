@@ -180,6 +180,30 @@ test('Stop hook requires commit and push evidence for GitHub repos when publishi
   assert.equal(published.continue, true);
 });
 
+test('Stop hook allows maintenance mode override from state chat_policy', () => {
+  const statePath = join(repoRoot, 'docs', 'lambchop', 'state.json');
+  const original = readFileSync(statePath, 'utf8');
+  try {
+    const state = JSON.parse(original);
+    state.project.chat_policy = {
+      mode: 'maintenance',
+      modes: ['intake', 'maintenance'],
+      notes: 'test override',
+    };
+    writeFileSync(statePath, JSON.stringify(state, null, 2));
+
+    const scriptPath = join(templateRoot, 'hooks', 'lambchop_stop.py');
+    const maintenance = runPython(scriptPath, {
+      hook_event_name: 'Stop',
+      stop_hook_active: false,
+      last_assistant_message: 'Implemented the requested feature and updated the tests.',
+    });
+    assert.equal(maintenance.continue, true);
+  } finally {
+    writeFileSync(statePath, original);
+  }
+});
+
 test('repo hook installer preserves unrelated hooks and replaces stale Lambchop hooks', () => {
   const targetRoot = mkdtempSync(join(tmpdir(), 'lambchop-hooks-'));
   mkdirSync(join(targetRoot, '.codex', 'hooks'), { recursive: true });

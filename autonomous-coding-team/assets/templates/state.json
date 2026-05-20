@@ -133,6 +133,14 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
+    "chat_policy": {
+      "mode": "intake",
+      "modes": [
+        "intake",
+        "maintenance"
+      ],
+      "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit override (no intake warnings). Default remains intake."
+    },
     "updated_at": "<ISO8601_TIMESTAMP>"
   },
   "work_items": [

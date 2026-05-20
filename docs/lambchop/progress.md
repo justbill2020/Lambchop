@@ -888,3 +888,11 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Clarification (Bill): when decisions are needed, Lambchop should ask the question explicitly because the operator may not be viewing repo files/code directly.
 - Change: added an "Operator Decisions (Ask First)" requirement to the live and template workflows and updated the automation prompt and workflow contract tests.
 - Validation: `node --test tests\\*.test.mjs` passed (21 tests).
+
+## 2026-05-20 15:55 - fix Stop-hook false positives via chat_policy
+- Clarification (Bill): Lambchop should be autonomous; Stop-hook should not block workflow/maintenance changes as "ordinary chat intake" when the operator requested maintenance work.
+- Change:
+  - Added `project.chat_policy.mode` (`intake` | `maintenance`) to live and template state schemas.
+  - Stop hook now reads `docs/*/state.json` and allows completion when `chat_policy.mode=maintenance`.
+  - Live and template workflows document setting `chat_policy.mode=maintenance` during maintenance work, then resetting to `intake`.
+- Validation: `node --test tests\\*.test.mjs` passed (23 tests).

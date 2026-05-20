@@ -101,6 +101,8 @@ When Bill reports a new need, feature request, bug, regression, vague problem, o
 
 Any chat context that is not a fresh scheduled automation run must behave as intake/planning-only unless Bill explicitly overrides the execution mode for that chat.
 
+If Bill explicitly requests workflow/scheduling/hook/shared-capability (maintenance) work in the current chat, record that explicit override by setting `docs/lambchop/state.json` `project.chat_policy.mode` to `maintenance` for the duration of the maintenance work, then reset it to `intake` after the changes are validated, committed, and (when allowed) pushed.
+
 ## Operator Decisions (Ask First)
 When a task requires a product decision, a safety decision, or any ambiguity that materially changes behavior, do not guess. Ask Bill explicitly in chat before proceeding.
 

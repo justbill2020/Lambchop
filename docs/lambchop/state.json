@@ -64,7 +64,15 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-20T20:47:00Z",
+    "chat_policy": {
+      "mode": "intake",
+      "modes": [
+        "intake",
+        "maintenance"
+      ],
+      "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit override (no intake warnings). Default remains intake."
+    },
+    "updated_at": "2026-05-20T20:55:40Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",

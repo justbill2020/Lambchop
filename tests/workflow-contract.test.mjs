@@ -68,3 +68,16 @@ test('workflow contract requires explicit operator questions for decisions', () 
     );
   }
 });
+
+test('workflow contract defines maintenance override via chat_policy mode', () => {
+  const currentWorkflow = readRepoFile('WORKFLOW.md');
+  const templateWorkflow = readRepoFile('autonomous-coding-team', 'assets', 'templates', 'WORKFLOW.md');
+
+  for (const [name, content] of [
+    ['current workflow', currentWorkflow],
+    ['template workflow', templateWorkflow],
+  ]) {
+    assert.match(content, /chat_policy/i, `${name} must reference chat_policy for explicit overrides`);
+    assert.match(content, /maintenance/i, `${name} must define maintenance mode semantics`);
+  }
+});
