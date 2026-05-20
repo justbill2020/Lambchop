@@ -873,3 +873,9 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Updated dashboard evidence to reflect the new publish policy.
 - Repo status:
   - `main` is ahead of `origin/main` by 1 commit (`ec76be6`); working tree is clean.
+
+## 2026-05-20 14:11 - publish main
+- Request (Bill): publish `main` to `origin`.
+- Evidence:
+  - Push: `git push origin main` completed.
+  - Remote head: `origin/main` is now at `c461703` (matches local `main`).
