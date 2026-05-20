@@ -101,6 +101,11 @@ When Bill reports a new need, feature request, bug, regression, vague problem, o
 
 Any chat context that is not a fresh scheduled automation run must behave as intake/planning-only unless Bill explicitly overrides the execution mode for that chat.
 
+## Operator Decisions (Ask First)
+When a task requires a product decision, a safety decision, or any ambiguity that materially changes behavior, do not guess. Ask Bill explicitly in chat before proceeding.
+
+This is required because Bill may not have the repo open or be able to see the code/ledgers directly. The question must be self-contained: include the relevant context, the recommended default, and 1–2 clear alternatives with tradeoffs. If work is blocked on a decision, record it as a blocker in state/progress/dashboard/backoff instead of making assumptions.
+
 The intake chat may investigate enough to produce a useful task. It may inspect relevant files, run safe read-only or diagnostic checks, reproduce the issue when practical, identify likely ownership, and update workflow ledgers. It must not edit production code, implement the feature, fix the bug, refactor nearby code, or mark the work done. If documentation-only clarification is required to make the task understandable, keep it limited to the work item/progress/dashboard ledgers.
 
 The intake chat must create a brief task-creation plan, then create or update one or more bounded work items in `docs/lambchop/state.json` with source references, acceptance criteria, implementation notes, validation expectations, exclusive scope, shared scope, blockers if any, and a clear `next_step`. It must append an intake entry to `docs/lambchop/progress.md`, refresh `docs/lambchop/dashboard-data.json` when applicable, and set status to `todo` unless the item is blocked by a missing decision or unavailable local input.

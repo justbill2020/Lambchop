@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-05-20T20:12:16Z"
+    "updated_at": "2026-05-20T20:47:00Z"
   },
   "summary": {
     "todo": 5,

@@ -883,3 +883,8 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 ## 2026-05-20 15:10 - workflow change: auto-push when may_push=true
 - Clarification (Bill): the publish directive should be automatic; if `project.autonomy_policy.may_push=true`, automation should push by default at the end of completed work (unless blocked by validation or other safety).
 - Change: updated `WORKFLOW.md` and the reusable workflow template to reflect "may_push=true implies auto-push".
+
+## 2026-05-20 15:47 - workflow change: ask operator on decisions
+- Clarification (Bill): when decisions are needed, Lambchop should ask the question explicitly because the operator may not be viewing repo files/code directly.
+- Change: added an "Operator Decisions (Ask First)" requirement to the live and template workflows and updated the automation prompt and workflow contract tests.
+- Validation: `node --test tests\\*.test.mjs` passed (21 tests).

@@ -45,3 +45,26 @@ test('workflow contract enforces a two-phase plan/schedule vs execute loop', () 
     );
   }
 });
+
+test('workflow contract requires explicit operator questions for decisions', () => {
+  const currentWorkflow = readRepoFile('WORKFLOW.md');
+  const templateWorkflow = readRepoFile('autonomous-coding-team', 'assets', 'templates', 'WORKFLOW.md');
+  const automationPrompt = readRepoFile('autonomous-coding-team', 'references', 'automation-prompt.md');
+
+  for (const [name, content] of [
+    ['current workflow', currentWorkflow],
+    ['template workflow', templateWorkflow],
+    ['automation prompt', automationPrompt],
+  ]) {
+    assert.match(
+      content,
+      /ask (bill|the operator) explicitly|Operator Decisions \(Ask First\)/i,
+      `${name} must require asking explicit questions when decisions are needed`,
+    );
+    assert.match(
+      content,
+      /self-contained|recommended default|alternatives/i,
+      `${name} must require self-contained decision questions with options`,
+    );
+  }
+});
