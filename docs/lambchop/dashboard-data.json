@@ -305,7 +305,9 @@
         "Ledger update correction: first structured JSON update failed because state.json uses project.scheduling_policy rather than a top-level automation object; corrected using the actual state schema.",
         "Final validation: node --test tests\\*.test.mjs passed with 20 tests; JSON parse validation passed for state, dashboard data, and backoff.",
         "Validation RED: node --test tests\\*.test.mjs failed after the automation-added two-phase contract test because WORKFLOW.md did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.",
-        "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording."
+        "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording.",
+        "Commit evidence: ddbfd57 fix: enforce Lambchop two-phase automation loop.",
+        "Push blocker: workflow autonomy_policy.may_push is false, so this chat did not push; local branch main is ahead of origin/main and needs explicit push permission or workflow update to publish."
       ],
       "blocker": null,
       "next_step": "Automation should implement the two-phase loop contract, then validate hooks and workflow templates prevent same-context plan-and-execute behavior."
@@ -401,9 +403,12 @@
     "Ledger update correction: first structured JSON update failed because state.json uses project.scheduling_policy rather than a top-level automation object; corrected using the actual state schema.",
     "Final validation: node --test tests\\*.test.mjs passed with 20 tests; JSON parse validation passed for state, dashboard data, and backoff.",
     "Validation RED: node --test tests\\*.test.mjs failed after the automation-added two-phase contract test because WORKFLOW.md did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.",
-    "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording."
+    "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording.",
+    "Commit evidence: ddbfd57 fix: enforce Lambchop two-phase automation loop.",
+    "Push blocker: workflow autonomy_policy.may_push is false, so this chat did not push; local branch main is ahead of origin/main and needs explicit push permission or workflow update to publish."
   ],
   "commits": [
+    "ddbfd57",
     "47d6927",
     "8628254",
     "7ce826a",
