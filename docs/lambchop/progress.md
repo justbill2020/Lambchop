@@ -833,3 +833,16 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Commit/publish evidence:
   - Local commit: `ddbfd57` (`fix: enforce Lambchop two-phase automation loop`).
   - Push blocker: `autonomy_policy.may_push` is false, so this chat did not push; `main` is ahead of `origin/main` and needs explicit push permission or a workflow update to publish.
+
+
+## 2026-05-20 13:29 - trigger terminalization compliance intake
+- Symptom:
+  - Progress/backoff evidence for 2026-05-20 shows work continued (edits/validation/commits) after a scheduler-visible run-now trigger was recorded.
+- Root cause:
+  - The handoff trigger was not treated as terminal; evidence and implementation work were mixed after triggering, which violates the contract that no additional work remains after starting the next action.
+  - This risks racing a newly-started automation run reading partially-updated ledgers.
+- Queued remediation (do not implement in this chat):
+  - `task-17-trigger-terminalization-guardrail` (todo): enforce 'run-now is the last step' via workflow + Stop hook + tests.
+  - `task-18-reconcile-trigger-afterwork-ledger-drift` (todo): repair evidence so handoff entries are terminal and counts/next_action match reality.
+- Scheduler status:
+  - automation_runs shows thread_id `019e4695-2d61-75c3-b257-e3cb5bdc06cf` is still `IN_PROGRESS`; no new run-now trigger was requested in this intake.

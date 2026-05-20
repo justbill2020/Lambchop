@@ -64,7 +64,7 @@
       "may_modify_production_config": false,
       "may_use_external_trackers": false
     },
-    "updated_at": "2026-05-20T17:07:00.000Z",
+    "updated_at": "2026-05-20T18:32:38Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -1262,7 +1262,7 @@
       "key": "task-16-two-phase-planning-execution-loop",
       "title": "Enforce two-phase planning/scheduling and execution automation loop",
       "type": "workflow-automation-contract",
-      "status": "todo",
+      "status": "done",
       "priority": 35,
       "dependencies": [
         "task-13-intake-automation-handoff-guardrail",
@@ -1303,7 +1303,8 @@
         "Validation RED: node --test tests\\*.test.mjs failed after the automation-added two-phase contract test because WORKFLOW.md did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.",
         "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording.",
         "Commit evidence: ddbfd57 fix: enforce Lambchop two-phase automation loop.",
-        "Push blocker: workflow autonomy_policy.may_push is false, so this chat did not push; local branch main is ahead of origin/main and needs explicit push permission or workflow update to publish."
+        "Push blocker: workflow autonomy_policy.may_push is false, so this chat did not push; local branch main is ahead of origin/main and needs explicit push permission or workflow update to publish.",
+        "Compliance issue discovered: work continued after scheduler-visible run-now trigger; scheduled remediation as task-17 to ensure run-now is terminal and evidence is recorded before triggering."
       ],
       "branch": "main",
       "worktree": "REPO_ROOT",
@@ -1327,7 +1328,75 @@
         "docs/lambchop/backoff.json",
         "Codex app automation status/prompt/rrule"
       ],
-      "next_step": "Automation should implement the two-phase loop contract, then validate hooks and workflow templates prevent same-context plan-and-execute behavior.",
+      "next_step": "Address the trigger-terminal compliance gap via task-17 so no work occurs after scheduler-visible run-now handoff.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "created_at": "2026-05-20T17:00:00.000Z",
+      "updated_at": "2026-05-20T18:32:38Z",
+      "completed_at": "2026-05-20T18:24:40Z"
+    },
+    {
+      "key": "task-17-trigger-terminalization-guardrail",
+      "title": "Make scheduler-visible run-now handoff terminal (no writes after trigger)",
+      "type": "workflow-automation-contract",
+      "status": "todo",
+      "priority": 34,
+      "dependencies": [
+        "task-16-two-phase-planning-execution-loop"
+      ],
+      "source_refs": [
+        "docs/lambchop/progress.md#2026-05-20-two-phase-loop-intake-correction",
+        "WORKFLOW.md#Project Chat Intake",
+        "WORKFLOW.md#Weekly Schedule And Completion Trigger",
+        "autonomous-coding-team/references/workflow-architecture.md#Run Loop",
+        ".codex/hooks/lambchop_stop.py"
+      ],
+      "acceptance_criteria": [
+        "After a scheduler-visible run-now trigger is executed, the automation turn must stop immediately (no more tool calls, edits, validation, commits, or ledger updates).",
+        "Intake chats must record and commit ledger/task evidence before triggering run-now; no evidence updates occur after the trigger.",
+        "Automation runs must perform validation, ledger updates, and commits before triggering the next run-now; the trigger is the last step.",
+        "Repo-local Stop hook blocks completion messages that imply work continued after run-now (e.g. 'triggered run-now then updated state/progress').",
+        "Validation adds at least one test proving the Stop hook blocks run-now + post-trigger-work evidence patterns."
+      ],
+      "implementation_notes": [
+        "Root cause: the 2026-05-20 intake entry triggered run-now and then continued with additional edits/validation/commits, which violates the contract that handoff must be terminal.",
+        "This guardrail should be a workflow + hook + test triple: explicit ordering rules, completion enforcement, and a failing test that proves the enforcement."
+      ],
+      "validation": [
+        "node --test tests\\*.test.mjs passes.",
+        "JSON parse passes for docs/lambchop/*.json."
+      ],
+      "branch": "codex/lambchop-task-17-trigger-terminalization-guardrail",
+      "worktree": ".worktrees/task-17-trigger-terminalization-guardrail",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "autonomous-coding-team/assets/templates/WORKFLOW.md",
+        "autonomous-coding-team/references/automation-prompt.md",
+        "autonomous-coding-team/references/workflow-architecture.md",
+        "autonomous-coding-team/references/validation-checklist.md",
+        ".codex/hooks/",
+        "autonomous-coding-team/assets/templates/.codex/hooks/",
+        "tests/lambchop-hooks.test.mjs"
+      ],
+      "shared_scope": [
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/backoff.json",
+        "Codex app automation status/prompt/rrule"
+      ],
+      "next_step": "Implement workflow+hook enforcement so run-now is terminal, then validate and record evidence.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1339,8 +1408,63 @@
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
-      "created_at": "2026-05-20T17:00:00.000Z",
-      "updated_at": "2026-05-20T17:07:00.000Z"
+      "created_at": "2026-05-20T18:32:38Z",
+      "updated_at": "2026-05-20T18:32:38Z"
+    },
+    {
+      "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
+      "title": "Reconcile ledgers so run-now handoff evidence is not followed by additional work",
+      "type": "ledger-reconciliation",
+      "status": "todo",
+      "priority": 28,
+      "dependencies": [
+        "task-17-trigger-terminalization-guardrail"
+      ],
+      "source_refs": [
+        "docs/lambchop/progress.md#2026-05-20-two-phase-loop-intake-correction",
+        "docs/lambchop/backoff.json#scheduler_persistence.notes",
+        "docs/lambchop/state.json#last_run",
+        "docs/lambchop/dashboard-data.json#last_run"
+      ],
+      "acceptance_criteria": [
+        "Progress entries clearly separate intake/handoff from subsequent implementation/validation/commit work.",
+        "last_run and dashboard next_action no longer claim a run is in progress implementing a task that is already marked done.",
+        "State/dashboard counts reflect actual work item status (task-16 done; tasks 17/18 queued)."
+      ],
+      "implementation_notes": [
+        "This is a documentation/evidence repair task: do not change workflow semantics here; task-17 enforces future behavior.",
+        "Adjust the 2026-05-20 entry to record that additional work after trigger was a compliance issue and that new tasks were queued to correct it."
+      ],
+      "validation": [
+        "JSON parse passes for docs/lambchop/*.json."
+      ],
+      "branch": "codex/lambchop-task-18-reconcile-trigger-afterwork-ledger-drift",
+      "worktree": ".worktrees/task-18-reconcile-trigger-afterwork-ledger-drift",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "docs/lambchop/progress.md",
+        "docs/lambchop/state.json",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/backoff.json"
+      ],
+      "shared_scope": [
+        "WORKFLOW.md"
+      ],
+      "next_step": "Rewrite evidence so trigger handoff is terminal; keep facts and timestamps but remove post-trigger work from the handoff entry.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "created_at": "2026-05-20T18:32:38Z",
+      "updated_at": "2026-05-20T18:32:38Z"
     }
   ],
   "proposal_backlog": [
@@ -1397,15 +1521,15 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-20260520-two-phase-loop-intake",
-    "started_at": "2026-05-20T17:00:00.000Z",
-    "work_item_key": "task-16-two-phase-planning-execution-loop",
+    "run_id": "manual-20260520-trigger-terminalization-intake",
+    "started_at": "2026-05-20T18:32:38Z",
+    "work_item_key": "task-17-trigger-terminalization-guardrail",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-20T17:07:00.000Z",
-    "next_action": "Fresh automation run 019e4695-2d61-75c3-b257-e3cb5bdc06cf is in progress and should implement task-16.",
-    "timestamp": "2026-05-20T17:07:00.000Z",
-    "summary": "Queued task-16, made the tdd skill contract explicit, and triggered a fresh Lambchop automation run for the two-phase loop implementation.",
-    "active_work_item": "task-16-two-phase-planning-execution-loop"
+    "dashboard_updated_at": "2026-05-20T18:32:38Z",
+    "next_action": "Let the existing IN_PROGRESS automation run finish; next fresh run should take task-17.",
+    "timestamp": "2026-05-20T18:32:38Z",
+    "summary": "Queued task-17/task-18 to enforce terminal run-now handoff and reconcile evidence; did not trigger a new run-now because an automation run is already IN_PROGRESS.",
+    "active_work_item": "task-17-trigger-terminalization-guardrail"
   }
 }
