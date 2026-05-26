@@ -945,5 +945,5 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Full suite: `node --test tests\*.test.mjs` passed with 24 tests; JSON parse validation passed for live and template ledgers; `git diff --check` passed with line-ending warnings only.
   - Validation correction: an `rg` stale-policy scan failed because the regex was malformed in PowerShell quoting; rerun with separate fixed patterns and no-match handling passed with no disabled GitHub issue defaults remaining.
 - Commit/publish evidence:
-  - Local commit: `4e46a7c` (`chore: configure GitHub issue tracking defaults`).
+  - Implementation commit: `76e202f` (`chore: configure GitHub issue tracking defaults`).
   - Push was not performed because this run's operating instructions forbid publishing despite `project.autonomy_policy.may_push=true`; `main` is ahead of `origin/main`.
