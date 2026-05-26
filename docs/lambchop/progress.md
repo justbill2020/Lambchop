@@ -947,3 +947,21 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Commit/publish evidence:
   - Implementation commit: `76e202f` (`chore: configure GitHub issue tracking defaults`).
   - Push was not performed because this run's operating instructions forbid publishing despite `project.autonomy_policy.may_push=true`; `main` is ahead of `origin/main`.
+
+## 2026-05-26 14:54 - PRD published for real-work completion gate
+- Skill: `to-prd`.
+- Published PRD:
+  - GitHub issue: `https://github.com/justbill2020/Lambchop/issues/1`.
+  - Local work item linked: `task-22-control-loop-real-work-gate`.
+  - The PRD covers the status-only loop defect, the real-work/source-of-truth completion gate, self-hosting recursion, scheduler evidence, hook enforcement, reconciliation, and test expectations.
+- Label evidence:
+  - `gh issue create` succeeded.
+  - `gh issue edit 1 --add-label ready-for-agent` failed because `ready-for-agent` is missing in GitHub.
+  - The missing label remains a blocker; no fallback label was invented.
+- Scheduler handoff evidence:
+  - Automation was already recorded ACTIVE before any scheduler-visible trigger attempt; no unpause was needed.
+  - No scheduler-visible trigger was attempted because app-native automation tooling is unavailable in this context and DB fallback remains unsafe after terminal-handoff changes.
+  - Parked anchor remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
+- Validation:
+  - `gh issue view 1 --comments --json number,title,body,labels,state,url` confirmed the PRD issue is open and unlabeled.
+  - Validation RED: JSON parse failed for `docs/lambchop/dashboard-data.json` after the PRD ledger update because a comma was missing in the validation array; the failure was recorded and corrected.

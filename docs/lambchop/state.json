@@ -108,7 +108,7 @@
       ],
       "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit override (no intake warnings). Default remains intake."
     },
-    "updated_at": "2026-05-26T19:42:41Z",
+    "updated_at": "2026-05-26T19:57:40Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -1712,7 +1712,8 @@
         "docs/lambchop/state.json#last_run",
         "docs/lambchop/dashboard-data.json#summary.next_action",
         "C:/Users/BillMartin/.codex/automations/lambchop-autonomous-coding-team/memory.md#2026-05-26-run",
-        "git:codex/lambchop-task-17-trigger-terminalization-guardrail"
+        "git:codex/lambchop-task-17-trigger-terminalization-guardrail",
+        "https://github.com/justbill2020/Lambchop/issues/1"
       ],
       "acceptance_criteria": [
         "A failing test or fixture proves a branch/memory/progress-only completion cannot mark a work item done or advance dashboard next_action unless the canonical state on main/integration branch changes coherently.",
@@ -1734,6 +1735,12 @@
       ],
       "branch": "codex/lambchop-task-22-control-loop-real-work-gate",
       "worktree": ".worktrees/task-22-control-loop-real-work-gate",
+      "github_issue": {
+        "number": 1,
+        "url": "https://github.com/justbill2020/Lambchop/issues/1",
+        "type": "PRD",
+        "label_status": "ready-for-agent label failed because the label is missing in GitHub"
+      },
       "commit": null,
       "blocker": null,
       "exclusive_scope": [
@@ -1767,7 +1774,7 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
       "created_at": "2026-05-26T19:17:33Z",
-      "updated_at": "2026-05-26T19:17:33Z"
+      "updated_at": "2026-05-26T19:57:40Z"
     }
   ],
   "proposal_backlog": [
@@ -1836,17 +1843,17 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-20260526-github-issues-default-config",
-    "started_at": "2026-05-26T19:27:15Z",
-    "work_item_key": "maintenance-github-issues-default",
+    "run_id": "manual-20260526-prd-real-work-gate",
+    "started_at": "2026-05-26T19:54:46Z",
+    "work_item_key": "task-22-control-loop-real-work-gate",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-26T19:42:41Z",
-    "next_action": "Task-22 remains the highest-priority root-cause fix; GitHub Issues is now configured as Lambchop's default issue tracker.",
-    "timestamp": "2026-05-26T19:42:41Z",
-    "summary": "Configured Matt Pocock-style agent docs and Lambchop defaults for GitHub Issues via gh issue, with recursive self-hosting notes.",
-    "active_work_item": "maintenance-github-issues-default",
-    "validation_note": "RED then GREEN: node --test tests\\workflow-contract.test.mjs failed before AGENTS/docs/agents existed, then passed after GitHub Issues defaults and recursive domain docs were added. Full tests passed; malformed rg stale-policy scan failed, then fixed scan passed.",
-    "validation": "node --test tests\\*.test.mjs passed with 24 tests; JSON parse validation passed for live/template ledgers; git diff --check passed with line-ending warnings only; fixed stale-policy scan passed with no disabled GitHub issue defaults remaining. Implementation commit 76e202f created; push skipped because this run's operating instructions forbid publishing despite may_push=true. Scheduler evidence: no app-native automation_update pause/unpause tool is available in this context; no DB fallback used; last recorded automation status remains ACTIVE with parked RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU; no run-now trigger requested for maintenance."
+    "dashboard_updated_at": "2026-05-26T19:57:40Z",
+    "next_action": "Task-22 PRD is published as GitHub issue #1; automation implementation remains next once scheduler handoff is available.",
+    "timestamp": "2026-05-26T19:57:40Z",
+    "summary": "Published a PRD for stopping Lambchop status-only automation loops and linked it to task-22.",
+    "active_work_item": "task-22-control-loop-real-work-gate",
+    "validation_note": "gh issue create published issue #1. Applying ready-for-agent failed because the label is missing; blocker recorded instead of inventing a label. JSON parse RED for dashboard-data caused by a missing comma was recorded and fixed.",
+    "validation": "gh issue view 1 confirmed the PRD issue is open and unlabeled. JSON parse failed for dashboard-data before comma fix, then passed after repair. Automation was already recorded ACTIVE before any scheduler-visible trigger attempt; no unpause was needed. No scheduler-visible trigger was attempted because app-native automation_update tooling is unavailable in this context and DB fallback remains unsafe after terminal-handoff changes. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU."
   }
 }
