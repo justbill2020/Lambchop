@@ -896,3 +896,20 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Stop hook now reads `docs/*/state.json` and allows completion when `chat_policy.mode=maintenance`.
   - Live and template workflows document setting `chat_policy.mode=maintenance` during maintenance work, then resetting to `intake`.
 - Validation: `node --test tests\\*.test.mjs` passed (23 tests).
+
+## 2026-05-26 12:50 - status-only control-loop defect intake
+- User report: Bill called out that Lambchop is broken because hooks and automations can enter a loop that logs status updates and guesses while not coding or adjusting the project accordingly.
+- Root cause identified: Lambchop lacks an enforced source-of-truth completion gate. Hooks/automations can count ledger/progress/memory/branch movement as progress even when `main`, `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and executable project behavior remain unchanged.
+- Evidence:
+  - `main` still records `task-17-trigger-terminalization-guardrail` as `todo`, while automation memory records it completed on branch `codex/lambchop-task-17-trigger-terminalization-guardrail` with commits `9e83f9c` and `5157d4a`.
+  - Dashboard summary still says to initiate run-now so task-17 remains next executable work, proving dashboard state can lag behind branch/memory claims.
+  - Progress already records a prior correction where Bill reported the system only updated status text and had not actually scheduled work.
+  - Stop hook enforces final-message shape, but current main hook does not enforce a canonical integration/source-of-truth delta before completion.
+- Queued issue/work item:
+  - `task-22-control-loop-real-work-gate` (todo, priority 50): stop Lambchop status-only control loops by adding a real-work/source-of-truth completion gate.
+- To-issues slice:
+  - Type: AFK, highest priority, blocked by none. It should produce one tracer bullet through test fixture, workflow contract, hook enforcement, automation prompt, state/dashboard reconciliation, and validation.
+- Scheduler status:
+  - Existing backoff evidence records the automation as already ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
+  - No unpause was performed in this intake.
+  - Scheduler-visible run-now was not triggered because app-native automation tooling is unavailable in this context and DB fallback is deferred as unsafe for this intake after terminal-handoff changes.

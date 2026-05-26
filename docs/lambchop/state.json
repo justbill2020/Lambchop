@@ -72,7 +72,7 @@
       ],
       "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit override (no intake warnings). Default remains intake."
     },
-    "updated_at": "2026-05-20T20:55:40Z",
+    "updated_at": "2026-05-26T19:17:33Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -125,7 +125,7 @@
       "hooks_file": ".codex/hooks.json",
       "hooks_dir": ".codex/hooks",
       "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
-      "last_checked_at": "2026-05-15T18:28:00.000Z",
+      "last_checked_at": "2026-05-15T18:28:00Z",
       "notes": "Hooks require feature/bug chats to queue tasks and hand off to automation; UI work uses Huashu Design; setup/upgrade checks Lambchop source commits; Stop hook requires commit and push evidence for GitHub repos when push is enabled or explicitly requested."
     },
     "shared_capabilities": {
@@ -1263,8 +1263,8 @@
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
       "integration_status": "ready",
-      "completed_at": "2026-05-15T18:15:00.000Z",
-      "updated_at": "2026-05-15T21:31:00.000Z"
+      "completed_at": "2026-05-15T18:15:00Z",
+      "updated_at": "2026-05-15T21:31:00Z"
     },
     {
       "key": "task-16-two-phase-planning-execution-loop",
@@ -1348,7 +1348,7 @@
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
       "integration_status": "ready",
-      "created_at": "2026-05-20T17:00:00.000Z",
+      "created_at": "2026-05-20T17:00:00Z",
       "updated_at": "2026-05-20T18:32:38Z",
       "completed_at": "2026-05-20T18:24:40Z"
     },
@@ -1662,6 +1662,76 @@
       "integration_status": "not_ready",
       "created_at": "2026-05-20T18:52:24Z",
       "updated_at": "2026-05-20T18:52:24Z"
+    },
+    {
+      "key": "task-22-control-loop-real-work-gate",
+      "title": "Stop Lambchop status-only control loops",
+      "type": "automation-root-cause-defect",
+      "status": "todo",
+      "priority": 50,
+      "dependencies": [],
+      "source_refs": [
+        "docs/lambchop/progress.md#2026-05-20-12-00-two-phase-loop-intake-correction",
+        "docs/lambchop/progress.md#2026-05-20-13-29-trigger-terminalization-compliance-intake",
+        "docs/lambchop/state.json#last_run",
+        "docs/lambchop/dashboard-data.json#summary.next_action",
+        "C:/Users/BillMartin/.codex/automations/lambchop-autonomous-coding-team/memory.md#2026-05-26-run",
+        "git:codex/lambchop-task-17-trigger-terminalization-guardrail"
+      ],
+      "acceptance_criteria": [
+        "A failing test or fixture proves a branch/memory/progress-only completion cannot mark a work item done or advance dashboard next_action unless the canonical state on main/integration branch changes coherently.",
+        "Automation completion distinguishes real project changes from ledger-only movement; status/progress updates alone do not reset the no-progress guard unless they queue a new source-backed task or repair scheduler/tooling behavior.",
+        "The run loop reconciles completed side-branch work before selecting later tasks, including task-17 currently completed on codex/lambchop-task-17-trigger-terminalization-guardrail but still todo on main.",
+        "Stop hook and workflow evidence require explicit source-of-truth changed fields: integration branch, commit/push status when enabled, validation, and dashboard/state agreement.",
+        "Backoff/progress/dashboard record the exact root cause and any scheduler trigger blocker without claiming simulated work as implementation."
+      ],
+      "implementation_notes": [
+        "Root cause identified during intake: Lambchop lacks an enforced source-of-truth completion gate. Hooks and automations can accept ledger/progress/memory/branch movement as progress even when main, dashboard data, and executable project behavior remain unchanged. The task-17 branch demonstrates this split: memory records completion on codex/lambchop-task-17-trigger-terminalization-guardrail, but main still shows task-17 todo and dashboard next_action remains stale.",
+        "Pattern evidence: progress contains earlier correction where Bill reported the system only updated status text and did not schedule work; later task-17 work exists on a side branch while main ledgers and dashboard still show it as todo.",
+        "This should be implemented before ordinary feature work because it is a trust boundary for all later autonomous execution.",
+        "Use to-issues tracer-bullet style: make a narrow vertical slice that fails on stale main/side-branch divergence, then implement the gate through workflow, hook, automation prompt, tests, state/dashboard reconciliation, and validation evidence."
+      ],
+      "validation": [
+        "Add a failing workflow/hook test or fixture for status-only completion before implementation.",
+        "node --test tests\\\\*.test.mjs passes after implementation.",
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
+      ],
+      "branch": "codex/lambchop-task-22-control-loop-real-work-gate",
+      "worktree": ".worktrees/task-22-control-loop-real-work-gate",
+      "commit": null,
+      "blocker": null,
+      "exclusive_scope": [
+        "WORKFLOW.md",
+        "autonomous-coding-team/assets/templates/WORKFLOW.md",
+        "autonomous-coding-team/references/automation-prompt.md",
+        "autonomous-coding-team/references/workflow-architecture.md",
+        "autonomous-coding-team/references/validation-checklist.md",
+        ".codex/hooks/lambchop_stop.py",
+        "autonomous-coding-team/assets/templates/.codex/hooks/lambchop_stop.py",
+        "tests/lambchop-hooks.test.mjs",
+        "tests/workflow-contract.test.mjs"
+      ],
+      "shared_scope": [
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/backoff.json",
+        "C:/Users/BillMartin/.codex/automations/lambchop-autonomous-coding-team/memory.md"
+      ],
+      "next_step": "Build a failing test/fixture proving status-only or side-branch-only progress cannot count as completed work, then enforce a real-work/source-of-truth gate.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "created_at": "2026-05-26T19:17:33Z",
+      "updated_at": "2026-05-26T19:17:33Z"
     }
   ],
   "proposal_backlog": [
@@ -1730,17 +1800,17 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-20260520-schedule-review-proposals",
-    "started_at": "2026-05-20T18:52:24Z",
-    "work_item_key": "task-19-dashboard-proposal-review-ui",
+    "run_id": "manual-20260526-lambchop-status-loop-root-cause-intake",
+    "started_at": "2026-05-26T19:17:33Z",
+    "work_item_key": "task-22-control-loop-real-work-gate",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-20T18:52:24Z",
-    "next_action": "Scheduler-visible run-now should be initiated after this scheduling commit so automation can continue with task-17 first.",
-    "timestamp": "2026-05-20T18:52:24Z",
-    "summary": "Scheduled all three user-approved proposal backlog entries as task-19 through task-21 while preserving task-17/task-18 queue priority.",
-    "active_work_item": "task-19-dashboard-proposal-review-ui",
-    "validation_note": "Validation command correction: PowerShell rejected Bash heredoc syntax for node consistency check; rerun with node -e.",
-    "validation": "Validation passed: JSON parse for state/dashboard/backoff/control requests; state/dashboard counts match (todo=5, done=18); proposal backlog has 0 needs_user_review and 3 scheduled entries; git diff --check passed with line-ending warnings only."
+    "dashboard_updated_at": "2026-05-26T19:17:33Z",
+    "next_action": "Task-22 queued as highest-priority root-cause fix: stop status-only control loops before ordinary feature work continues.",
+    "timestamp": "2026-05-26T19:17:33Z",
+    "summary": "Bill reported Lambchop is broken because hooks/automations can log status updates and simulate work without coding or adjusting the project. Root cause identified and queued as task-22.",
+    "active_work_item": "task-22-control-loop-real-work-gate",
+    "validation_note": "Intake-only chat: no implementation performed. Automation was already recorded ACTIVE in backoff; run-now trigger not executed because app-native automation_update tooling is unavailable in this context and DB fallback would be unsafe after terminal-handoff changes.",
+    "validation": "Evidence inspected: WORKFLOW.md, state, progress, backoff, dashboard data, hooks, git log, worktrees, and automation memory."
   }
 }

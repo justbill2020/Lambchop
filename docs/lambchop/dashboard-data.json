@@ -6,17 +6,17 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-05-20T20:55:40Z"
+    "updated_at": "2026-05-26T19:17:33Z"
   },
   "summary": {
-    "todo": 5,
+    "todo": 6,
     "in_progress": 0,
     "blocked": 0,
     "done": 18,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Tasks 19-21 are scheduled; initiate run-now after commit so task-17 remains next executable work."
+    "next_action": "Task-22 queued as highest-priority root-cause fix: stop status-only control loops before ordinary feature work continues."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -572,7 +572,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-05-15T21:31:00.000Z"
+      "updated_at": "2026-05-15T21:31:00Z"
     },
     {
       "key": "task-16-two-phase-planning-execution-loop",
@@ -616,7 +616,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T17:00:00.000Z",
+      "created_at": "2026-05-20T17:00:00Z",
       "updated_at": "2026-05-20T18:32:38Z"
     },
     {
@@ -787,6 +787,39 @@
       },
       "created_at": "2026-05-20T18:52:24Z",
       "updated_at": "2026-05-20T18:52:24Z"
+    },
+    {
+      "key": "task-22-control-loop-real-work-gate",
+      "title": "Stop Lambchop status-only control loops",
+      "status": "todo",
+      "priority": 50,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "codex/lambchop-task-22-control-loop-real-work-gate",
+      "worktree": ".worktrees/task-22-control-loop-real-work-gate",
+      "validation": [
+        "Add failing status-only completion test before implementation.",
+        "node --test tests\\\\*.test.mjs passes after implementation.",
+        "JSON parse passes for docs/lambchop/*.json."
+      ],
+      "implementation_notes": [
+        "Root cause identified during intake: Lambchop lacks an enforced source-of-truth completion gate. Hooks and automations can accept ledger/progress/memory/branch movement as progress even when main, dashboard data, and executable project behavior remain unchanged. The task-17 branch demonstrates this split: memory records completion on codex/lambchop-task-17-trigger-terminalization-guardrail, but main still shows task-17 todo and dashboard next_action remains stale.",
+        "Queued from Bill defect report on 2026-05-26; ordinary feature work should wait until this trust boundary is fixed."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Build a failing test/fixture proving status-only or side-branch-only progress cannot count as completed work, then enforce a real-work/source-of-truth gate.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "created_at": "2026-05-26T19:17:33Z",
+      "updated_at": "2026-05-26T19:17:33Z"
     }
   ],
   "proposal_backlog": [
@@ -903,18 +936,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "manual-20260520-schedule-review-proposals",
-    "started_at": "2026-05-20T18:52:24Z",
-    "work_item_key": "task-19-dashboard-proposal-review-ui",
+    "run_id": "manual-20260526-lambchop-status-loop-root-cause-intake",
+    "started_at": "2026-05-26T19:17:33Z",
+    "work_item_key": "task-22-control-loop-real-work-gate",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-20T18:52:24Z",
-    "next_action": "Scheduler-visible run-now should be initiated after this scheduling commit so automation can continue with task-17 first.",
-    "timestamp": "2026-05-20T18:52:24Z",
-    "summary": "Scheduled all three user-approved proposal backlog entries as task-19 through task-21 while preserving task-17/task-18 queue priority.",
-    "active_work_item": "task-19-dashboard-proposal-review-ui",
-    "validation_note": "Validation command correction: PowerShell rejected Bash heredoc syntax for node consistency check; rerun with node -e.",
-    "validation": "Validation passed: JSON parse for state/dashboard/backoff/control requests; state/dashboard counts match (todo=5, done=18); proposal backlog has 0 needs_user_review and 3 scheduled entries; git diff --check passed with line-ending warnings only."
+    "dashboard_updated_at": "2026-05-26T19:17:33Z",
+    "next_action": "Task-22 queued as highest-priority root-cause fix: stop status-only control loops before ordinary feature work continues.",
+    "timestamp": "2026-05-26T19:17:33Z",
+    "summary": "Bill reported Lambchop is broken because hooks/automations can log status updates and simulate work without coding or adjusting the project. Root cause identified and queued as task-22.",
+    "active_work_item": "task-22-control-loop-real-work-gate",
+    "validation_note": "Intake-only chat: no implementation performed. Automation was already recorded ACTIVE in backoff; run-now trigger not executed because app-native automation_update tooling is unavailable in this context and DB fallback would be unsafe after terminal-handoff changes.",
+    "validation": "Evidence inspected: WORKFLOW.md, state, progress, backoff, dashboard data, hooks, git log, worktrees, and automation memory."
   },
   "hooks": {
     "mode": "repo-local",
@@ -922,7 +955,7 @@
     "hooks_file": ".codex/hooks.json",
     "hooks_dir": ".codex/hooks",
     "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
-    "last_checked_at": "2026-05-15T18:28:00.000Z",
+    "last_checked_at": "2026-05-15T18:28:00Z",
     "notes": "Hooks require feature/bug chats to queue tasks and hand off to automation; UI work uses Huashu Design; setup/upgrade checks Lambchop source commits; Stop hook requires commit and push evidence for GitHub repos when push is enabled or explicitly requested."
   },
   "shared_capabilities": {
@@ -959,7 +992,7 @@
       "lambchop-update",
       "dashboard-refresh"
     ],
-    "last_checked_at": "2026-05-15T18:15:00.000Z",
+    "last_checked_at": "2026-05-15T18:15:00Z",
     "status": "validated"
   }
 }
