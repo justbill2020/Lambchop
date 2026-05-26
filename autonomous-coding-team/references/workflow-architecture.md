@@ -122,7 +122,7 @@ If preflight fails, record a blocked/no-work run with exact evidence and next st
 - opening PRs
 - deploying
 - modifying production config
-- using external trackers
+- using non-GitHub external trackers
 - deleting or reverting user work
 - editing implementation code in the main checkout
 - marking work done without validation evidence

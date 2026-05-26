@@ -913,3 +913,37 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - Existing backoff evidence records the automation as already ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
   - No unpause was performed in this intake.
   - Scheduler-visible run-now was not triggered because app-native automation tooling is unavailable in this context and DB fallback is deferred as unsafe for this intake after terminal-handoff changes.
+
+## 2026-05-26 14:27 - GitHub Issues default configuration RED
+- Request (Bill): set up Matt Pocock-style agent skill docs for `gh issue` usage and configure Lambchop to use GitHub as the default issue tracker.
+- Recursive note: this maintenance is self-hosted; the active autonomous coding agent is running inside Lambchop while Lambchop is the autonomous coding agent project being changed.
+- Pause evidence:
+  - Codex app-native automation tooling was searched and no `automation_update` pause/unpause tool was available in this context.
+  - No scheduler DB fallback was used; do not stop already-running automation processes.
+- Scheduler status:
+  - Last recorded status remains ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
+  - No run-now trigger was requested because this is maintenance and no app-native scheduler tool is available.
+- Validation RED:
+  - `node --test tests\workflow-contract.test.mjs` failed as expected after adding the GitHub Issues default contract because `AGENTS.md` and `docs/agents/issue-tracker.md` did not exist yet.
+
+## 2026-05-26 14:34 - GitHub Issues default configuration GREEN
+- Change:
+  - Created `AGENTS.md` and `docs/agents/` docs from the Matt Pocock-style setup skill for GitHub Issues, triage labels, and domain-reading guidance.
+  - Configured live and reusable Lambchop workflow/state/templates to treat GitHub Issues as the default issue tracker for GitHub-backed repos using `gh issue ...`.
+  - Recorded Lambchop's self-hosting recursion: the running autonomous coding agent may be changing the repo that defines the autonomous coding agent.
+- GitHub evidence:
+  - `gh repo view --json nameWithOwner,url,hasIssuesEnabled` returned `justbill2020/Lambchop` with issues enabled.
+  - `gh label list --limit 100` showed existing labels but not `needs-triage`, `needs-info`, `ready-for-agent`, or `ready-for-human`.
+  - Missing canonical triage labels are recorded as a blocker; no external label mutation was performed in this maintenance window.
+- Scheduler evidence:
+  - Pause/unpause blocker remains: no app-native `automation_update` pause/unpause tool is available in this context.
+  - Last recorded automation status remains ACTIVE with parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
+  - No scheduler DB fallback and no run-now trigger were used because this was maintenance and Bill did not ask for a trigger.
+- Validation:
+  - RED: `node --test tests\workflow-contract.test.mjs` failed before agent issue docs existed.
+  - GREEN: `node --test tests\workflow-contract.test.mjs` passed after adding the GitHub Issues defaults and recursive domain note.
+  - Full suite: `node --test tests\*.test.mjs` passed with 24 tests; JSON parse validation passed for live and template ledgers; `git diff --check` passed with line-ending warnings only.
+  - Validation correction: an `rg` stale-policy scan failed because the regex was malformed in PowerShell quoting; rerun with separate fixed patterns and no-match handling passed with no disabled GitHub issue defaults remaining.
+- Commit/publish evidence:
+  - Local commit: `4e46a7c` (`chore: configure GitHub issue tracking defaults`).
+  - Push was not performed because this run's operating instructions forbid publishing despite `project.autonomy_policy.may_push=true`; `main` is ahead of `origin/main`.

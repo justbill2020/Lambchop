@@ -4,7 +4,7 @@ These notes are informational only. The v1 workflow is Codex-first and does not 
 
 ## Pressure Scenario (What This Doc Must Cover)
 - You want to run the same “autonomous coding team” workflow using Cursor or Claude Code instead of Codex.
-- You want to keep the same local-only safety defaults (no push/PR/deploy/external trackers unless explicitly enabled).
+- You want to keep the same local-first safety defaults (no push/PR/deploy/non-GitHub external trackers unless explicitly enabled; GitHub Issues remains the default issue tracker for GitHub-backed repos).
 
 ## Codex-First vs Tool-Agnostic
 

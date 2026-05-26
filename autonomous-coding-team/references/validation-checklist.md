@@ -25,14 +25,14 @@ Before claiming a setup is complete, confirm:
 - The workflow includes project chat intake rules: ordinary chats investigate user-reported needs or breakages, create/update queued work items and progress evidence, and do not implement unless explicitly overridden.
 - The workflow requires intake chats to hand off queued work by unpausing or confirming active automation status, triggering scheduler-visible run-now, and recording trigger evidence.
 - The workflow enforces a two-phase loop: automation turns execute only already-scheduled runnable work first; planning/scheduling that creates runnable new tasks records evidence and defers execution to the next scheduler-visible run instead of implementing newly created tasks in the same turn.
-- Push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts are forbidden by default.
+- Push, PR, deploy, production config mutation, non-GitHub external tracker mutation, and user-work reverts are forbidden by default. GitHub Issues is the default issue tracker for GitHub-backed repos.
 - Worktree root and branch naming are present.
 - Git write-access preflight is required before claiming work.
 - Work item statuses are limited to `todo`, `in_progress`, `blocked`, `done`, and `skipped`.
 - Work items include lease, exclusive scope, shared scope, validation, blocker, next step, orchestration, assigned subagent, dispatch status, integration status, and integration fields.
 - Parallel execution policy uses adaptive Superpowers subagent orchestration with minimum 2 lanes, maximum 5 lanes, and single-item fallback when fewer than 2 independent items are eligible.
 - The workflow makes the main automation run the orchestrator for dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.
-- Subagents are forbidden from triggering scheduler runs, publishing, deploying, mutating external trackers, or overwriting another lane.
+- Subagents are forbidden from triggering scheduler runs, publishing, deploying, mutating external trackers, creating/updating GitHub issues, or overwriting another lane.
 - Weekly automation rules include a parked weekly RRULE anchor set to yesterday at noon before automation updates or run-now triggers, scheduler-visible run-now trigger after completed ACTIVE runs, pause/inactive skip behavior, trigger evidence in progress/memory, and no worker/subagent trigger substitute.
 - Automation-maintenance rules require pausing before workflow/prompt/schedule/status edits, leaving already-running processes alone, unpausing after successful validation unless the user asks to stay paused or a blocker makes unpausing unsafe, and not triggering run-now after maintenance unpause unless the user asks.
 - Hook rules state that repo-local hooks are preferred when available/trusted, automations remain required for unattended recurrence, and automation-only fallback is recorded when hooks cannot be used.
@@ -86,7 +86,7 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - Private local input: does the agent require ignored paths or environment-only configuration and log only bounded public evidence?
 - Project chat intake: when the user says "I need this" or "this is broken" in a normal chat, does the agent investigate, document, and queue bounded work for automation instead of fixing it directly?
 - Project chat handoff: after queuing intake work, does the agent unpause or confirm active automation status, trigger scheduler-visible run-now, and record the handoff evidence instead of stopping at a plan?
-- "Fully autonomous" pressure: does the agent keep push, PR, deploy, and external trackers disabled until explicitly enabled?
+- "Fully autonomous" pressure: does the agent keep push, PR, deploy, and non-GitHub external trackers disabled until explicitly enabled while using GitHub Issues only through the documented `gh issue ...` path?
 - Local skill deployment: can the skill be installed/linked into `$CODEX_HOME/skills/` and then discovered by Codex?
 
 ### Empty Repo Setup — Concrete Pressure Script
@@ -101,7 +101,7 @@ Use this as a step-by-step “pressure” checklist for a brand-new repo with no
    - project purpose (one sentence)
    - current milestone (what “done” means for first iteration)
    - integration branch name (`main` vs `master`) if not inferable
-   - confirm default safety boundary is local-only (no push/PR/deploy/external trackers)
+   - confirm default safety boundary is local-first (no push/PR/deploy/non-GitHub external trackers; GitHub Issues via `gh issue ...`)
 4. Generate project-specific autonomous files:
    - `WORKFLOW.md`
    - `docs/<project-slug>/state.json`
@@ -122,7 +122,7 @@ Use this as a step-by-step “pressure” checklist for a brand-new repo with no
    - Dockerized project API streams `/api/events` or records the exact blocker.
    - Dashboard hub `/api/projects` includes this project or records the exact blocker.
    - No unresolved `<PLACEHOLDER>` tokens exist outside reusable templates.
-   - Workflow explicitly forbids push, PR, deploy, production config mutation, external tracker mutation, and user-work reverts by default.
+   - Workflow explicitly forbids push, PR, deploy, production config mutation, non-GitHub external tracker mutation, and user-work reverts by default while documenting GitHub Issues via `gh issue ...`.
    - Workflow includes adaptive 2-5 parallel subagent orchestration with main-run integration.
    - Repo-local hooks parse and include the Lambchop lifecycle hook entries, or the exact hook trust/capability blocker is recorded.
 6. Record evidence in the generated progress ledger:

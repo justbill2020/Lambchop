@@ -48,7 +48,7 @@ The user can point Codex at a GitHub repository URL, remote name, or local repo 
    - Dashboard data parses, the Dockerized project API serves live status locally on the configured project API port, `/api/events` streams updates, and the shared hub registry includes the project.
    - No unresolved placeholders remain outside reusable templates.
    - Workflow includes adaptive 2-5 parallel Superpowers subagent orchestration with main-run integration.
-   - Workflow forbids push, PR, deploy, production config changes, external trackers, and user-work reverts by default.
+   - Workflow forbids push, PR, deploy, production config changes, non-GitHub external trackers, and user-work reverts by default. GitHub Issues is the default issue tracker for GitHub-backed repos.
    - Git preflight passes or records a blocker.
    - Automation registry audit runs and any unrelated failures are called out separately.
 
@@ -63,7 +63,7 @@ Report:
 - blockers and exact next step
 
 ## Safety Defaults
-Do not push to GitHub, open PRs, deploy, or mutate external issue trackers during deployment. A remote URL is a source and destination identity, not permission to publish.
+Do not push to GitHub, open PRs, deploy, or mutate non-GitHub external issue trackers during deployment. A remote URL is a source and destination identity, not permission to publish. Use GitHub Issues through `gh issue ...` only when workflow setup or Bill authorizes issue tracking.
 
 
 ## Deployment Checklist
@@ -76,4 +76,4 @@ Use this checklist when deploying the autonomous team into a target repo (see al
 - Run git write-access preflight (temp branch + temp worktree) before claiming work.
 - Validate: JSON ledgers parse; Dockerized project API status and events endpoints respond; shared dashboard hub registry includes the project; no unresolved placeholders outside templates; local-only safety defaults are explicit.
 - Record proof: target repo path + remote, created/updated files, automation id + cadence, first queued item, validation evidence, blockers/next step.
-- Keep pushes/PRs/deploys/external trackers disabled unless the user explicitly enables them.
+- Keep pushes/PRs/deploys/non-GitHub external trackers disabled unless the user explicitly enables them.

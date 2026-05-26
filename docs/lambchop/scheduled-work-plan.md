@@ -34,7 +34,7 @@ Default to one coherent local commit per work item. Split work when acceptance c
 7. Polish only when the milestone is otherwise complete.
 
 ## Stop Conditions
-Do not invent work when there is no source of truth. Stop and record a blocker when Bill's decision is required, a requested action would push/PR/deploy/mutate external trackers, source files conflict in a way that changes product intent, or the current milestone is complete.
+Do not invent work when there is no source of truth. Stop and record a blocker when Bill's decision is required, a requested action would push/PR/deploy/mutate non-GitHub external trackers, source files conflict in a way that changes product intent, or the current milestone is complete.
 
 ## Backlog Seeds
 - Use adaptive parallel sprint orchestration for independent work packets and record proof.

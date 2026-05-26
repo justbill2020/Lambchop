@@ -81,3 +81,34 @@ test('workflow contract defines maintenance override via chat_policy mode', () =
     assert.match(content, /maintenance/i, `${name} must define maintenance mode semantics`);
   }
 });
+
+test('workflow contract defaults GitHub repositories to GitHub Issues triage', () => {
+  const currentWorkflow = readRepoFile('WORKFLOW.md');
+  const templateWorkflow = readRepoFile('autonomous-coding-team', 'assets', 'templates', 'WORKFLOW.md');
+  const state = JSON.parse(readRepoFile('docs', 'lambchop', 'state.json'));
+  const templateState = JSON.parse(readRepoFile('autonomous-coding-team', 'assets', 'templates', 'state.json'));
+  const agentInstructions = readRepoFile('AGENTS.md');
+  const issueTrackerDocs = readRepoFile('docs', 'agents', 'issue-tracker.md');
+  const domainDocs = readRepoFile('docs', 'agents', 'domain.md');
+
+  for (const [name, content] of [
+    ['current workflow', currentWorkflow],
+    ['template workflow', templateWorkflow],
+    ['agent instructions', agentInstructions],
+    ['issue tracker docs', issueTrackerDocs],
+  ]) {
+    assert.match(content, /GitHub Issues/i, `${name} must name GitHub Issues as the default tracker`);
+    assert.match(content, /gh issue/i, `${name} must document gh issue usage`);
+  }
+
+  for (const [name, project] of [
+    ['current state', state.project],
+    ['template state', templateState.project],
+  ]) {
+    assert.equal(project.external_issue_tracking, true, `${name} must enable external issue tracking`);
+    assert.equal(project.issue_tracker.type, 'github', `${name} must use GitHub as the issue tracker`);
+    assert.equal(project.issue_tracker.cli, 'gh', `${name} must use gh for issue operations`);
+  }
+
+  assert.match(domainDocs, /recursive|self-host/i, 'domain docs must note Lambchop self-hosting recursion');
+});

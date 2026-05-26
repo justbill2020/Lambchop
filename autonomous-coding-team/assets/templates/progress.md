@@ -26,6 +26,6 @@ This file is the human-readable proof-of-work log for the `<PROJECT_NAME>` auton
   - Main automation run remains orchestrator for dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.
 - Safety:
   - Default autonomy is local commits only.
-  - Push, PR, deploy, production config mutation, external trackers, and user-work reverts are disabled by default.
+  - Push, PR, deploy, production config mutation, non-GitHub external trackers, and user-work reverts are disabled by default. GitHub Issues is the default issue tracker for GitHub-backed repos.
 - Next step:
   - Run first-run discovery and replace setup placeholders with project-specific work items.

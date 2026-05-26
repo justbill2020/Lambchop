@@ -30,7 +30,7 @@ Use this checklist when deploying the autonomous coding team workflow into a new
 
 ## Decisions (Ask Only What Cannot Be Inferred)
 - Project purpose and current milestone definition of done.
-- Safety boundaries: confirm local-only is the default (no push/PR/deploy/external trackers) unless explicitly enabled.
+- Safety boundaries: confirm local-first is the default (no push/PR/deploy/non-GitHub external trackers) unless explicitly enabled; GitHub Issues is the default issue tracker for GitHub-backed repos.
 - Any required validation commands beyond what the repo already defines.
 
 ## Install / Repair Autonomous Files

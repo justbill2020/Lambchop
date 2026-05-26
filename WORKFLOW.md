@@ -3,7 +3,7 @@ name: Lambchop Autonomous Workflow
 version: 1
 automation:
   cadence: parked weekly cron anchor plus scheduler-visible run-now trigger after each completed active run
-  external_issue_tracking: false
+  external_issue_tracking: github
   specs_source: autonomous-coding-team/
   workflow_file: WORKFLOW.md
   state_file: docs/lambchop/state.json
@@ -48,6 +48,8 @@ This file is the operating contract for recurring autonomous Codex implementatio
 
 Lambchop is the reusable Codex skill project for deploying autonomous coding teams into new or existing repositories. The current milestone is to make the skill itself a working autonomous coding team and a reusable deployment pattern for other projects.
 
+Lambchop is also self-hosted: the active autonomous coding agent may run inside this repository while this repository is the autonomous coding agent system being changed. Treat that recursion as a first-class constraint. Workflow, hook, schedule, dashboard, issue-tracker, prompt, and source-commit changes must leave durable source-of-truth evidence, not merely status text.
+
 ## Sources Of Truth
 Use these sources in this order:
 
@@ -59,6 +61,7 @@ Use these sources in this order:
 6. `.codex/hooks.json` and `.codex/hooks/lambchop_*.py` provide repo-local active-session guardrails when trusted by Codex.
 7. `autonomous-coding-team/` contains the skill, references, and templates.
 8. Repository files and validation results are the source of truth for implemented behavior.
+9. GitHub Issues is the default durable issue/PRD discussion tracker for this repository; `docs/lambchop/state.json` remains the executable automation queue.
 
 If these sources disagree, preserve explicit user intent first, then implemented passing behavior, then safety and data integrity. Update state/progress to match reality and record the reconciliation.
 
@@ -89,12 +92,14 @@ When instructions conflict, follow explicit user intent first, then safety, then
 - `repo-local hooks`: Codex lifecycle hooks installed under `.codex/` for active-session context, safety guardrails, evidence reminders, and completion checks. They improve automation and chat quality but do not replace the unattended cron automation.
 - `shared capabilities`: first-run shared resources installed once into the Codex environment and reused by every Lambchop-managed repo. This includes the dashboard hub, Superpowers, Huashu Design, and future core upstream skills.
 - `Lambchop source commit`: the git commit of the Lambchop skill/templates used during setup or in-place upgrade. Target repos must record it so later check-ins can compare the saved commit with the current Lambchop source and repair stale deployments.
+- `GitHub Issues tracker`: the default external issue tracker for Lambchop and GitHub-backed Lambchop-managed repos. Use `gh issue ...` commands and the conventions in `docs/agents/issue-tracker.md`; do not treat dashboard control requests as issue-tracker execution.
+- `self-hosting recursion`: the condition where Lambchop's active autonomous coding agent is changing the Lambchop repo that defines that same autonomous agent. Recursive maintenance must record real workflow/source-of-truth deltas and validation evidence.
 
 ## Allowed Actions
-Automation may inspect the repo, create worktrees, create local `codex/lambchop-{work_item_key}` branches, edit skill/docs/templates for the active item, run validation commands, commit locally, and update state/progress/schedule ledgers.
+Automation may inspect the repo, create worktrees, create local `codex/lambchop-{work_item_key}` branches, edit skill/docs/templates for the active item, run validation commands, commit locally, update state/progress/schedule ledgers, and use GitHub Issues through `gh issue ...` for issue tracking when the action is workflow-authorized.
 
 ## Forbidden Actions
-Automation must not publish branches unless `docs/lambchop/state.json` explicitly sets `project.autonomy_policy.may_push=true`. When `may_push=true`, publishing is expected after each coherent local commit for completed work items (unless validation is failing or workflow safety blocks publishing for another reason). Automation must not open pull requests, deploy, modify production configuration, use external trackers, delete or revert user work, do implementation work directly in the main checkout after setup, overwrite another live lease, or mark work done without validation evidence.
+Automation must not publish branches unless `docs/lambchop/state.json` explicitly sets `project.autonomy_policy.may_push=true`. When `may_push=true`, publishing is expected after each coherent local commit for completed work items (unless validation is failing or workflow safety blocks publishing for another reason). Automation must not open pull requests, deploy, modify production configuration, use non-GitHub external trackers, delete or revert user work, do implementation work directly in the main checkout after setup, overwrite another live lease, or mark work done without validation evidence. GitHub issue creation, comments, labels, and reads are allowed only through the documented `gh issue` workflow; closing issues still requires explicit workflow or Bill authorization.
 
 ## Project Chat Intake
 When Bill reports a new need, feature request, bug, regression, vague problem, or "this is broken" issue in an ordinary project chat, that chat session must act as an intake agent, not an implementation agent.
@@ -110,7 +115,7 @@ This is required because Bill may not have the repo open or be able to see the c
 
 The intake chat may investigate enough to produce a useful task. It may inspect relevant files, run safe read-only or diagnostic checks, reproduce the issue when practical, identify likely ownership, and update workflow ledgers. It must not edit production code, implement the feature, fix the bug, refactor nearby code, or mark the work done. If documentation-only clarification is required to make the task understandable, keep it limited to the work item/progress/dashboard ledgers.
 
-The intake chat must create a brief task-creation plan, then create or update one or more bounded work items in `docs/lambchop/state.json` with source references, acceptance criteria, implementation notes, validation expectations, exclusive scope, shared scope, blockers if any, and a clear `next_step`. It must append an intake entry to `docs/lambchop/progress.md`, refresh `docs/lambchop/dashboard-data.json` when applicable, and set status to `todo` unless the item is blocked by a missing decision or unavailable local input.
+The intake chat must create a brief task-creation plan, then create or update one or more bounded work items in `docs/lambchop/state.json` with source references, acceptance criteria, implementation notes, validation expectations, exclusive scope, shared scope, blockers if any, and a clear `next_step`. For GitHub-tracked work, create or update the corresponding GitHub issue with `gh issue ...` and start every AI-generated issue/comment with `> *This was generated by AI during triage.*` It must append an intake entry to `docs/lambchop/progress.md`, refresh `docs/lambchop/dashboard-data.json` when applicable, and set status to `todo` unless the item is blocked by a missing decision or unavailable local input.
 
 After intake, the chat must hand off to the automation instead of stopping at a plan. It must verify the parked weekly anchor, unpause the project automation when it is paused or record that it was already active, trigger a scheduler-visible run-now for the same automation, and record the queued task, automation status, trigger result, and dashboard/progress/backoff evidence. The actual implementation must wait for the recurring coding automation or an explicit user instruction that overrides this intake-only rule for the current chat.
 
@@ -177,7 +182,7 @@ The main automation run is the orchestrator. It must prefer a parallel sprint pa
 
 Each parallel lane must have its own work item, branch, worktree, lease, acceptance criteria, validation expectation, and non-overlapping `exclusive_scope`. The orchestrator must give each subagent a self-contained prompt with source references, files in scope, TDD expectations, forbidden actions, and required output.
 
-Subagents may implement and validate their assigned lane only. They must not trigger scheduler runs, update automation schedule fields, publish, deploy, mutate external trackers, or overwrite another lane. The orchestrator reviews each result, runs integration validation, records outcomes, updates dashboard data, and commits coherent completed changes.
+Subagents may implement and validate their assigned lane only. They must not trigger scheduler runs, update automation schedule fields, publish, deploy, mutate external trackers, create or update GitHub issues, or overwrite another lane. The orchestrator reviews each result, runs integration validation, records outcomes, updates dashboard data, performs any required GitHub issue synchronization, and commits coherent completed changes.
 
 If multi-agent support or Superpowers is unavailable, record the blocker or `not_useful` reason and continue with the safest single-item local workflow.
 

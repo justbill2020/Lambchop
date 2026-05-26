@@ -45,7 +45,7 @@ Ask only what cannot be inferred safely:
 - Source of truth: existing specs/plans first, then README/docs, then TODOs, then user brief.
 - Autonomy: local branches, worktrees, edits, tests, docs, and local commits only.
 - Publishing: disabled.
-- External trackers: disabled.
+- Issue tracker: GitHub Issues by default for GitHub-backed repos; non-GitHub external trackers disabled.
 - Initial cadence: parked weekly cron anchor on yesterday at noon with an end-of-run scheduler-visible run-now trigger when ACTIVE; pausing the automation must prevent the next trigger.
 - Worktree root: `.worktrees`.
 - Branch prefix: `codex/`.

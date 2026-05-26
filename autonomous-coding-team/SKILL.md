@@ -8,7 +8,7 @@ description: Use when setting up, operating, repairing, or continuing a reposito
 ## Overview
 Turn a new or existing repository into a Codex-first autonomous coding team. The user experience is conversational: Codex inspects the repo, asks only for missing product or policy decisions, creates the local workflow system, validates it, and prepares or updates the Codex automation. The generated workflow treats the main automation run as a sprint orchestrator that uses adaptive parallel Superpowers subagents when independent work exists.
 
-Default autonomy is local-only: worktrees, branches, code changes, tests, docs, progress ledgers, repo-local dashboard artifacts, weekly automation anchors, scheduler-visible completion triggers, and local commits are allowed. Pushes, PRs, deploys, production config changes, and external trackers are forbidden unless the user explicitly enables them.
+Default autonomy is local-first: worktrees, branches, code changes, tests, docs, progress ledgers, repo-local dashboard artifacts, weekly automation anchors, scheduler-visible completion triggers, local commits, and GitHub Issues tracking through `gh issue ...` are allowed when the repo is GitHub-backed. Pushes, PRs, deploys, production config changes, and non-GitHub external trackers are forbidden unless the user explicitly enables them.
 
 ## Local Installation (Codex)
 Install this skill into your local Codex skill folder so it can be used across repositories.
@@ -34,7 +34,7 @@ These notes are informational and do not change the Codex-first v1 workflow.
 ## When Not To Use
 - The user only wants a one-time implementation task.
 - The user asks for a general coding plan without recurring automation.
-- The requested default is publishing, deployment, or external issue-tracker mutation before local safety rules are established.
+- The requested default is publishing, deployment, or non-GitHub issue-tracker mutation before local safety rules are established.
 
 ## Required Flow
 1. Inspect before asking: repo files, git status, branches, remotes, docs, package manifests, configs, existing `WORKFLOW.md`, existing project state files under `docs/`, and existing automations when available.
@@ -78,7 +78,8 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Use a parked weekly cron RRULE as the persisted schedule anchor: before any automation update or run-now trigger, set the normal schedule to yesterday's weekday at noon in the operator's timezone.
 - Trigger the next scheduler-visible run after a completed ACTIVE run; skip the trigger when the automation is PAUSED or inactive.
 - Never use a worker/subagent or local artifact as a substitute for a scheduler-visible run-now trigger.
-- Never publish, deploy, or mutate external trackers unless explicitly enabled by the user.
+- Use GitHub Issues as the default durable issue tracker for GitHub-backed repos, while keeping `docs/<project-slug>/state.json` as the executable local queue.
+- Never publish, deploy, or mutate non-GitHub external trackers unless explicitly enabled by the user.
 
 ## Common Mistakes
 - Asking setup questions before inspecting the repo.
