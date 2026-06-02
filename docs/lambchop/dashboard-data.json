@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-02T21:10:00Z",
+    "updated_at": "2026-06-02T22:01:00Z",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -28,12 +28,12 @@
   "summary": {
     "todo": 4,
     "in_progress": 0,
-    "blocked": 1,
+    "blocked": 3,
     "done": 20,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Ask Bill to confirm the initial bucket/room set: Inbox -> Planning -> Ready -> Building -> Verifying -> Blocked -> Shipped, then refine the local PRD."
+    "next_action": "Run task-18 to reconcile the historical 2026-05-20 handoff ledgers now that task-17 and task-22 are enforced on main."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -149,7 +149,7 @@
       "implementation_notes": [
         "Use a temporary local fixture repo or a fresh subagent scenario. Do not require the user to run scripts."
       ],
-      "commit": null,
+      "commit": "54e54fa",
       "blocker": null,
       "next_step": "Run task-03-pressure-test-existing-repo-setup.",
       "lease": {
@@ -164,12 +164,12 @@
     {
       "key": "task-03-github-repo-deployment-method",
       "title": "Add reusable GitHub repo deployment method",
-      "status": "done",
+      "status": "todo",
       "priority": 25,
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "ready",
+      "integration_status": "not_ready",
       "branch": "master",
       "worktree": "REPO_ROOT",
       "validation": [
@@ -704,12 +704,12 @@
     {
       "key": "task-19-dashboard-proposal-review-ui",
       "title": "Show proposal review needs in the dashboard",
-      "status": "todo",
+      "status": "done",
       "priority": 24,
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
+      "integration_status": "ready",
       "branch": "codex/lambchop-task-19-dashboard-proposal-review-ui",
       "worktree": ".worktrees/dashboard-proposal-review-ui",
       "validation": [
@@ -723,7 +723,7 @@
         "Risk notes from proposal: Approval actions should remain manual for now; the dashboard should not mutate project state.",
         "Parallelization notes from proposal: Small UI/API task, likely single-lane unless paired with docs."
       ],
-      "commit": null,
+      "commit": "54e54fa",
       "blocker": null,
       "next_step": "Use Huashu Design, then implement read-only dashboard/API proposal visibility with focused tests.",
       "lease": {
@@ -892,6 +892,83 @@
       },
       "created_at": "2026-06-02T20:15:00Z",
       "updated_at": "2026-06-02T21:10:00Z"
+    },
+    {
+      "key": "task-24-github-triage-labels-afk-hitl",
+      "title": "Create canonical GitHub triage labels for AFK/HITL routing",
+      "status": "blocked",
+      "priority": 46,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "gh label list confirmed canonical triage labels are missing on 2026-06-02.",
+        "gh issue list shows one open issue: #1 for the real-work/source-of-truth gate.",
+        "Scheduler evidence: lambchop-autonomous-coding-team is ACTIVE with parked Monday anchor; recent handoff run 019e893f-f713-7d83-8bc6-5c2ae6bbd50d is PENDING_REVIEW, so no duplicate run-now was triggered."
+      ],
+      "implementation_notes": [
+        "Created from Bill request to use grill-with-docs to unblock issues, find new issues, and move HITL to AFK quickly and effectively.",
+        "Current GitHub labels are only default labels: bug, documentation, duplicate, enhancement, good first issue, help wanted, invalid, question, wontfix.",
+        "Canonical triage labels are missing: needs-triage, needs-info, ready-for-agent, ready-for-human.",
+        "External GitHub label mutation requires Bill approval or an explicit workflow-approved automation action; record blocker instead of inventing fallback labels."
+      ],
+      "commit": null,
+      "blocker": "Waiting for Bill approval to mutate GitHub labels or for an automation-approved label setup action; cannot mark AFK/HITL lanes correctly without canonical labels.",
+      "next_step": "Bill approves creating the canonical GitHub triage labels, then apply labels and re-triage open issues into AFK/HITL lanes.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "created_at": "2026-06-02T21:20:00Z",
+      "updated_at": "2026-06-02T21:20:00Z"
+    },
+    {
+      "key": "task-25-godot-dashboard-issue-breakdown-publication",
+      "title": "Publish Godot dashboard tracer-bullet issue breakdown",
+      "status": "blocked",
+      "priority": 44,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "Read local Godot dashboard PRD and current task-23/task-24 state before drafting slices.",
+        "Automation status checked before intake handoff: ACTIVE with parked Monday anchor.",
+        "Recent scheduler-visible handoff run 019e893f-f713-7d83-8bc6-5c2ae6bbd50d is ARCHIVED; a new handoff is required after queuing this task.",
+        "Validation RED/correction: first scheduler DB query failed because a compressed Python one-liner was broken by PowerShell quoting; corrected by using a clean inline script.",
+        "Validation RED/correction: fallback query against C:/Users/BillMartin/.codex/codex-dev.db reached a zero-byte/stale database and failed with no automation_runs table; corrected by locating C:/Users/BillMartin/.codex/sqlite/codex-dev.db.",
+        "Validation RED/correction: broad recursive sqlite searches timed out; corrected with targeted inspection of the Codex sqlite directory.",
+        "Validation RED/correction: scheduler scan one-liner failed from PowerShell quoting; corrected with a here-string inline Python script.",
+        "Validation RED/correction: first query against the correct scheduler DB requested obsolete started_at/finished_at columns; corrected to current automation_runs columns.",
+        "Corrected scheduler evidence: lambchop-autonomous-coding-team is ACTIVE, parked RRULE is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, no unpause was needed, and recent runs are archived so a scheduler-visible handoff may be initiated after validation.",
+        "Scheduler-visible handoff initiated for task-25: automation was already ACTIVE, no unpause was needed, parked RRULE remained RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, scheduler DB backed up to C:/Users/BillMartin/.codex/backups/automation-run-now-lambchop-task25-godot-dashboard-to-issues-20260602-185903/codex-dev.db, and next_run_at was nudged to 1780426743709. No duplicate active run was present before the nudge; subsequent run execution is left to the scheduler.",
+        "Scheduler pickup evidence for task-25: automation run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is IN_PROGRESS, created_at=1780426749779, updated_at=1780426758363; automation remains ACTIVE and normal parked next_run_at returned to 1780938077000 with RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO."
+      ],
+      "implementation_notes": [
+        "Proposed slices: canonical AFK/HITL labels; project API communicator contract; communicator-only onboarding; Huashu Design crew-map prototype; first Godot data view; issue/card drill-down; role-agent personalities; constrained queued dashboard controls.",
+        "Per to-issues skill, do not publish issues until Bill approves the breakdown and dependencies/AFK-HITL classification.",
+        "Task is blocked because canonical triage labels are missing and Bill has not yet approved the breakdown for publication."
+      ],
+      "commit": null,
+      "blocker": "Waiting for Bill approval of the proposed to-issues breakdown and for canonical triage labels or an explicit label fallback decision.",
+      "next_step": "Bill approves/edits the 8-slice breakdown, then publish issues in dependency order after label blocker is resolved.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "created_at": "2026-06-02T21:45:00Z",
+      "updated_at": "2026-06-02T22:01:00Z"
     }
   ],
   "proposal_backlog": [
@@ -965,6 +1042,18 @@
       "title": "Define shared Godot dashboard plugin architecture",
       "blocker": "Grill-with-docs is still resolving game-like dashboard design decisions; next decision is the initial bucket/room set for the crew-map kanban board.",
       "next_step": "Ask Bill to confirm the initial bucket/room set: Inbox -> Planning -> Ready -> Building -> Verifying -> Blocked -> Shipped, then refine the local PRD."
+    },
+    {
+      "key": "task-24-github-triage-labels-afk-hitl",
+      "title": "Create canonical GitHub triage labels for AFK/HITL routing",
+      "blocker": "Waiting for Bill approval to mutate GitHub labels or for an automation-approved label setup action; cannot mark AFK/HITL lanes correctly without canonical labels.",
+      "next_step": "Bill approves creating the canonical GitHub triage labels, then apply labels and re-triage open issues into AFK/HITL lanes."
+    },
+    {
+      "key": "task-25-godot-dashboard-issue-breakdown-publication",
+      "title": "Publish Godot dashboard tracer-bullet issue breakdown",
+      "blocker": "Waiting for Bill approval of the proposed to-issues breakdown and for canonical triage labels or an explicit label fallback decision.",
+      "next_step": "Bill approves/edits the 8-slice breakdown, then publish issues in dependency order after label blocker is resolved."
     }
   ],
   "active_lanes": [],
@@ -1024,7 +1113,20 @@
     "Design clarification from Bill: spatial interaction should feel like a crew-map kanban inspired by tiny agents moving issues/PRDs/MVP items between buckets, with drill-down into issue specifics and current work; use original Lambchop visual language rather than copying third-party game IP.",
     "Design clarification from Bill: shared Godot dashboard must switch between Lambchop-managed projects connected through each project API helper/communicator, rendering the selected project crew-map, issue details, agent activity, scheduler state, validation evidence, and queued controls.",
     "Validation RED/correction: ledger consistency check briefly failed with dashboard todo=6 vs state todo=4 while the scheduler-started automation was updating task-17/task-22 ledgers; immediate re-read showed state/dashboard counts aligned at todo=4, in_progress=0, blocked=1, done=20, skipped=0.",
-    "Stop-hook compliance evidence: task-23 is queued in state, automation is already ACTIVE, no unpause was needed, parked anchor is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, and scheduler-visible handoff is already in progress as automation_runs thread 019e893f-f713-7d83-8bc6-5c2ae6bbd50d IN_PROGRESS; no duplicate run-now was triggered."
+    "Stop-hook compliance evidence: task-23 is queued in state, automation is already ACTIVE, no unpause was needed, parked anchor is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, and scheduler-visible handoff is already in progress as automation_runs thread 019e893f-f713-7d83-8bc6-5c2ae6bbd50d IN_PROGRESS; no duplicate run-now was triggered.",
+    "Triage label intake queued task-24: canonical GitHub labels needs-triage, needs-info, ready-for-agent, and ready-for-human are missing; blocked pending Bill approval for label mutation. Automation already ACTIVE, no unpause needed, parked Monday anchor preserved, prior handoff run 019e893f-f713-7d83-8bc6-5c2ae6bbd50d is PENDING_REVIEW; no duplicate run-now triggered.",
+    "Operator maintenance: Bill requested removing repo-local hooks because they are breaking the autonomous coding team. Paused lambchop-autonomous-coding-team through Codex app tooling before edit; status set to PAUSED with parked Monday anchor preserved. Disabled active repo hooks by replacing .codex/hooks.json with an empty hooks object; hook scripts remain on disk but are no longer registered.",
+    "Workflow guardrail added: hooks.status=disabled_by_operator means Lambchop must not reinstall or repair repo-local hooks until Bill explicitly re-enables them; automation-only contract continues.",
+    "Maintenance finalized: validation passed, automation unpaused to ACTIVE with parked Monday anchor preserved, automation prompt updated to respect hooks.status=disabled_by_operator, and no run-now trigger was requested after maintenance unpause.",
+    "to-issues intake queued task-25 for publishing the approved Godot dashboard issue breakdown; blocked pending Bill approval and canonical label readiness. Automation already ACTIVE with parked Monday anchor; scheduler-visible handoff will be initiated after ledger validation.",
+    "Validation RED/correction: first scheduler DB query failed because a compressed Python one-liner was broken by PowerShell quoting; corrected by using a clean inline script.",
+    "Validation RED/correction: fallback query against C:/Users/BillMartin/.codex/codex-dev.db reached a zero-byte/stale database and failed with no automation_runs table; corrected by locating C:/Users/BillMartin/.codex/sqlite/codex-dev.db.",
+    "Validation RED/correction: broad recursive sqlite searches timed out; corrected with targeted inspection of the Codex sqlite directory.",
+    "Validation RED/correction: scheduler scan one-liner failed from PowerShell quoting; corrected with a here-string inline Python script.",
+    "Validation RED/correction: first query against the correct scheduler DB requested obsolete started_at/finished_at columns; corrected to current automation_runs columns.",
+    "Corrected scheduler evidence: lambchop-autonomous-coding-team is ACTIVE, parked RRULE is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, no unpause was needed, and recent runs are archived so a scheduler-visible handoff may be initiated after validation.",
+    "Scheduler-visible handoff initiated for task-25: automation was already ACTIVE, no unpause was needed, parked RRULE remained RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, scheduler DB backed up to C:/Users/BillMartin/.codex/backups/automation-run-now-lambchop-task25-godot-dashboard-to-issues-20260602-185903/codex-dev.db, and next_run_at was nudged to 1780426743709. No duplicate active run was present before the nudge; subsequent run execution is left to the scheduler.",
+    "Scheduler pickup evidence for task-25: automation run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is IN_PROGRESS, created_at=1780426749779, updated_at=1780426758363; automation remains ACTIVE and normal parked next_run_at returned to 1780938077000 with RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO."
   ],
   "commits": [
     "ddbfd57",
@@ -1034,27 +1136,27 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260602-task-22-source-of-truth-gate",
-    "started_at": "2026-06-02T21:05:00Z",
-    "work_item_key": "task-22-control-loop-real-work-gate",
+    "run_id": "manual-20260602-godot-dashboard-to-issues-intake",
+    "started_at": "2026-06-02T21:45:00Z",
+    "work_item_key": "task-25-godot-dashboard-issue-breakdown-publication",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-02T21:05:00Z",
+    "dashboard_updated_at": "2026-06-02T22:01:00Z",
     "next_action": "Run task-18 to reconcile the historical 2026-05-20 handoff ledgers now that task-17 and task-22 are enforced on main.",
-    "timestamp": "2026-06-02T21:05:00Z",
-    "summary": "Landed the source-of-truth completion gate on main and re-landed the terminal run-now Stop-hook guardrail.",
-    "active_work_item": "task-22-control-loop-real-work-gate",
-    "validation_note": "Maintenance blocker: app-native automation pause/unpause tooling was unavailable, so no maintenance pause was performed. Parked anchor remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO and no new run-now trigger was requested during this maintenance-shaped run.",
-    "validation": "RED/GREEN recorded: node --test tests\\workflow-contract.test.mjs tests\\lambchop-hooks.test.mjs failed before the source-of-truth gate and terminal handoff guard existed on main, then passed with 18 tests after the hook/workflow/template updates. Validation correction recorded: docs/lambchop/backoff.json briefly failed JSON parse because stale duplicate scheduler fields remained after scheduler_persistence.notes; the duplicate block was removed before completion. Full validation then passed: node --test tests\\*.test.mjs reported 26 passing tests, JSON parse passed for state/dashboard/backoff/control-request ledgers, and state/dashboard counts aligned at todo=4, in_progress=0, blocked=1, done=20, skipped=0. Scheduler status remains ACTIVE with parked RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Maintenance pause/unpause tooling was unavailable, so no pause/unpause or run-now occurred in this run."
+    "timestamp": "2026-06-02T22:01:00Z",
+    "summary": "Queued blocked task-25; scheduler-visible handoff is now IN_PROGRESS in the Lambchop automation.",
+    "active_work_item": "task-25-godot-dashboard-issue-breakdown-publication",
+    "validation_note": "to-issues breakdown remains blocked pending Bill approval and canonical triage labels. Scheduler handoff was picked up by an IN_PROGRESS automation run, but the next runnable queue item on main remains task-18.",
+    "validation": "Scheduler pickup evidence for task-25: automation run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is IN_PROGRESS, created_at=1780426749779, updated_at=1780426758363; automation remains ACTIVE and normal parked next_run_at returned to 1780938077000 with RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Canonical queue reconciliation keeps task-24/task-25 blocked and restores task-18 as the next runnable repair on main."
   },
   "hooks": {
     "mode": "repo-local",
-    "status": "installed",
+    "status": "disabled_by_operator",
     "hooks_file": ".codex/hooks.json",
     "hooks_dir": ".codex/hooks",
     "merge_policy": "preserve unrelated hooks and replace Lambchop-owned hook entries",
-    "last_checked_at": "2026-05-15T18:28:00Z",
-    "notes": "Hooks require feature/bug chats to queue tasks and hand off to automation; UI work uses Huashu Design; setup/upgrade checks Lambchop source commits; Stop hook requires commit and push evidence for GitHub repos when push is enabled or explicitly requested."
+    "last_checked_at": "2026-06-02T21:28:00Z",
+    "notes": "Bill requested repo-local hooks be removed because they are breaking the autonomous coding team. .codex/hooks.json now registers no hooks; hook scripts remain on disk for reference but are inactive. Workflow now treats disabled_by_operator as intentional and not a repair target."
   },
   "shared_capabilities": {
     "mode": "first-run-install-once",

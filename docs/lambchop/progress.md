@@ -2,6 +2,44 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-02 14:02 - queue truth reconciliation after task-25 intake
+- Status: done
+- Run id: `run-20260602T190245Z-ledger-reconcile`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Findings:
+  - The queued `task-24`/`task-25` intake and operator-requested hook disablement were present as uncommitted `main` changes.
+  - Within those changes, queue truth had drifted: `task-18-reconcile-trigger-afterwork-ledger-drift` was marked `done`, while `task-22-control-loop-real-work-gate` still said `todo` even though the source-of-truth gate work already landed on `main`.
+- Reconciliation:
+  - Restored the canonical queue so `task-17` and `task-22` are done on `main`.
+  - Restored `task-18` to `todo`; it remains the next runnable repair before dashboard/UI follow-up work.
+  - Kept `task-24` and `task-25` blocked; their intake evidence remains recorded without overriding the next executable item.
+- Scheduler:
+  - Scheduler pickup evidence for `task-25` remains recorded separately; this reconciliation run did not pause, unpause, or trigger another run-now action.
+  - Parked anchor remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+- Next step:
+  - Run `task-18-reconcile-trigger-afterwork-ledger-drift`.
+
+## 2026-06-02 16:28 - repo-local hooks disabled by operator request
+- Request (Bill): remove the repo-local hooks because they are breaking the autonomous coding team.
+- Maintenance pause evidence:
+  - Paused `lambchop-autonomous-coding-team` through Codex app automation tooling before editing hook configuration.
+  - Pause preserved parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+- Change:
+  - Replaced `.codex/hooks.json` with an empty `hooks` object, so Lambchop repo-local hooks are no longer registered for this repository.
+  - Left `.codex/hooks/lambchop_*.py` scripts on disk for reference; they are inactive because the hook config no longer points to them.
+  - Updated `WORKFLOW.md` so `hooks.status=disabled_by_operator` is an intentional operator state and not a future hook repair target.
+  - Updated state/dashboard/backoff evidence to mark hooks `disabled_by_operator`.
+- Scheduler:
+  - Validation passed, then `lambchop-autonomous-coding-team` was unpaused to ACTIVE through Codex app automation tooling.
+  - Parked anchor remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - No run-now trigger was requested after the maintenance unpause.
+- Validation:
+  - `.codex/hooks.json` parses and contains an empty `hooks` object.
+  - Live state, dashboard data, backoff, and dashboard control request JSON parse.
+  - State/dashboard counts align with hooks marked `disabled_by_operator`.
+  - `git diff --check` passed with line-ending warnings only.
+
 ## 2026-06-02 16:05 - source-of-truth completion gate on main
 - Status: done
 - Run id: `run-20260602-task-22-source-of-truth-gate`
@@ -966,6 +1004,41 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Change: updated `WORKFLOW.md` and the reusable workflow template to reflect "may_push=true implies auto-push".
 
 ## 2026-05-20 15:47 - workflow change: ask operator on decisions
+## 2026-06-02 16:56 - to-issues scheduler validation corrections
+- Task: `task-25-godot-dashboard-issue-breakdown-publication`.
+- Validation RED/corrections:
+  - First scheduler DB query failed because a compressed Python one-liner was broken by PowerShell quoting.
+  - Querying `C:/Users/BillMartin/.codex/codex-dev.db` reached a stale zero-byte database with no `automation_runs` table.
+  - Broad recursive sqlite searches timed out.
+  - A one-line sqlite scan failed from PowerShell quoting; rerun with a here-string inline Python script.
+  - First query against the correct scheduler database requested obsolete `started_at`/`finished_at` columns.
+- Corrected evidence:
+  - Active scheduler database is `C:/Users/BillMartin/.codex/sqlite/codex-dev.db`.
+  - `lambchop-autonomous-coding-team` is ACTIVE.
+  - Parked RRULE remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - Recent Lambchop automation runs are archived, so a scheduler-visible handoff can be initiated after ledger validation.
+  - No unpause was needed because the automation was already ACTIVE.
+- Blocker: task publication remains blocked pending Bill approval of the 8-slice issue breakdown and canonical triage labels or an explicit fallback decision.
+
+## 2026-06-02 16:59 - task-25 scheduler-visible handoff initiated
+- Task: `task-25-godot-dashboard-issue-breakdown-publication`.
+- Handoff evidence:
+  - Automation was already ACTIVE; no unpause was needed.
+  - Parked RRULE remained `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - Scheduler DB backup created at `C:/Users/BillMartin/.codex/backups/automation-run-now-lambchop-task25-godot-dashboard-to-issues-20260602-185903/codex-dev.db`.
+  - `next_run_at` was nudged to `1780426743709` so the app scheduler can pick up the queued task.
+  - No duplicate active Lambchop automation run was present before the nudge; later execution is left to the scheduler.
+- Blocker: publishing issues remains blocked until Bill approves/edits the 8-slice issue breakdown and canonical triage labels exist or Bill approves an explicit fallback.
+
+## 2026-06-02 17:01 - task-25 handoff picked up
+- Scheduler pickup evidence:
+  - Lambchop automation run `019e89b4-44bf-7ba3-9b1a-5a07c52ab07a` is `IN_PROGRESS`.
+  - Run row timestamps: `created_at=1780426749779`, `updated_at=1780426758363`.
+  - Automation remains ACTIVE.
+  - Normal parked schedule returned to `next_run_at=1780938077000`.
+  - Parked RRULE remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+- Blocker: task-25 remains blocked from issue publication until Bill approves/edits the 8-slice breakdown and canonical triage labels exist or Bill approves an explicit fallback.
+
 - Clarification (Bill): when decisions are needed, Lambchop should ask the question explicitly because the operator may not be viewing repo files/code directly.
 - Change: added an "Operator Decisions (Ask First)" requirement to the live and template workflows and updated the automation prompt and workflow contract tests.
 - Validation: `node --test tests\\*.test.mjs` passed (21 tests).
