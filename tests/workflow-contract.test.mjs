@@ -112,3 +112,19 @@ test('workflow contract defaults GitHub repositories to GitHub Issues triage', (
 
   assert.match(domainDocs, /recursive|self-host/i, 'domain docs must note Lambchop self-hosting recursion');
 });
+
+test('workflow contract requires source-of-truth completion on the integration branch', () => {
+  const currentWorkflow = readRepoFile('WORKFLOW.md');
+  const templateWorkflow = readRepoFile('autonomous-coding-team', 'assets', 'templates', 'WORKFLOW.md');
+  const automationPrompt = readRepoFile('autonomous-coding-team', 'references', 'automation-prompt.md');
+
+  for (const [name, content] of [
+    ['current workflow', currentWorkflow],
+    ['template workflow', templateWorkflow],
+    ['automation prompt', automationPrompt],
+  ]) {
+    assert.match(content, /source-of-truth|source of truth/i, `${name} must define a source-of-truth completion gate`);
+    assert.match(content, /integration branch|main branch|canonical state/i, `${name} must require canonical branch reconciliation`);
+    assert.match(content, /side-branch|branch-only|ledger-only|memory-only/i, `${name} must reject branch-only or ledger-only completion`);
+  }
+});

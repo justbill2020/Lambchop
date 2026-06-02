@@ -152,9 +152,17 @@ test('Stop hook blocks feature-chat endings that skip automation handoff', () =>
   const handedOff = runPython(scriptPath, {
     hook_event_name: 'Stop',
     stop_hook_active: false,
-    last_assistant_message: 'Queued TASK-123, unpaused the automation, triggered scheduler-visible run-now, and recorded progress/dashboard evidence.',
+    last_assistant_message: 'Queued TASK-123, recorded progress/dashboard evidence, confirmed the automation was already active, and triggered scheduler-visible run-now.',
   });
   assert.equal(handedOff.continue, true);
+
+  const handoffThenMoreWork = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    last_assistant_message: 'Queued TASK-123, unpaused the automation, triggered scheduler-visible run-now, and then updated progress.md and dashboard evidence.',
+  });
+  assert.equal(handoffThenMoreWork.decision, 'block');
+  assert.match(handoffThenMoreWork.reason, /terminal/i);
 });
 
 test('Stop hook requires commit and push evidence for GitHub repos when publishing is enabled', () => {
@@ -178,6 +186,32 @@ test('Stop hook requires commit and push evidence for GitHub repos when publishi
     last_assistant_message: 'Validated tests, committed the changes, pushed the branch to GitHub, and updated progress.md/dashboard/backoff evidence.',
   });
   assert.equal(published.continue, true);
+});
+
+test('Stop hook blocks branch-only completion claims until the integration branch is updated', () => {
+  const scriptPath = join(templateRoot, 'hooks', 'lambchop_stop.py');
+  const branchOnly = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    git_branch: 'codex/lambchop-task-22-control-loop-real-work-gate',
+    integration_branch: 'main',
+    last_assistant_message: (
+      'Completed task-22, validated tests, committed the fix, and updated progress.md/dashboard/backoff evidence.'
+    ),
+  });
+  assert.equal(branchOnly.decision, 'block');
+  assert.match(branchOnly.reason, /integration branch|source-of-truth|main/i);
+
+  const integrated = runPython(scriptPath, {
+    hook_event_name: 'Stop',
+    stop_hook_active: false,
+    git_branch: 'main',
+    integration_branch: 'main',
+    last_assistant_message: (
+      'Completed task-22 on the integration branch, validated tests, committed the fix, and updated progress.md/dashboard/backoff evidence.'
+    ),
+  });
+  assert.equal(integrated.continue, true);
 });
 
 test('Stop hook allows maintenance mode override from state chat_policy', () => {

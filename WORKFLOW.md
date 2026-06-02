@@ -65,6 +65,13 @@ Use these sources in this order:
 
 If these sources disagree, preserve explicit user intent first, then implemented passing behavior, then safety and data integrity. Update state/progress to match reality and record the reconciliation.
 
+## Source-Of-Truth Completion Gate
+Completed work only counts when the canonical state on the integration branch is updated coherently. Branch-only commits, memory-only notes, ledger-only edits, or progress-only/dashboard-only movement must not be treated as completed implementation by themselves.
+
+Before selecting later tasks or marking an item done, reconcile validated side-branch work into the integration branch, then update `docs/lambchop/state.json`, `docs/lambchop/progress.md`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` from that canonical branch state. If a branch proves a fix but has not been integrated yet, record it as in-progress or blocked instead of done.
+
+This rule exists because self-hosting recursion makes status-only movement dangerous: memory, progress, or a task branch can drift away from `main`. A scheduler-visible handoff, dashboard `next_action`, no-progress reset, or done-state promotion must point at source-of-truth changes on the integration branch, not side-branch-only evidence.
+
 ## Instruction Strength Glossary
 
 Use instruction words consistently:
@@ -161,13 +168,14 @@ Every automation run must:
 12. When a sprint packet has 2 or more independent items and subagents are available, the main automation run orchestrates bounded parallel subagents. It dispatches one self-contained task per work item, requires Superpowers `dispatching-parallel-agents`, TDD, and verification guidance, and keeps ownership of integration, state, progress, dashboard regeneration, commits, and scheduler finalization.
 13. Use the `tdd` skill for production behavior and skill behavior: write or identify one public-behavior test first, verify RED, make the minimal implementation needed for GREEN, repeat, then refactor while green.
 14. Integrate subagent results one at a time, reconcile shared-scope risks, and mark each lane as completed, blocked, conflicted, failed_validation, or not_useful.
-15. Run relevant validation.
-16. Commit coherent completed changes locally with validation details.
-17. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review. If the planner loop creates runnable new work items, schedule them, record the evidence, and stop; do not implement newly created tasks in the same run.
-18. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/lambchop/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
-19. Update state, progress, shared-capability evidence, and the schedule/trigger ledger.
-20. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.
-21. Apply the completion trigger protocol: if the automation is ACTIVE and the no-progress guard did not pause or block triggering, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
+15. Reconcile branch results into the integration branch before counting the work as real progress or done-state promotion; side-branch-only commits do not satisfy the source-of-truth completion gate.
+16. Run relevant validation.
+17. Commit coherent completed changes locally with validation details.
+18. After completing or blocking the active item or sprint packet, run the planner loop: reconcile state, inspect the scheduled work plan and PRD/spec sources, add the next bounded source-backed work item when work remains, or create a proposal backlog that needs user review. If the planner loop creates runnable new work items, schedule them, record the evidence, and stop; do not implement newly created tasks in the same run.
+19. Keep the live dashboard inputs current by updating state, progress, backoff, scheduled work, and `docs/lambchop/dashboard-data.json`; the Dockerized project API reads those files and pushes reactive updates while it is running.
+20. Update state, progress, shared-capability evidence, and the schedule/trigger ledger.
+21. Apply the no-progress pause guard before any completion trigger: update the consecutive no-progress counter, pause the automation when the threshold is reached, and skip run-now when the guard pauses or recommends pausing.
+22. Apply the completion trigger protocol: if the automation is ACTIVE and the no-progress guard did not pause or block triggering, request a scheduler-visible run-now trigger for the same automation; if it is PAUSED or inactive, skip the trigger and record that pause prevented the next run.
 
 ## Work Item Statuses
 Use only `todo`, `in_progress`, `blocked`, `done`, and `skipped`.
@@ -225,15 +233,15 @@ Use `docs/lambchop/backoff.json` as a historical schedule/trigger ledger until t
 
 The automation must pause itself after 3 consecutive runs that accomplish no real work. This guard runs before the completion trigger and takes precedence over continuing the loop.
 
-Real work means at least one of these happened and was recorded in state, progress, and dashboard data:
+Real work means at least one of these happened on the integration branch and was recorded in state, progress, and dashboard data:
 
-- a work item was completed with validation evidence
+- a work item was completed with validation evidence and canonical integration-branch updates
 - a blocked or review item changed state because fresh evidence cleared or advanced it
 - a new source-backed work item was created from the scheduled work plan or repo evidence
 - a proposal backlog was newly created or materially refreshed with actionable choices for the user
 - a scheduler/tooling repair changed app-visible automation behavior
 
-No-progress runs include repeated reports of the same blocker, inability to claim or work any eligible item, validation/tooling failures that leave the same next step, skipped triggers caused by missing automation tooling, and true no-work findings that only restate previously recorded evidence.
+No-progress runs include repeated reports of the same blocker, inability to claim or work any eligible item, validation/tooling failures that leave the same next step, skipped triggers caused by missing automation tooling, true no-work findings that only restate previously recorded evidence, and side-branch-only work that has not been reconciled into the integration branch.
 
 For every run, update `docs/lambchop/backoff.json` with:
 
@@ -263,7 +271,7 @@ Lambchop should preserve reusable lessons from target projects without project-s
 - milestone packets are allowed only with distinct ownership, explicit shared scope, and combined validation
 
 ## Definition Of Done
-A work item is done only when acceptance criteria are satisfied, validation evidence is recorded, state and progress agree, code/docs changes are locally committed when appropriate, and the next step is clear.
+A work item is done only when acceptance criteria are satisfied, validation evidence is recorded, the integration branch reflects the change, state and progress agree with that canonical branch state, code/docs changes are locally committed when appropriate, and the next step is clear.
 
 ## Automation Prompt
 The Codex cron automation should tell Codex to read `WORKFLOW.md` first and follow it as the operating contract. Schedule, workspace, model, reasoning effort, and execution environment belong in automation fields.

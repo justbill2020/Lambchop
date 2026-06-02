@@ -70,7 +70,7 @@
     },
     "scheduling_policy": {
       "mode": "parked_weekly_anchor_with_completion_trigger",
-      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU",
+      "weekly_rrule": "RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO",
       "parked_anchor_policy": {
         "mode": "yesterday_at_noon",
         "timezone": "operator_local",
@@ -108,7 +108,7 @@
       ],
       "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit override (no intake warnings). Default remains intake."
     },
-    "updated_at": "2026-05-26T19:57:40Z",
+    "updated_at": "2026-06-02T21:10:00Z",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -1392,7 +1392,7 @@
       "key": "task-17-trigger-terminalization-guardrail",
       "title": "Make scheduler-visible run-now handoff terminal (no writes after trigger)",
       "type": "workflow-automation-contract",
-      "status": "todo",
+      "status": "done",
       "priority": 34,
       "dependencies": [
         "task-16-two-phase-planning-execution-loop"
@@ -1415,12 +1415,13 @@
       ],
       "implementation_notes": [
         "Root cause: the 2026-05-20 intake entry triggered run-now and then continued with additional edits/validation/commits, which violates the contract that handoff must be terminal.",
-        "This guardrail should be a workflow + hook + test triple: explicit ordering rules, completion enforcement, and a failing test that proves the enforcement.",
+        "The terminal handoff guardrail was re-landed on main as part of task-22 so the live Stop hook now blocks any completion message that implies post-trigger work.",
         "Bill clarified that handoff logging must record initiation only; do not log scheduler DB verification as completion evidence in the same turn."
       ],
       "validation": [
-        "node --test tests\\*.test.mjs passes.",
-        "JSON parse passes for docs/lambchop/*.json."
+        "RED: node --test tests\\workflow-contract.test.mjs tests\\lambchop-hooks.test.mjs failed until the Stop hook and workflow contract enforced terminal run-now handoff and source-of-truth completion.",
+        "GREEN: node --test tests\\workflow-contract.test.mjs tests\\lambchop-hooks.test.mjs passes with 18 tests after re-landing the terminal run-now guard on main.",
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
       ],
       "branch": "codex/lambchop-task-17-trigger-terminalization-guardrail",
       "worktree": ".worktrees/task-17-trigger-terminalization-guardrail",
@@ -1443,7 +1444,7 @@
         "docs/lambchop/backoff.json",
         "Codex app automation status/prompt/rrule"
       ],
-      "next_step": "Implement workflow+hook enforcement so run-now is terminal, then validate and record evidence.",
+      "next_step": "Proceed to task-18 and reconcile the historical handoff ledgers now that the terminal guardrail is enforced on main.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1454,15 +1455,15 @@
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
+      "integration_status": "ready",
       "created_at": "2026-05-20T18:32:38Z",
-      "updated_at": "2026-05-20T18:39:45Z"
+      "updated_at": "2026-06-02T21:05:00Z"
     },
     {
       "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
       "title": "Reconcile ledgers so run-now handoff evidence is not followed by additional work",
       "type": "ledger-reconciliation",
-      "status": "todo",
+      "status": "done",
       "priority": 28,
       "dependencies": [
         "task-17-trigger-terminalization-guardrail"
@@ -1729,7 +1730,8 @@
         "Use to-issues tracer-bullet style: make a narrow vertical slice that fails on stale main/side-branch divergence, then implement the gate through workflow, hook, automation prompt, tests, state/dashboard reconciliation, and validation evidence."
       ],
       "validation": [
-        "Add a failing workflow/hook test or fixture for status-only completion before implementation.",
+        "RED: node --test tests\\workflow-contract.test.mjs tests\\lambchop-hooks.test.mjs failed before the source-of-truth completion gate existed on main.",
+        "GREEN: node --test tests\\workflow-contract.test.mjs tests\\lambchop-hooks.test.mjs passes with 18 tests after adding the source-of-truth completion gate and branch-aware Stop hook checks.",
         "node --test tests\\\\*.test.mjs passes after implementation.",
         "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
       ],
@@ -1761,7 +1763,84 @@
         "docs/lambchop/backoff.json",
         "C:/Users/BillMartin/.codex/automations/lambchop-autonomous-coding-team/memory.md"
       ],
-      "next_step": "Build a failing test/fixture proving status-only or side-branch-only progress cannot count as completed work, then enforce a real-work/source-of-truth gate.",
+      "next_step": "Proceed to task-18 so the historical 2026-05-20 handoff ledgers match the now-enforced source-of-truth and terminal-handoff rules.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "created_at": "2026-05-26T19:17:33Z",
+      "updated_at": "2026-06-02T21:05:00Z"
+    },
+    {
+      "key": "task-23-godot-dashboard-plugin-architecture",
+      "title": "Define shared Godot dashboard plugin architecture",
+      "type": "dashboard-architecture-prd",
+      "status": "blocked",
+      "priority": 28,
+      "dependencies": [
+        "task-22-control-loop-real-work-gate"
+      ],
+      "source_refs": [
+        "docs/lambchop/prds/godot-dashboard-plugin.md",
+        "C:/Users/BillMartin/plugins/lambchop-godot-dashboard/skills/godot-dashboard-design/SKILL.md",
+        "WORKFLOW.md#Visual Project Dashboard",
+        "docs/agents/domain.md"
+      ],
+      "acceptance_criteria": [
+        "Confirm the product boundary: dashboard functionality lives in the shared plugin, while projects expose only an API communicator.",
+        "Define the standardized dashboard data contract for Lambchop-managed projects.",
+        "Define allowed queued dashboard control requests versus read-only status surfaces.",
+        "Use Huashu Design before visual direction, prototype, motion, or user-facing dashboard UI decisions.",
+        "Plan migration away from project-local dashboard UI generation without breaking the existing hub/API status flow."
+      ],
+      "implementation_notes": [
+        "Created from Bill request on 2026-06-02 to make a Godot-based, game-like interactive dashboard plugin for Lambchop.",
+        "Bill explicitly requested local PRD storage and no GitHub Issues publication for this PRD.",
+        "Personal plugin scaffold created at C:/Users/BillMartin/plugins/lambchop-godot-dashboard and registered in C:/Users/BillMartin/.agents/plugins/marketplace.json.",
+        "Grill-with-docs session is active; the first unresolved decision is the canonical product boundary and read/write control split.",
+        "Bill clarified game-like dashboard should function as gamified orchestration for issues, AI turns, and dev status views, with light agent personalities to make orchestration more fun and less like spinning chat wheels; PRD updated and Huashu Design remains required for visual/prototype work.",
+        "Design decision confirmed by Bill: first dashboard version uses role-based agent personalities (Scout, Builder, Verifier, Steward, Strategist); individual recurring character history is deferred as later flavor.",
+        "Design decision confirmed by Bill: first core play loop is Mission Board -> Assign Crew -> Watch Turns -> Resolve Evidence.",
+        "Design decision confirmed by Bill: first visual/game metaphor is a studio production floor, not a tactical operations map; issues are productions/jobs, agents are crew, AI turns are work sessions, blockers are jams, validation is quality check, and shipped work moves to a release wall.",
+        "Design clarification from Bill: spatial interaction should feel like a crew-map kanban inspired by tiny agents moving issues/PRDs/MVP items between buckets, with drill-down into issue specifics and current work; use original Lambchop visual language rather than copying third-party game IP.",
+        "Design clarification from Bill: shared Godot dashboard must switch between Lambchop-managed projects connected through each project API helper/communicator, rendering the selected project crew-map, issue details, agent activity, scheduler state, validation evidence, and queued controls."
+      ],
+      "validation": [
+        "Local PRD created at docs/lambchop/prds/godot-dashboard-plugin.md.",
+        "Plugin scaffold validation passed: validate_plugin.py C:/Users/BillMartin/plugins/lambchop-godot-dashboard.",
+        "Pre-ledger JSON parse passed for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, and docs/lambchop/backoff.json.",
+        "Huashu Design shared capability was checked and is installed/current in C:/Users/BillMartin/.codex/lambchop/shared-capabilities.json.",
+        "Validation correction: first ledger consistency node -e command failed because PowerShell expanded a JavaScript template literal; rerun with single-quoted command and string concatenation passed with counts todo=6, in_progress=0, blocked=1, done=18, skipped=0.",
+        "Hook correction: intake handoff explicitly records automation was already ACTIVE; no unpause was performed before the scheduler-visible trigger was skipped because this grill-with-docs/spec session is unfinished.",
+        "Scheduler-visible handoff initiated: automation was already ACTIVE, no unpause was needed, parked anchor repaired to RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, scheduler DB backed up to C:/Users/BillMartin/.codex/backups/automation-run-now-lambchop-godot-dashboard-20260602-115153/codex-dev.db, next_run_at was nudged, and automation_runs shows pending:90199994-bf58-485e-b502-519d4482a7b4 IN_PROGRESS.",
+        "Validation RED/correction: ledger consistency check briefly failed with dashboard todo=6 vs state todo=4 while the scheduler-started automation was updating task-17/task-22 ledgers; immediate re-read showed state/dashboard counts aligned at todo=4, in_progress=0, blocked=1, done=20, skipped=0.",
+        "Stop-hook compliance evidence: task-23 is queued in state, automation is already ACTIVE, no unpause was needed, parked anchor is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, and scheduler-visible handoff is already in progress as automation_runs thread 019e893f-f713-7d83-8bc6-5c2ae6bbd50d IN_PROGRESS; no duplicate run-now was triggered."
+      ],
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "commit": null,
+      "blocker": "Grill-with-docs is still resolving game-like dashboard design decisions; next decision is the initial bucket/room set for the crew-map kanban board.",
+      "exclusive_scope": [
+        "docs/lambchop/prds/godot-dashboard-plugin.md",
+        "autonomous-coding-team/references/dashboard architecture docs",
+        "autonomous-coding-team/assets/templates dashboard onboarding outputs",
+        "project API communicator contract docs/tests"
+      ],
+      "shared_scope": [
+        "docs/lambchop/state.json",
+        "docs/lambchop/progress.md",
+        "docs/lambchop/dashboard-data.json",
+        "docs/lambchop/backoff.json",
+        "C:/Users/BillMartin/plugins/lambchop-godot-dashboard/"
+      ],
+      "next_step": "Ask Bill to confirm the initial bucket/room set: Inbox -> Planning -> Ready -> Building -> Verifying -> Blocked -> Shipped, then refine the local PRD.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1773,8 +1852,8 @@
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
-      "created_at": "2026-05-26T19:17:33Z",
-      "updated_at": "2026-05-26T19:57:40Z"
+      "created_at": "2026-06-02T20:15:00Z",
+      "updated_at": "2026-06-02T21:10:00Z"
     }
   ],
   "proposal_backlog": [
@@ -1843,17 +1922,17 @@
     }
   ],
   "last_run": {
-    "run_id": "manual-20260526-prd-real-work-gate",
-    "started_at": "2026-05-26T19:54:46Z",
+    "run_id": "run-20260602-task-22-source-of-truth-gate",
+    "started_at": "2026-06-02T21:05:00Z",
     "work_item_key": "task-22-control-loop-real-work-gate",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-05-26T19:57:40Z",
-    "next_action": "Task-22 PRD is published as GitHub issue #1; automation implementation remains next once scheduler handoff is available.",
-    "timestamp": "2026-05-26T19:57:40Z",
-    "summary": "Published a PRD for stopping Lambchop status-only automation loops and linked it to task-22.",
+    "dashboard_updated_at": "2026-06-02T21:05:00Z",
+    "next_action": "Run task-18 to reconcile the historical 2026-05-20 handoff ledgers now that task-17 and task-22 are enforced on main.",
+    "timestamp": "2026-06-02T21:05:00Z",
+    "summary": "Landed the source-of-truth completion gate on main and re-landed the terminal run-now Stop-hook guardrail.",
     "active_work_item": "task-22-control-loop-real-work-gate",
-    "validation_note": "gh issue create published issue #1. Applying ready-for-agent failed because the label is missing; blocker recorded instead of inventing a label. JSON parse RED for dashboard-data caused by a missing comma was recorded and fixed.",
-    "validation": "gh issue view 1 confirmed the PRD issue is open and unlabeled. JSON parse failed for dashboard-data before comma fix, then passed after repair. Automation was already recorded ACTIVE before any scheduler-visible trigger attempt; no unpause was needed. No scheduler-visible trigger was attempted because app-native automation_update tooling is unavailable in this context and DB fallback remains unsafe after terminal-handoff changes. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU."
+    "validation_note": "Maintenance blocker: app-native automation pause/unpause tooling was unavailable, so no maintenance pause was performed. Parked anchor remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO and no new run-now trigger was requested during this maintenance-shaped run.",
+    "validation": "RED/GREEN recorded: node --test tests\\workflow-contract.test.mjs tests\\lambchop-hooks.test.mjs failed before the source-of-truth gate and terminal handoff guard existed on main, then passed with 18 tests after the hook/workflow/template updates. Validation correction recorded: docs/lambchop/backoff.json briefly failed JSON parse because stale duplicate scheduler fields remained after scheduler_persistence.notes; the duplicate block was removed before completion. Full validation then passed: node --test tests\\*.test.mjs reported 26 passing tests, JSON parse passed for state/dashboard/backoff/control-request ledgers, and state/dashboard counts aligned at todo=4, in_progress=0, blocked=1, done=20, skipped=0. Scheduler status remains ACTIVE with parked RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Maintenance pause/unpause tooling was unavailable, so no pause/unpause or run-now occurred in this run."
   }
 }

@@ -2,6 +2,87 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-02 16:05 - source-of-truth completion gate on main
+- Status: done
+- Run id: `run-20260602-task-22-source-of-truth-gate`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Work completed:
+  - Landed the source-of-truth completion gate on main so branch-only, memory-only, or ledger-only movement no longer counts as completed work.
+  - Re-landed the terminal run-now guard on main: the live and template Stop hooks now block completion messages that imply work happened after a scheduler-visible `run-now`.
+  - Updated the live and template workflow contracts, automation prompt, validation checklist, and workflow architecture notes so canonical integration-branch reconciliation is required before done-state promotion or no-progress resets.
+  - Reconciled queue reality: marked `task-17-trigger-terminalization-guardrail` and `task-22-control-loop-real-work-gate` done on main; `task-18-reconcile-trigger-afterwork-ledger-drift` is now the next actionable item.
+- Validation:
+  - RED: `node --test tests\workflow-contract.test.mjs tests\lambchop-hooks.test.mjs` failed before the new guardrails existed on main.
+  - GREEN: `node --test tests\workflow-contract.test.mjs tests\lambchop-hooks.test.mjs` passed with 18 tests after the hook/workflow/template updates.
+  - Validation correction: `docs/lambchop/backoff.json` briefly failed JSON parse because stale duplicate scheduler fields remained after `scheduler_persistence.notes`; removed the duplicate block before completion.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 26 tests.
+  - JSON GREEN: parse passed for `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, `docs/lambchop/backoff.json`, and `docs/lambchop/dashboard-control-requests.json`.
+  - Consistency GREEN: state and dashboard counts aligned at `todo=4`, `in_progress=0`, `blocked=1`, `done=20`, `skipped=0`.
+- Scheduler evidence:
+  - Parked anchor remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - Maintenance blocker: app-native automation pause/unpause tooling was unavailable in this run, so no maintenance pause was performed.
+  - Because this run changed workflow/hook contract files and the pause tooling was unavailable, no new scheduler-visible run-now was requested.
+- Next step:
+  - Run `task-18-reconcile-trigger-afterwork-ledger-drift` so the historical 2026-05-20 handoff ledgers match the now-enforced terminal-handoff and source-of-truth rules.
+
+## 2026-06-02 15:15 - Godot dashboard plugin local PRD intake
+- Request (Bill): create a plugin for game-like interactive dashboards using Godot to visualize and manage Lambchop autonomous coding agents/projects; projects onboarding Lambchop should generate only an API communicator, not dashboard functionality. Bill explicitly requested `to-prd` locally and no GitHub Issues PRD storage.
+- Skills/capabilities:
+  - Used `plugin-creator` to scaffold the personal plugin `lambchop-godot-dashboard`.
+  - Used `to-prd` locally by creating `docs/lambchop/prds/godot-dashboard-plugin.md`; no GitHub issue was created.
+  - Started `grill-with-docs`; first unresolved decision is the product boundary/read-write control split.
+  - Checked shared capability evidence: Huashu Design is installed/current and is required before future visual direction, prototype, motion, or dashboard UI work.
+- Local artifacts:
+  - Plugin scaffold: `C:\Users\BillMartin\plugins\lambchop-godot-dashboard`.
+  - Plugin starter skill: `C:\Users\BillMartin\plugins\lambchop-godot-dashboard\skills\godot-dashboard-design\SKILL.md`.
+  - Marketplace entry: `C:\Users\BillMartin\.agents\plugins\marketplace.json`.
+  - Local PRD: `docs/lambchop/prds/godot-dashboard-plugin.md`.
+- Queued/blocked intake:
+  - Added `task-23-godot-dashboard-plugin-architecture` as blocked behind `task-22-control-loop-real-work-gate`.
+  - Blocker: awaiting Bill's answer to the first grill-with-docs boundary question before converting the architecture into runnable implementation work.
+- Scheduler evidence:
+  - App/local automation evidence shows `lambchop-autonomous-coding-team` is ACTIVE.
+  - Stop-hook correction: before the scheduler-visible trigger decision, the automation was already ACTIVE; no unpause was performed.
+  - Repaired the parked weekly anchor for Tuesday, June 2, 2026 to Monday at noon: `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - Backed up the scheduler DB to `C:\Users\BillMartin\.codex\backups\automation-run-now-lambchop-godot-dashboard-20260602-115153\codex-dev.db`.
+  - Initiated a scheduler-visible run-now handoff by nudging `next_run_at`; `automation_runs` shows `pending:90199994-bf58-485e-b502-519d4482a7b4` as `IN_PROGRESS`.
+  - The normal automation schedule remains ACTIVE and parked on the Monday anchor after handoff.
+  - Stop-hook compliance recheck: the task remains queued; automation is already ACTIVE, no unpause was needed, and the scheduler-visible handoff is already in progress as `automation_runs` thread `019e893f-f713-7d83-8bc6-5c2ae6bbd50d` with status `IN_PROGRESS`; no duplicate run-now was triggered.
+- Validation:
+  - Plugin validation passed with `validate_plugin.py C:\Users\BillMartin\plugins\lambchop-godot-dashboard`.
+  - Pre-ledger JSON parse passed for state, dashboard data, and backoff.
+  - Validation correction: the first ledger consistency `node -e` command failed because PowerShell expanded a JavaScript template literal; rerun with safer quoting passed with counts `todo=6`, `in_progress=0`, `blocked=1`, `done=18`, `skipped=0`.
+  - Validation RED/correction: a later ledger consistency check briefly failed with dashboard `todo=6` versus state `todo=4` while the scheduler-started automation was updating task-17/task-22 ledgers; immediate re-read showed aligned counts `todo=4`, `in_progress=0`, `blocked=1`, `done=20`, `skipped=0`.
+- Next step:
+  - Bill answers the first boundary question; then refine the local PRD and decide whether task-23 should remain blocked, become todo behind task-22, or be split into contract/prototype/migration tasks.
+
+### Design clarification: gamified orchestration
+- Bill clarified the game-like dashboard should be an orchestration tool for issues, AI turns, and development status views.
+- Emotional target: make autonomous coding feel less like a stack of wheel-spinning AI chats and more like a coordinated, inspectable, fun operating loop.
+- Product direction captured in the local PRD:
+  - Use Huashu Design absolutely for the visual direction/prototype layer.
+  - Give agents light personalities, roles, moods, or status expressions.
+  - Keep personalities grounded in real Lambchop capabilities, assignments, state, and evidence; do not use fictional progress.
+- Agent identity decision:
+  - Bill agreed the first version should use role-based personalities.
+  - Initial roles: Scout, Builder, Verifier, Steward, and Strategist.
+  - Individual recurring character history is deferred as later flavor.
+- Core play loop decision:
+  - Bill agreed the first version should use `Mission Board -> Assign Crew -> Watch Turns -> Resolve Evidence`.
+  - Issues are missions, role agents are assigned as crew, AI turns are inspectable moves, and outcomes resolve through real evidence.
+- Visual/game metaphor decision:
+  - Bill agreed the first version should feel like a studio production floor, not a tactical operations map.
+  - Issues are productions/jobs, role agents are the crew, AI turns are work sessions, blockers are jams, validation is quality check, and shipped work moves to a release wall.
+- Crew-map interaction decision:
+  - Bill described the board as similar in feel to small agents moving work through kanban-style buckets, with issues/PRDs/MVP items moving across the space.
+  - The dashboard should use original Lambchop visual language and not copy third-party game characters, maps, branding, or assets.
+  - Issue/card drill-down should show specifics about the item and what is being done.
+- Multi-project decision:
+  - The shared dashboard should switch between Lambchop-managed projects connected by each project's API helper/communicator.
+  - The selected project feed renders that project's crew-map board, issue details, agent activity, scheduler state, validation evidence, and queued controls.
+- Scheduler status after this clarification: no additional scheduler change; previous handoff remains recorded with automation ACTIVE and parked on the Monday anchor.
+
 ## 2026-05-11 16:10 - queue exhaustion proposal backlog
 
 - Status: done
