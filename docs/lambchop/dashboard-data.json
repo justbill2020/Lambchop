@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-02T22:01:00Z",
+    "updated_at": "2026-06-08T17:05:02Z",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -28,12 +28,12 @@
   "summary": {
     "todo": 4,
     "in_progress": 0,
-    "blocked": 3,
-    "done": 20,
+    "blocked": 4,
+    "done": 21,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Run task-18 to reconcile the historical 2026-05-20 handoff ledgers now that task-17 and task-22 are enforced on main."
+    "next_action": "Run task-18-reconcile-trigger-afterwork-ledger-drift so the queued repair work matches the current source-of-truth contract."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -866,7 +866,8 @@
         "Hook correction: intake handoff explicitly records automation was already ACTIVE; no unpause was performed before the scheduler-visible trigger was skipped because this grill-with-docs/spec session is unfinished.",
         "Scheduler-visible handoff initiated: automation was already ACTIVE, no unpause was needed, parked anchor repaired to RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, scheduler DB backed up to C:/Users/BillMartin/.codex/backups/automation-run-now-lambchop-godot-dashboard-20260602-115153/codex-dev.db, next_run_at was nudged, and automation_runs shows pending:90199994-bf58-485e-b502-519d4482a7b4 IN_PROGRESS.",
         "Validation RED/correction: ledger consistency check briefly failed with dashboard todo=6 vs state todo=4 while the scheduler-started automation was updating task-17/task-22 ledgers; immediate re-read showed state/dashboard counts aligned at todo=4, in_progress=0, blocked=1, done=20, skipped=0.",
-        "Stop-hook compliance evidence: task-23 is queued in state, automation is already ACTIVE, no unpause was needed, parked anchor is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, and scheduler-visible handoff is already in progress as automation_runs thread 019e893f-f713-7d83-8bc6-5c2ae6bbd50d IN_PROGRESS; no duplicate run-now was triggered."
+        "Stop-hook compliance evidence: task-23 is queued in state, automation is already ACTIVE, no unpause was needed, parked anchor is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, and scheduler-visible handoff is already in progress as automation_runs thread 019e893f-f713-7d83-8bc6-5c2ae6bbd50d IN_PROGRESS; no duplicate run-now was triggered.",
+        "Godot dashboard launch evidence: Huashu Design capability checked as installed/current; created runnable Godot project at C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot with project.godot, scenes/dashboard.tscn, scripts/dashboard.gd, and icon.svg. Godot 4.6.3 installed via winget because no local Godot executable was found. Visible process Godot_v4.6.3-stable_win64 pid=1124 is running with window title Lambchop Godot Dashboard (DEBUG). Headless smoke launch returned Godot Engine v4.6.3 without script errors. Automation remained ACTIVE; no pause/unpause was performed; parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO; existing scheduler run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a remains PENDING_REVIEW, so no duplicate trigger was initiated."
       ],
       "implementation_notes": [
         "Created from Bill request on 2026-06-02 to make a Godot-based, game-like interactive dashboard plugin for Lambchop.",
@@ -881,8 +882,8 @@
         "Design clarification from Bill: shared Godot dashboard must switch between Lambchop-managed projects connected through each project API helper/communicator, rendering the selected project crew-map, issue details, agent activity, scheduler state, validation evidence, and queued controls."
       ],
       "commit": null,
-      "blocker": "Grill-with-docs is still resolving game-like dashboard design decisions; next decision is the initial bucket/room set for the crew-map kanban board.",
-      "next_step": "Ask Bill to confirm the initial bucket/room set: Inbox -> Planning -> Ready -> Building -> Verifying -> Blocked -> Shipped, then refine the local PRD.",
+      "blocker": "Design architecture remains open, but first actionable next slice is task-27 gamified monitoring HUD.",
+      "next_step": "Proceed with task-27 to add monitoring HUD, agent presence, validation/backoff/trust signals, and world-event feed.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -891,7 +892,7 @@
         "heartbeat_at": null
       },
       "created_at": "2026-06-02T20:15:00Z",
-      "updated_at": "2026-06-02T21:10:00Z"
+      "updated_at": "2026-06-02T22:35:00Z"
     },
     {
       "key": "task-24-github-triage-labels-afk-hitl",
@@ -969,6 +970,75 @@
       },
       "created_at": "2026-06-02T21:45:00Z",
       "updated_at": "2026-06-02T22:01:00Z"
+    },
+    {
+      "key": "task-26-github-issue-1-triage-state-reconcile",
+      "title": "Reconcile GitHub issue #1 triage state with local queue truth",
+      "status": "blocked",
+      "priority": 48,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "Triage RED: GitHub issue #1 is open and unlabeled; canonical labels needs-triage, needs-info, ready-for-agent, and ready-for-human are missing. Local evidence is inconsistent: progress says task-22 landed/done on main, but docs/lambchop/state.json currently has task-22 status=todo and task-18 status=done while dashboard next_action still says run task-18. Automation is ACTIVE with parked Monday RRULE; current handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate scheduler trigger was initiated.",
+        "TDD intake handoff evidence: no new task was queued because task-26 already exists for the proposed tracer bullet around issue #1/source-of-truth reconciliation. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered. Blocker remains Bill approval for canonical labels and source-of-truth reconciliation before GitHub issue mutation."
+      ],
+      "implementation_notes": [
+        "Created by triage session on 2026-06-02 after issue #1 was found open/unlabeled and local ledgers disagreed about task-22/task-18 truth.",
+        "Do not mutate GitHub labels until canonical labels exist or Bill approves label creation/fallback.",
+        "Every GitHub triage comment must start with the AI triage disclosure."
+      ],
+      "commit": null,
+      "blocker": "Blocked by missing canonical triage labels and source-of-truth disagreement between progress/state/dashboard for issue #1/task-22/task-18.",
+      "next_step": "Bill approves creating canonical labels, then reconcile task-22/task-18 source-of-truth and triage issue #1 as ready-for-agent or ready-for-human/closure based on verified state.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-02T22:18:00Z"
+    },
+    {
+      "key": "task-27-godot-dashboard-gamified-monitoring-hud",
+      "title": "Add gamified status and monitoring HUD to Godot dashboard",
+      "status": "done",
+      "priority": 49,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "Gamified monitoring intake: Bill said the Godot dashboard is a good kanban start and asked about gamified status and monitoring capabilities. Huashu Design capability was checked as installed/current. Queued task-27 to add an operational monitoring HUD with agent presence/moods, scheduler heartbeat, run timeline, validation lights, backoff/no-progress meter, trust/source-of-truth meter, and world-event feed. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered.",
+        "TDD RED/tooling failure: initial parallel file/test inspection failed with Windows paging file / OutOfMemory errors while the Godot dashboard process was running. Stopped the visible Godot process to free memory, then continued with smaller sequential checks. This is recorded before moving on per Lambchop validation evidence rules.",
+        "TDD RED: node --test tests\\godot-dashboard.test.mjs failed because verifier mood still relied on a raw red-string search instead of a dedicated helper.",
+        "TDD GREEN: patched C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot/scripts/dashboard.gd to use _has_red_validation(); node --test tests\\godot-dashboard.test.mjs passed with 7 tests.",
+        "Full validation GREEN: node --test tests\\*.test.mjs passed with 33 tests.",
+        "JSON GREEN: docs/lambchop/{state,dashboard-data,backoff,dashboard-control-requests}.json parsed successfully after ledger reconciliation."
+      ],
+      "implementation_notes": [
+        "Created from Bill feedback after first Godot tracer bullet: current board is a good kanban start, but needs gamified status and monitoring capabilities.",
+        "Use Huashu Design direction: make truth and operational state visible, not decorative game chrome.",
+        "Prefer meaningful indicators over purely cosmetic badges.",
+        "The Godot dashboard prototype lives in the local plugin path outside the Lambchop git repo; Lambchop tracks this slice through repo tests and ledger evidence against that local prototype."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Run task-18-reconcile-trigger-afterwork-ledger-drift so the queued repair work matches the current source-of-truth contract.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-08T17:05:02Z"
     }
   ],
   "proposal_backlog": [
@@ -1040,8 +1110,8 @@
     {
       "key": "task-23-godot-dashboard-plugin-architecture",
       "title": "Define shared Godot dashboard plugin architecture",
-      "blocker": "Grill-with-docs is still resolving game-like dashboard design decisions; next decision is the initial bucket/room set for the crew-map kanban board.",
-      "next_step": "Ask Bill to confirm the initial bucket/room set: Inbox -> Planning -> Ready -> Building -> Verifying -> Blocked -> Shipped, then refine the local PRD."
+      "blocker": "Design architecture remains open, but first actionable next slice is task-27 gamified monitoring HUD.",
+      "next_step": "Proceed with task-27 to add monitoring HUD, agent presence, validation/backoff/trust signals, and world-event feed."
     },
     {
       "key": "task-24-github-triage-labels-afk-hitl",
@@ -1054,6 +1124,12 @@
       "title": "Publish Godot dashboard tracer-bullet issue breakdown",
       "blocker": "Waiting for Bill approval of the proposed to-issues breakdown and for canonical triage labels or an explicit label fallback decision.",
       "next_step": "Bill approves/edits the 8-slice breakdown, then publish issues in dependency order after label blocker is resolved."
+    },
+    {
+      "key": "task-26-github-issue-1-triage-state-reconcile",
+      "title": "Reconcile GitHub issue #1 triage state with local queue truth",
+      "blocker": "Blocked by missing canonical triage labels and source-of-truth disagreement between progress/state/dashboard for issue #1/task-22/task-18.",
+      "next_step": "Bill approves creating canonical labels, then reconcile task-22/task-18 source-of-truth and triage issue #1 as ready-for-agent or ready-for-human/closure based on verified state."
     }
   ],
   "active_lanes": [],
@@ -1126,7 +1202,13 @@
     "Validation RED/correction: first query against the correct scheduler DB requested obsolete started_at/finished_at columns; corrected to current automation_runs columns.",
     "Corrected scheduler evidence: lambchop-autonomous-coding-team is ACTIVE, parked RRULE is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, no unpause was needed, and recent runs are archived so a scheduler-visible handoff may be initiated after validation.",
     "Scheduler-visible handoff initiated for task-25: automation was already ACTIVE, no unpause was needed, parked RRULE remained RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO, scheduler DB backed up to C:/Users/BillMartin/.codex/backups/automation-run-now-lambchop-task25-godot-dashboard-to-issues-20260602-185903/codex-dev.db, and next_run_at was nudged to 1780426743709. No duplicate active run was present before the nudge; subsequent run execution is left to the scheduler.",
-    "Scheduler pickup evidence for task-25: automation run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is IN_PROGRESS, created_at=1780426749779, updated_at=1780426758363; automation remains ACTIVE and normal parked next_run_at returned to 1780938077000 with RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO."
+    "Scheduler pickup evidence for task-25: automation run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is IN_PROGRESS, created_at=1780426749779, updated_at=1780426758363; automation remains ACTIVE and normal parked next_run_at returned to 1780938077000 with RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO.",
+    "Triage RED: GitHub issue #1 is open and unlabeled; canonical labels needs-triage, needs-info, ready-for-agent, and ready-for-human are missing. Local evidence is inconsistent: progress says task-22 landed/done on main, but docs/lambchop/state.json currently has task-22 status=todo and task-18 status=done while dashboard next_action still says run task-18. Automation is ACTIVE with parked Monday RRULE; current handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate scheduler trigger was initiated.",
+    "TDD intake handoff evidence: no new task was queued because task-26 already exists for the proposed tracer bullet around issue #1/source-of-truth reconciliation. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered. Blocker remains Bill approval for canonical labels and source-of-truth reconciliation before GitHub issue mutation.",
+    "Godot dashboard launch evidence: Huashu Design capability checked as installed/current; created runnable Godot project at C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot with project.godot, scenes/dashboard.tscn, scripts/dashboard.gd, and icon.svg. Godot 4.6.3 installed via winget because no local Godot executable was found. Visible process Godot_v4.6.3-stable_win64 pid=1124 is running with window title Lambchop Godot Dashboard (DEBUG). Headless smoke launch returned Godot Engine v4.6.3 without script errors. Automation remained ACTIVE; no pause/unpause was performed; parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO; existing scheduler run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a remains PENDING_REVIEW, so no duplicate trigger was initiated.",
+    "Gamified monitoring intake: Bill said the Godot dashboard is a good kanban start and asked about gamified status and monitoring capabilities. Huashu Design capability was checked as installed/current. Queued task-27 to add an operational monitoring HUD with agent presence/moods, scheduler heartbeat, run timeline, validation lights, backoff/no-progress meter, trust/source-of-truth meter, and world-event feed. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered.",
+    "TDD RED/tooling failure: initial parallel file/test inspection failed with Windows paging file / OutOfMemory errors while the Godot dashboard process was running. Stopped the visible Godot process to free memory, then continued with smaller sequential checks. This is recorded before moving on per Lambchop validation evidence rules.",
+    "Focused RED/GREEN completed for task-27: the Godot HUD test failed until verifier mood switched to a dedicated red-validation helper, then the focused and full suites passed."
   ],
   "commits": [
     "ddbfd57",
@@ -1136,18 +1218,20 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "manual-20260602-godot-dashboard-to-issues-intake",
-    "started_at": "2026-06-02T21:45:00Z",
-    "work_item_key": "task-25-godot-dashboard-issue-breakdown-publication",
+    "run_id": "run-20260608-task27-monitoring-hud-green",
+    "started_at": "2026-06-08T17:05:02Z",
+    "work_item_key": "task-27-godot-dashboard-gamified-monitoring-hud",
     "parallel_group": null,
-    "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-02T22:01:00Z",
-    "next_action": "Run task-18 to reconcile the historical 2026-05-20 handoff ledgers now that task-17 and task-22 are enforced on main.",
-    "timestamp": "2026-06-02T22:01:00Z",
-    "summary": "Queued blocked task-25; scheduler-visible handoff is now IN_PROGRESS in the Lambchop automation.",
-    "active_work_item": "task-25-godot-dashboard-issue-breakdown-publication",
-    "validation_note": "to-issues breakdown remains blocked pending Bill approval and canonical triage labels. Scheduler handoff was picked up by an IN_PROGRESS automation run, but the next runnable queue item on main remains task-18.",
-    "validation": "Scheduler pickup evidence for task-25: automation run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is IN_PROGRESS, created_at=1780426749779, updated_at=1780426758363; automation remains ACTIVE and normal parked next_run_at returned to 1780938077000 with RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Canonical queue reconciliation keeps task-24/task-25 blocked and restores task-18 as the next runnable repair on main."
+    "subagent_lanes": [
+      "explorer-019e8e50-a690-7860-b212-8f57e736c476"
+    ],
+    "dashboard_updated_at": "2026-06-08T17:05:02Z",
+    "next_action": "Run task-18-reconcile-trigger-afterwork-ledger-drift so the queued repair work matches the current source-of-truth contract.",
+    "timestamp": "2026-06-08T17:05:02Z",
+    "summary": "Completed task-27 monitoring HUD reconciliation and validated the Godot tracer bullet.",
+    "active_work_item": "task-27-godot-dashboard-gamified-monitoring-hud",
+    "validation_note": "Focused RED/GREEN completed for task-27: the Godot HUD test failed until verifier mood switched to a dedicated red-validation helper, then the focused and full suites passed.",
+    "validation": "TDD GREEN: node --test tests\\godot-dashboard.test.mjs passed after switching verifier mood to _has_red_validation(); full suite then passed with 33 tests and JSON parse checks stayed green."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1194,5 +1278,8 @@
     ],
     "last_checked_at": "2026-05-15T18:15:00Z",
     "status": "validated"
-  }
+  },
+  "latest_progress": [
+    "2026-06-08: task-27 monitoring HUD fix validated green; next runnable queue item is task-18 reconciliation."
+  ]
 }

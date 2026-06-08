@@ -2,6 +2,28 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-08 12:05 - task-27 monitoring HUD reconciliation finished
+- Status: done
+- Run id: `run-20260608-task27-monitoring-hud-green`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Huashu Design:
+  - Continued the already-selected visual direction: make operational truth visible instead of adding decorative game chrome.
+- Work completed:
+  - Reconciled dirty task-27 work already sitting in the main checkout and finished the missing TDD GREEN step.
+  - Patched `C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot/scripts/dashboard.gd` so verifier mood now depends on a dedicated `_has_red_validation()` helper instead of a raw string search.
+  - Promoted `task-27-godot-dashboard-gamified-monitoring-hud` to done in state/dashboard ledgers and restored the queue's next runnable repair to `task-18-reconcile-trigger-afterwork-ledger-drift`.
+- Validation:
+  - RED: `node --test tests\godot-dashboard.test.mjs` failed because verifier mood still relied on a raw red-string search.
+  - GREEN: `node --test tests\godot-dashboard.test.mjs` passed with 7 tests after the helper-based fix.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 33 tests.
+  - JSON GREEN: parse passed for `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, `docs/lambchop/backoff.json`, and `docs/lambchop/dashboard-control-requests.json`.
+- Scheduler:
+  - Automation evidence remains ACTIVE with the parked Monday anchor already recorded in backoff/state/dashboard data.
+  - No new scheduler-visible run-now was requested in this run because this was a manual reconciliation of pre-existing dirty task-27 work in `main`, not a fresh isolated-lane completion.
+- Next step:
+  - Run `task-18-reconcile-trigger-afterwork-ledger-drift`.
+
 ## 2026-06-02 14:02 - queue truth reconciliation after task-25 intake
 - Status: done
 - Run id: `run-20260602T190245Z-ledger-reconcile`
@@ -1029,6 +1051,80 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - `next_run_at` was nudged to `1780426743709` so the app scheduler can pick up the queued task.
   - No duplicate active Lambchop automation run was present before the nudge; later execution is left to the scheduler.
 - Blocker: publishing issues remains blocked until Bill approves/edits the 8-slice issue breakdown and canonical triage labels exist or Bill approves an explicit fallback.
+
+## 2026-06-03 10:05 - task-27 TDD/subagent start with OOM correction
+- Skills: `tdd` via `subagent-driven-development`.
+- Target: `task-27-godot-dashboard-gamified-monitoring-hud`.
+- Subagent:
+  - Spawned explorer `019e8e50-a690-7860-b212-8f57e736c476` to inspect the Godot tracer bullet and suggest the smallest monitoring HUD shape and first public-behavior test.
+- Validation RED/tooling failure:
+  - Initial parallel file/test inspection failed with Windows paging file / OutOfMemory errors while the Godot dashboard process was running.
+  - Stopped the visible Godot process to free memory before continuing.
+  - Continuing with smaller sequential checks.
+
+## 2026-06-02 17:35 - gamified monitoring HUD intake
+- Request: Bill said the first Godot dashboard is a good kanban start and asked about gamified status and monitoring capabilities.
+- Huashu Design:
+  - Shared capability checked first; Huashu Design is installed/current.
+- Queued work:
+  - Added `task-27-godot-dashboard-gamified-monitoring-hud`.
+  - Scope: add a monitoring HUD with agent presence/moods, scheduler heartbeat, current run timeline, validation lights, backoff/no-progress meter, trust/source-of-truth meter, and world-event feed.
+  - Design direction: make truth and operational state visible; avoid decorative game chrome that does not help orchestration.
+- Scheduler evidence:
+  - Automation was already ACTIVE; no unpause was needed.
+  - Parked RRULE remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - Existing scheduler-visible handoff run `019e89b4-44bf-7ba3-9b1a-5a07c52ab07a` is `PENDING_REVIEW`, so no duplicate run-now was triggered.
+- Next step: implement the monitoring HUD and event feed in the Godot tracer bullet, then smoke-test launch again.
+
+## 2026-06-02 17:25 - Godot dashboard tracer bullet launched
+- Request: start the Godot dashboard.
+- Huashu Design:
+  - Shared capability checked first; Huashu Design is installed/current.
+- Built runnable tracer bullet:
+  - Created `C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot/project.godot`.
+  - Created `C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot/scenes/dashboard.tscn`.
+  - Created `C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot/scripts/dashboard.gd`.
+  - Created `C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot/icon.svg`.
+  - Scene reads `docs/lambchop/dashboard-data.json`, renders work buckets, a role-agent strip, project summary, and card drill-down details.
+- Runtime:
+  - No existing Godot executable was found on PATH or in common install folders.
+  - Installed Godot Engine 4.6.3 through winget.
+  - Started visible Godot process `Godot_v4.6.3-stable_win64`, pid `1124`, window title `Lambchop Godot Dashboard (DEBUG)`.
+  - Headless smoke launch printed Godot 4.6.3 startup banner and no script errors.
+- Scheduler evidence:
+  - Automation remained ACTIVE; no pause/unpause was performed.
+  - Parked RRULE remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - Existing scheduler run `019e89b4-44bf-7ba3-9b1a-5a07c52ab07a` remains `PENDING_REVIEW`, so no duplicate trigger was initiated.
+- Next step: Bill reviews the running tracer bullet and decides whether the next pass should emphasize bucket layout, agent motion/personality, or project API communicator data.
+
+## 2026-06-02 17:18 - TDD intake handoff for task-26
+- Skill: `tdd`.
+- Proposed tracer bullet: issue #1/source-of-truth reconciliation should report a triage blocker instead of marking the issue ready for agent when progress/state/dashboard disagree.
+- Queue status:
+  - No new work item was created because `task-26-github-issue-1-triage-state-reconcile` already covers this target.
+  - `task-26` remains blocked pending canonical labels and source-of-truth reconciliation.
+- Scheduler evidence:
+  - Automation was already ACTIVE; no unpause was needed.
+  - Parked RRULE remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - Existing scheduler-visible handoff run `019e89b4-44bf-7ba3-9b1a-5a07c52ab07a` is `PENDING_REVIEW`, so no duplicate run-now was triggered.
+- Blocker: Bill still needs to approve canonical triage labels or an explicit fallback before GitHub issue mutation can proceed.
+
+## 2026-06-02 17:10 - GitHub issue #1 triage blocked by label/state drift
+- Skill: `triage`.
+- Issue reviewed: `https://github.com/justbill2020/Lambchop/issues/1`.
+- Triage finding:
+  - Issue #1 is open and unlabeled.
+  - Canonical state labels `needs-triage`, `needs-info`, `ready-for-agent`, and `ready-for-human` are missing from GitHub.
+  - Local source-of-truth evidence is inconsistent: progress says `task-22-control-loop-real-work-gate` landed/done on `main`, but `docs/lambchop/state.json` currently reports `task-22` as `todo`.
+  - `task-18-reconcile-trigger-afterwork-ledger-drift` is currently `done`, while dashboard `next_action` still says to run task-18.
+- Queued/blocked item:
+  - Added `task-26-github-issue-1-triage-state-reconcile`.
+  - Blocker: missing canonical triage labels plus source-of-truth disagreement between progress/state/dashboard for issue #1/task-22/task-18.
+- Scheduler evidence:
+  - Automation is already ACTIVE; no unpause was needed.
+  - Parked RRULE remains `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+  - Existing scheduler handoff run `019e89b4-44bf-7ba3-9b1a-5a07c52ab07a` is `PENDING_REVIEW`, so no duplicate run-now was initiated.
+- GitHub mutation: none. Labels/comments were not changed because canonical labels are missing and the local source-of-truth state needs reconciliation first.
 
 ## 2026-06-02 17:01 - task-25 handoff picked up
 - Scheduler pickup evidence:
