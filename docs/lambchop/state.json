@@ -107,7 +107,7 @@
       ],
       "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit maintenance override. Default mode allows diagnose-first direct execution for bounded work and deferral only when needed."
     },
-    "updated_at": "2026-06-10T18:35:00-05:00",
+    "updated_at": "2026-06-10T19:25:00-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -2672,7 +2672,7 @@
       "key": "task-38-mvp0-self-hosting-proof",
       "title": "Prove MVPv0 self-hosting inside Lambchop",
       "type": "mvp-proof",
-      "status": "todo",
+      "status": "done",
       "priority": 70,
       "dependencies": [
         "task-29-cli-agent-adapter-seam-codex-first",
@@ -2697,7 +2697,12 @@
       "implementation_notes": [
         "This is the MVPv0 proof gate Bill asked for before multi-project expansion."
       ],
-      "validation": [],
+      "validation": [
+        "TDD RED: node --test tests\\self-hosting-proof.test.mjs failed because src/self-hosting-proof.mjs did not exist.",
+        "TDD GREEN: added src/self-hosting-proof.mjs that composes the Codex CLI adapter seam, portfolio admission, Story/Mission model, run evidence, material-progress gate, meeting discipline, and floor-manager behavior; node --test tests\\self-hosting-proof.test.mjs then passed.",
+        "Focused GREEN: node --test tests\\self-hosting-proof.test.mjs plus the runtime stack passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 43 tests."
+      ],
       "branch": "main",
       "worktree": "REPO_ROOT",
       "commit": null,
@@ -2710,7 +2715,7 @@
         "docs/lambchop/progress.md",
         "docs/lambchop/dashboard-data.json"
       ],
-      "next_step": "Write the first public behavior proving Lambchop can continue Lambchop development through its own project model.",
+      "next_step": "Proceed to task-39 and admit a second project only when capacity allows.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -2723,13 +2728,13 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
       "created_at": "2026-06-10T19:45:00Z",
-      "updated_at": "2026-06-10T23:35:00Z"
+      "updated_at": "2026-06-11T00:05:00Z"
     },
     {
       "key": "task-39-mvp1-second-project-admission",
       "title": "Add MVPv1 second-project admission tracer bullet",
       "type": "mvp-proof",
-      "status": "todo",
+      "status": "done",
       "priority": 71,
       "dependencies": [
         "task-38-mvp0-self-hosting-proof"
@@ -2747,7 +2752,12 @@
       "implementation_notes": [
         "This is the first proof step for Bill’s multi-project requirement."
       ],
-      "validation": [],
+      "validation": [
+        "Behavior GREEN: node --test tests\\second-project-admission.test.mjs passed against the portfolio heartbeat seam.",
+        "TDD RED: node --test tests\\second-project-proof.test.mjs failed because src/second-project-proof.mjs did not exist.",
+        "TDD GREEN: added src/second-project-proof.mjs for the MVPv1 admission tracer bullet; node --test tests\\second-project-proof.test.mjs then passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 45 tests."
+      ],
       "branch": "main",
       "worktree": "REPO_ROOT",
       "commit": null,
@@ -2760,7 +2770,7 @@
         "docs/lambchop/progress.md",
         "docs/lambchop/dashboard-data.json"
       ],
-      "next_step": "Start after MVPv0 self-hosting proof is complete.",
+      "next_step": "AFK issue backlog is complete; wait for Bill's review of issue #9 and any follow-up work.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -2773,7 +2783,7 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
       "created_at": "2026-06-10T19:45:00Z",
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-11T00:25:00Z"
     }
   ],
   "proposal_backlog": [
@@ -2842,17 +2852,17 @@
     }
   ],
   "last_run": {
-    "run_id": "run-20260610-floor-managers",
-    "started_at": "2026-06-10T18:35:00-05:00",
-    "work_item_key": "task-37-office-workshop-floor-managers",
+    "run_id": "run-20260610-second-project-admission",
+    "started_at": "2026-06-10T19:25:00-05:00",
+    "work_item_key": "task-39-mvp1-second-project-admission",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T18:35:00-05:00",
-    "next_action": "Run task-38-mvp0-self-hosting-proof and, separately, review issue #9 when you want to compare the production-floor visual directions.",
-    "timestamp": "2026-06-10T18:35:00-05:00",
-    "summary": "Completed the Office and Workshop floor-manager tracer bullet through TDD and cleared the AFK blocker in front of the visual production-floor review.",
+    "dashboard_updated_at": "2026-06-10T19:25:00-05:00",
+    "next_action": "AFK issue backlog is complete. Review issue #9 for the production-floor visual direction and then continue with any follow-up changes from that review.",
+    "timestamp": "2026-06-10T19:25:00-05:00",
+    "summary": "Completed the MVPv1 second-project admission tracer bullet and finished the AFK issue backlog.",
     "active_work_item": null,
-    "validation_note": "Office and Workshop floor managers now respond to heartbeat pressure, schedule meetings through the meeting gate, accept declines, and reallocate work without becoming a second control system.",
-    "validation": "Validation GREEN: node --test tests\\floor-manager.test.mjs, the focused runtime stack, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "A second project can now remain visible in the portfolio without activating when capacity is exhausted, completing the AFK GitHub issue spine alongside the MVPv0 proof.",
+    "validation": "Validation GREEN: node --test tests\\second-project-proof.test.mjs, node --test tests\\second-project-admission.test.mjs, and node --test tests\\*.test.mjs all passed."
   }
 }

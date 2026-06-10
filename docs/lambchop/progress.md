@@ -2,6 +2,50 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-10 19:25 - task-39 second project admission finished
+- Status: done
+- Run id: `run-20260610-second-project-admission`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Parallel-dispatch decision:
+  - Kept this final AFK slice single-lane. The MVPv1 proof is a thin composition layer over the same shared portfolio behavior, so splitting it would have been wasted coordination.
+- Work completed:
+  - Added [src/second-project-proof.mjs](C:/Users/BillMartin/dev/Lambchop/src/second-project-proof.mjs) as the explicit MVPv1 proof surface.
+  - Added [tests/second-project-proof.test.mjs](C:/Users/BillMartin/dev/Lambchop/tests/second-project-proof.test.mjs) to prove a second project remains visible in the portfolio without activating when capacity is exhausted.
+  - Recorded the AFK GitHub issue backlog as complete.
+- Validation:
+  - Behavior GREEN: `node --test tests\second-project-admission.test.mjs` passed against the portfolio heartbeat seam.
+  - RED: `node --test tests\second-project-proof.test.mjs` failed because `src/second-project-proof.mjs` did not exist.
+  - GREEN: `node --test tests\second-project-proof.test.mjs` passed after the MVPv1 proof surface was added.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 45 tests.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` parsed successfully.
+- Production floor review:
+  - Ready. All AFK issue slices are complete, and issue `#9` is now the human production-floor visual review step.
+- Next step:
+  - Review issue `#9` and continue with any follow-up changes that come out of that review.
+
+## 2026-06-10 19:05 - task-38 self hosting proof finished
+- Status: done
+- Run id: `run-20260610-self-hosting-proof`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Parallel-dispatch decision:
+  - Kept this slice single-lane. The MVPv0 proof had to compose the same shared seams into one traced path, so parallel edits would have been mostly integration churn.
+- Work completed:
+  - Added [src/self-hosting-proof.mjs](C:/Users/BillMartin/dev/Lambchop/src/self-hosting-proof.mjs) as the first end-to-end MVPv0 proof seam.
+  - Added [tests/self-hosting-proof.test.mjs](C:/Users/BillMartin/dev/Lambchop/tests/self-hosting-proof.test.mjs) to prove Lambchop can continue Lambchop development through the Codex CLI-backed orchestration spine while remaining a first-class Project in the portfolio model.
+  - Reduced the AFK issue backlog to the final second-project admission slice.
+- Validation:
+  - RED: `node --test tests\self-hosting-proof.test.mjs` failed because `src/self-hosting-proof.mjs` did not exist.
+  - GREEN: `node --test tests\self-hosting-proof.test.mjs` passed after the self-hosting proof seam was added.
+  - Focused GREEN: `node --test tests\self-hosting-proof.test.mjs` plus the runtime stack passed.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 43 tests.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` parsed successfully.
+- Production floor review:
+  - Still ready. Issue `#9` is available for your human visual review while AFK work continues on the final second-project admission slice.
+- Next step:
+  - Run `task-39-mvp1-second-project-admission`.
+
 ## 2026-06-10 18:35 - task-37 floor managers finished
 - Status: done
 - Run id: `run-20260610-floor-managers`

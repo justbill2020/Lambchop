@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-10T23:35:00Z",
+    "updated_at": "2026-06-11T00:25:00Z",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -21,14 +21,14 @@
     }
   },
   "summary": {
-    "todo": 7,
+    "todo": 5,
     "in_progress": 0,
     "blocked": 3,
-    "done": 31,
+    "done": 33,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Run task-38-mvp0-self-hosting-proof and, separately, review issue #9 when you want to compare the production-floor visual directions."
+    "next_action": "AFK issue backlog is complete. Review issue #9 for the production-floor visual direction and then continue with any follow-up changes from that review."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -1340,7 +1340,7 @@
     {
       "key": "task-38-mvp0-self-hosting-proof",
       "title": "Prove MVPv0 self-hosting inside Lambchop",
-      "status": "todo",
+      "status": "done",
       "priority": 70,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -1348,13 +1348,18 @@
       "integration_status": "not_ready",
       "branch": "main",
       "worktree": "REPO_ROOT",
-      "validation": [],
+      "validation": [
+        "TDD RED: node --test tests\\self-hosting-proof.test.mjs failed because src/self-hosting-proof.mjs did not exist.",
+        "TDD GREEN: added src/self-hosting-proof.mjs that composes the Codex CLI adapter seam, portfolio admission, Story/Mission model, run evidence, material-progress gate, meeting discipline, and floor-manager behavior; node --test tests\\self-hosting-proof.test.mjs then passed.",
+        "Focused GREEN: node --test tests\\self-hosting-proof.test.mjs plus the runtime stack passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 43 tests."
+      ],
       "implementation_notes": [
         "This is the MVPv0 proof gate Bill asked for before multi-project expansion."
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Write the first public behavior proving Lambchop can continue Lambchop development through its own project model.",
+      "next_step": "Proceed to task-39 and admit a second project only when capacity allows.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1362,12 +1367,12 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T23:35:00Z"
+      "updated_at": "2026-06-11T00:05:00Z"
     },
     {
       "key": "task-39-mvp1-second-project-admission",
       "title": "Add MVPv1 second-project admission tracer bullet",
-      "status": "todo",
+      "status": "done",
       "priority": 71,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -1375,13 +1380,18 @@
       "integration_status": "not_ready",
       "branch": "main",
       "worktree": "REPO_ROOT",
-      "validation": [],
+      "validation": [
+        "Behavior GREEN: node --test tests\\second-project-admission.test.mjs passed against the portfolio heartbeat seam.",
+        "TDD RED: node --test tests\\second-project-proof.test.mjs failed because src/second-project-proof.mjs did not exist.",
+        "TDD GREEN: added src/second-project-proof.mjs for the MVPv1 admission tracer bullet; node --test tests\\second-project-proof.test.mjs then passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 45 tests."
+      ],
       "implementation_notes": [
         "This is the first proof step for Bill’s multi-project requirement."
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Start after MVPv0 self-hosting proof is complete.",
+      "next_step": "AFK issue backlog is complete; wait for Bill's review of issue #9 and any follow-up work.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1389,7 +1399,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-11T00:25:00Z"
     }
   ],
   "proposal_backlog": [
@@ -1572,7 +1582,11 @@
     "2026-06-10 GREEN: node --test tests\\failure-severity-audit.test.mjs passed after the severity audit module was added.",
     "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 41 tests after the issue #8 slice landed.",
     "2026-06-10 GREEN: node --test tests\\floor-manager.test.mjs passed after the Office/Workshop floor-manager behavior was added.",
-    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 42 tests after the issue #10 slice landed."
+    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 42 tests after the issue #10 slice landed.",
+    "2026-06-11 GREEN: node --test tests\\self-hosting-proof.test.mjs passed after the self-hosting proof module was added.",
+    "2026-06-11 GREEN: full suite node --test tests\\*.test.mjs passed with 43 tests after the issue #11 slice landed.",
+    "2026-06-11 GREEN: node --test tests\\second-project-proof.test.mjs passed after the MVPv1 proof module was added.",
+    "2026-06-11 GREEN: full suite node --test tests\\*.test.mjs passed with 45 tests after the issue #12 slice landed."
   ],
   "commits": [
     "ddbfd57",
@@ -1582,18 +1596,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260610-floor-managers",
-    "started_at": "2026-06-10T18:35:00-05:00",
-    "work_item_key": "task-37-office-workshop-floor-managers",
+    "run_id": "run-20260610-second-project-admission",
+    "started_at": "2026-06-10T19:25:00-05:00",
+    "work_item_key": "task-39-mvp1-second-project-admission",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T18:35:00-05:00",
-    "next_action": "Run task-38-mvp0-self-hosting-proof and, separately, review issue #9 when you want to compare the production-floor visual directions.",
-    "timestamp": "2026-06-10T18:35:00-05:00",
-    "summary": "Completed the Office and Workshop floor-manager tracer bullet through TDD and cleared the AFK blocker in front of the visual production-floor review.",
+    "dashboard_updated_at": "2026-06-10T19:25:00-05:00",
+    "next_action": "AFK issue backlog is complete. Review issue #9 for the production-floor visual direction and then continue with any follow-up changes from that review.",
+    "timestamp": "2026-06-10T19:25:00-05:00",
+    "summary": "Completed the MVPv1 second-project admission tracer bullet and finished the AFK issue backlog.",
     "active_work_item": null,
-    "validation_note": "Office and Workshop floor managers now respond to heartbeat pressure, schedule meetings through the meeting gate, accept declines, and reallocate work without becoming a second control system.",
-    "validation": "Validation GREEN: node --test tests\\floor-manager.test.mjs, the focused runtime stack, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "A second project can now remain visible in the portfolio without activating when capacity is exhausted, completing the AFK GitHub issue spine alongside the MVPv0 proof.",
+    "validation": "Validation GREEN: node --test tests\\second-project-proof.test.mjs, node --test tests\\second-project-admission.test.mjs, and node --test tests\\*.test.mjs all passed."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1642,7 +1656,7 @@
     "status": "validated"
   },
   "latest_progress": [
-    "2026-06-10: completed issue #10 by adding the Office and Workshop floor-manager behavior.",
-    "2026-06-10: the production floor is now ready for human visual review through issue #9 while AFK work continues on MVPv0 self-hosting."
+    "2026-06-11: completed issue #12 by adding the MVPv1 second-project admission proof.",
+    "2026-06-11: all AFK issue slices are complete, and the production floor is ready for your human review in issue #9."
   ]
 }
