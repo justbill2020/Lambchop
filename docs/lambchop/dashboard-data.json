@@ -2,11 +2,11 @@
   "project": {
     "name": "Lambchop",
     "slug": "lambchop",
-    "phase": "autonomous-skill-mvp",
+    "phase": "portfolio-orchestrator-mvp0",
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-08T17:05:02Z",
+    "updated_at": "2026-06-10T19:45:00Z",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -14,26 +14,21 @@
       "cli": "gh",
       "default_for_github_remotes": true,
       "label_status": {
-        "checked_at": "2026-05-26T19:34:30Z",
-        "missing_canonical_labels": [
-          "needs-triage",
-          "needs-info",
-          "ready-for-agent",
-          "ready-for-human"
-        ],
-        "blocker": "Missing canonical triage labels were not created because this maintenance configured local defaults and did not request external label mutation."
+        "checked_at": "2026-06-10T19:45:00Z",
+        "missing_canonical_labels": [],
+        "blocker": null
       }
     }
   },
   "summary": {
-    "todo": 4,
+    "todo": 14,
     "in_progress": 0,
-    "blocked": 4,
-    "done": 21,
+    "blocked": 3,
+    "done": 24,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Run task-18-reconcile-trigger-afterwork-ledger-drift so the queued repair work matches the current source-of-truth contract."
+    "next_action": "Run task-30-portfolio-project-admission-heartbeat to establish the first project-capacity heartbeat slice."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -46,7 +41,7 @@
     "fallback_when_unavailable": "single-item-local-workflow"
   },
   "roadmap": {
-    "current_milestone": "Prove the reusable deployment flow with Lambchop itself, then validate the skill against empty-repo and existing-repo scenarios before local installation.",
+    "current_milestone": "MVPv0: Lambchop can continue Lambchop development within Lambchop through a GitHub-first portfolio orchestrator, with MVPv1 adding second-project admission.",
     "planning_sources": [
       "WORKFLOW.md",
       "docs/lambchop/state.json",
@@ -56,9 +51,9 @@
       "autonomous-coding-team/assets/templates/"
     ],
     "next_backlog_seeds": [
-      "Use the README upgrade prompt to migrate a previously configured target repo.",
-      "Pressure-test a generated repo with 3 independent tasks to prove subagent lane selection.",
-      "Install or link the skill into local Codex skills after validation."
+      "Run issue #3 to establish capacity-gated portfolio and project admission.",
+      "Resolve issue #1 with corrected source-of-truth evidence so legacy queue drift stops distracting the new backlog.",
+      "Prepare the human-review visual comparison in issue #9 after the runtime evidence slices are in place."
     ]
   },
   "work_items": [
@@ -169,7 +164,7 @@
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
+      "integration_status": "ready",
       "branch": "master",
       "worktree": "REPO_ROOT",
       "validation": [
@@ -614,7 +609,7 @@
         "Validation RED: node --test tests\\*.test.mjs failed after the automation-added two-phase contract test because WORKFLOW.md did not yet include explicit two-phase loop wording; corrected by adding the phrase to the live and template workflows.",
         "Validation RED: node --test tests\\*.test.mjs failed because the automation prompt said newly-created work items instead of newly-created tasks; corrected the prompt to use the contract wording.",
         "Commit evidence: ddbfd57 fix: enforce Lambchop two-phase automation loop.",
-        "Publishing policy update: project.autonomy_policy.may_push is now true (per Bill, 2026-05-20). Workflow now treats may_push=true as auto-push for completed work (unless blocked by validation/safety).",
+        "Push blocker: workflow autonomy_policy.may_push is false, so this chat did not push; local branch main is ahead of origin/main and needs explicit push permission or workflow update to publish.",
         "Compliance issue discovered: work continued after scheduler-visible run-now trigger; scheduled remediation as task-17 to ensure run-now is terminal and evidence is recorded before triggering."
       ],
       "implementation_notes": [
@@ -633,7 +628,6 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T17:00:00Z",
       "updated_at": "2026-05-20T18:32:38Z"
     },
     {
@@ -667,18 +661,17 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:32:38Z",
       "updated_at": "2026-06-02T21:05:00Z"
     },
     {
       "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
       "title": "Reconcile ledgers so run-now handoff evidence is not followed by additional work",
-      "status": "done",
+      "status": "todo",
       "priority": 28,
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "ready",
+      "integration_status": "not_ready",
       "branch": "codex/lambchop-task-18-reconcile-trigger-afterwork-ledger-drift",
       "worktree": ".worktrees/task-18-reconcile-trigger-afterwork-ledger-drift",
       "validation": [
@@ -690,7 +683,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Rewrite evidence so trigger handoff is terminal; keep facts and timestamps but remove post-trigger work from the handoff entry.",
+      "next_step": "Reconcile the historical 2026-05-20 handoff ledgers when that repair becomes the active queue item again.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -698,8 +691,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:32:38Z",
-      "updated_at": "2026-05-20T18:39:45Z"
+      "updated_at": "2026-06-10T14:45:00-05:00"
     },
     {
       "key": "task-19-dashboard-proposal-review-ui",
@@ -709,7 +701,7 @@
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "ready",
+      "integration_status": "not_ready",
       "branch": "codex/lambchop-task-19-dashboard-proposal-review-ui",
       "worktree": ".worktrees/dashboard-proposal-review-ui",
       "validation": [
@@ -733,7 +725,6 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:52:24Z",
       "updated_at": "2026-05-20T18:52:24Z"
     },
     {
@@ -768,7 +759,6 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:52:24Z",
       "updated_at": "2026-05-20T18:52:24Z"
     },
     {
@@ -803,39 +793,34 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-20T18:52:24Z",
       "updated_at": "2026-05-20T18:52:24Z"
     },
     {
       "key": "task-22-control-loop-real-work-gate",
       "title": "Stop Lambchop status-only control loops",
-      "status": "todo",
+      "status": "done",
       "priority": 50,
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
+      "integration_status": "ready",
       "branch": "codex/lambchop-task-22-control-loop-real-work-gate",
       "worktree": ".worktrees/task-22-control-loop-real-work-gate",
-      "github_issue": {
-        "number": 1,
-        "url": "https://github.com/justbill2020/Lambchop/issues/1",
-        "type": "PRD",
-        "label_status": "ready-for-agent label failed because the label is missing in GitHub"
-      },
       "validation": [
         "RED: node --test tests\\workflow-contract.test.mjs tests\\lambchop-hooks.test.mjs failed before the source-of-truth completion gate existed on main.",
         "GREEN: node --test tests\\workflow-contract.test.mjs tests\\lambchop-hooks.test.mjs passes with 18 tests after adding the source-of-truth completion gate and branch-aware Stop hook checks.",
         "node --test tests\\\\*.test.mjs passes after implementation.",
-        "JSON parse passes for docs/lambchop/*.json."
+        "JSON parse passes for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
       ],
       "implementation_notes": [
         "Root cause identified during intake: Lambchop lacks an enforced source-of-truth completion gate. Hooks and automations can accept ledger/progress/memory/branch movement as progress even when main, dashboard data, and executable project behavior remain unchanged. The task-17 branch demonstrates this split: memory records completion on codex/lambchop-task-17-trigger-terminalization-guardrail, but main still shows task-17 todo and dashboard next_action remains stale.",
-        "Queued from Bill defect report on 2026-05-26; ordinary feature work should wait until this trust boundary is fixed."
+        "Pattern evidence: progress contains earlier correction where Bill reported the system only updated status text and did not schedule work; later task-17 work exists on a side branch while main ledgers and dashboard still show it as todo.",
+        "This should be implemented before ordinary feature work because it is a trust boundary for all later autonomous execution.",
+        "Use to-issues tracer-bullet style: make a narrow vertical slice that fails on stale main/side-branch divergence, then implement the gate through workflow, hook, automation prompt, tests, state/dashboard reconciliation, and validation evidence."
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Proceed to task-18 so the historical 2026-05-20 handoff ledgers match the now-enforced source-of-truth and terminal-handoff rules.",
+      "next_step": "Issue #1 can now be triaged from the corrected source-of-truth state.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -843,8 +828,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-05-26T19:17:33Z",
-      "updated_at": "2026-06-02T21:05:00Z"
+      "updated_at": "2026-06-10T14:45:00-05:00"
     },
     {
       "key": "task-23-godot-dashboard-plugin-architecture",
@@ -879,7 +863,9 @@
         "Design decision confirmed by Bill: first core play loop is Mission Board -> Assign Crew -> Watch Turns -> Resolve Evidence.",
         "Design decision confirmed by Bill: first visual/game metaphor is a studio production floor, not a tactical operations map; issues are productions/jobs, agents are crew, AI turns are work sessions, blockers are jams, validation is quality check, and shipped work moves to a release wall.",
         "Design clarification from Bill: spatial interaction should feel like a crew-map kanban inspired by tiny agents moving issues/PRDs/MVP items between buckets, with drill-down into issue specifics and current work; use original Lambchop visual language rather than copying third-party game IP.",
-        "Design clarification from Bill: shared Godot dashboard must switch between Lambchop-managed projects connected through each project API helper/communicator, rendering the selected project crew-map, issue details, agent activity, scheduler state, validation evidence, and queued controls."
+        "Design clarification from Bill: shared Godot dashboard must switch between Lambchop-managed projects connected through each project API helper/communicator, rendering the selected project crew-map, issue details, agent activity, scheduler state, validation evidence, and queued controls.",
+        "First runnable Godot dashboard tracer bullet created under the local plugin and launched on 2026-06-02. It reads docs/lambchop/dashboard-data.json, renders work buckets, role-agent strip, project summary, and card drill-down detail.",
+        "Bill confirmed the first runnable board is a good kanban start and asked to add gamified status and monitoring capabilities."
       ],
       "commit": null,
       "blocker": "Design architecture remains open, but first actionable next slice is task-27 gamified monitoring HUD.",
@@ -891,13 +877,12 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-06-02T20:15:00Z",
       "updated_at": "2026-06-02T22:35:00Z"
     },
     {
       "key": "task-24-github-triage-labels-afk-hitl",
       "title": "Create canonical GitHub triage labels for AFK/HITL routing",
-      "status": "blocked",
+      "status": "done",
       "priority": 46,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -908,7 +893,8 @@
       "validation": [
         "gh label list confirmed canonical triage labels are missing on 2026-06-02.",
         "gh issue list shows one open issue: #1 for the real-work/source-of-truth gate.",
-        "Scheduler evidence: lambchop-autonomous-coding-team is ACTIVE with parked Monday anchor; recent handoff run 019e893f-f713-7d83-8bc6-5c2ae6bbd50d is PENDING_REVIEW, so no duplicate run-now was triggered."
+        "Scheduler evidence: lambchop-autonomous-coding-team is ACTIVE with parked Monday anchor; recent handoff run 019e893f-f713-7d83-8bc6-5c2ae6bbd50d is PENDING_REVIEW, so no duplicate run-now was triggered.",
+        "2026-06-10 GREEN: gh label list confirms needs-triage, needs-info, ready-for-agent, and ready-for-human now exist on justbill2020/Lambchop."
       ],
       "implementation_notes": [
         "Created from Bill request to use grill-with-docs to unblock issues, find new issues, and move HITL to AFK quickly and effectively.",
@@ -917,8 +903,8 @@
         "External GitHub label mutation requires Bill approval or an explicit workflow-approved automation action; record blocker instead of inventing fallback labels."
       ],
       "commit": null,
-      "blocker": "Waiting for Bill approval to mutate GitHub labels or for an automation-approved label setup action; cannot mark AFK/HITL lanes correctly without canonical labels.",
-      "next_step": "Bill approves creating the canonical GitHub triage labels, then apply labels and re-triage open issues into AFK/HITL lanes.",
+      "blocker": null,
+      "next_step": "Use the canonical labels when triaging or publishing GitHub-backed Lambchop work.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -926,8 +912,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-06-02T21:20:00Z",
-      "updated_at": "2026-06-02T21:20:00Z"
+      "updated_at": "2026-06-10T19:45:00Z"
     },
     {
       "key": "task-25-godot-dashboard-issue-breakdown-publication",
@@ -968,13 +953,12 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "created_at": "2026-06-02T21:45:00Z",
       "updated_at": "2026-06-02T22:01:00Z"
     },
     {
       "key": "task-26-github-issue-1-triage-state-reconcile",
       "title": "Reconcile GitHub issue #1 triage state with local queue truth",
-      "status": "blocked",
+      "status": "todo",
       "priority": 48,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -984,7 +968,8 @@
       "worktree": "REPO_ROOT",
       "validation": [
         "Triage RED: GitHub issue #1 is open and unlabeled; canonical labels needs-triage, needs-info, ready-for-agent, and ready-for-human are missing. Local evidence is inconsistent: progress says task-22 landed/done on main, but docs/lambchop/state.json currently has task-22 status=todo and task-18 status=done while dashboard next_action still says run task-18. Automation is ACTIVE with parked Monday RRULE; current handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate scheduler trigger was initiated.",
-        "TDD intake handoff evidence: no new task was queued because task-26 already exists for the proposed tracer bullet around issue #1/source-of-truth reconciliation. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered. Blocker remains Bill approval for canonical labels and source-of-truth reconciliation before GitHub issue mutation."
+        "TDD intake handoff evidence: no new task was queued because task-26 already exists for the proposed tracer bullet around issue #1/source-of-truth reconciliation. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered. Blocker remains Bill approval for canonical labels and source-of-truth reconciliation before GitHub issue mutation.",
+        "2026-06-10 reconciliation: canonical labels now exist and local queue truth was corrected so task-18 is todo while task-22 is done."
       ],
       "implementation_notes": [
         "Created by triage session on 2026-06-02 after issue #1 was found open/unlabeled and local ledgers disagreed about task-22/task-18 truth.",
@@ -992,8 +977,8 @@
         "Every GitHub triage comment must start with the AI triage disclosure."
       ],
       "commit": null,
-      "blocker": "Blocked by missing canonical triage labels and source-of-truth disagreement between progress/state/dashboard for issue #1/task-22/task-18.",
-      "next_step": "Bill approves creating canonical labels, then reconcile task-22/task-18 source-of-truth and triage issue #1 as ready-for-agent or ready-for-human/closure based on verified state.",
+      "blocker": null,
+      "next_step": "Comment on GitHub issue #1 with corrected source-of-truth evidence and leave it ready for maintainer closure/review.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1001,7 +986,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-02T22:18:00Z"
+      "updated_at": "2026-06-10T19:45:00Z"
     },
     {
       "key": "task-27-godot-dashboard-gamified-monitoring-hud",
@@ -1039,6 +1024,337 @@
         "heartbeat_at": null
       },
       "updated_at": "2026-06-08T17:05:02Z"
+    },
+    {
+      "key": "task-28-portfolio-orchestrator-issue-breakdown-publication",
+      "title": "Publish portfolio orchestrator MVP backlog to GitHub Issues",
+      "status": "done",
+      "priority": 60,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "2026-06-10 GREEN: gh issue list shows issues #2 through #12 live with ready-for-agent applied to AFK slices and ready-for-human applied to issue #9."
+      ],
+      "implementation_notes": [
+        "Bill approved the GitHub-first portfolio-orchestrator breakdown after the PRD and grilling pass.",
+        "This publication is distinct from the earlier Godot-dashboard tracer-bullet publication task."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Start issue #2 through TDD and move the next AFK dependency-safe slice to issue #3 after this seam lands.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-29-cli-agent-adapter-seam-codex-first",
+      "title": "Build the Codex-first CLI agent adapter seam",
+      "status": "done",
+      "priority": 61,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [
+        "TDD RED: node --test tests\\cli-agent-adapter.test.mjs failed because src/cli-agent-runtime.mjs did not exist.",
+        "TDD GREEN: added src/cli-agent-runtime.mjs with a Codex CLI adapter and run observation record; node --test tests\\cli-agent-adapter.test.mjs then passed."
+      ],
+      "implementation_notes": [
+        "The first vertical slice keeps the runtime surface small: one runtime factory, one adapter registry, one run record, and one Codex-backed adapter.",
+        "The public test uses a local fake Codex CLI script through the same seam so host-embedded assumptions are not part of the traced path."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Move to issue #3 and define the portfolio/project admission heartbeat tracer bullet on top of this execution seam.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-30-portfolio-project-admission-heartbeat",
+      "title": "Add portfolio and project admission heartbeat tracer bullet",
+      "status": "todo",
+      "priority": 62,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "This is the first orchestration slice above the CLI execution seam."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Write the first public test for project admission under capacity.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-31-story-mission-floor-state-model",
+      "title": "Model story, mission, and floor ownership state",
+      "status": "todo",
+      "priority": 63,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "The model should preserve Bill’s approved vocabulary and handoff rules."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Define the first public behavior around story-to-mission and floor-state transitions.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-32-run-evidence-dashboard-projection",
+      "title": "Build the run evidence module and unified dashboard projection",
+      "status": "todo",
+      "priority": 64,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "This should become the truth layer for drilldownable AFK runs."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Add the first tracer bullet that projects one completed run into dashboard-facing status.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-33-material-progress-wheel-spin-gate",
+      "title": "Add the material progress and wheel-spin controller gate",
+      "status": "todo",
+      "priority": 65,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "This is the global heartbeat gate that should keep AFK work from devolving into meeting-only motion."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Write the first public test for heartbeat pressure reducing concurrency after a no-progress streak.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-34-party-mode-meeting-gate",
+      "title": "Add office party-mode meeting gate and next-action discipline",
+      "status": "todo",
+      "priority": 66,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "Agents may decline meetings, and the organizer should learn from the decline reason."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Write the first behavior test for declining or failing a meeting without producing the required next action.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-35-failure-escalation-severity-audit",
+      "title": "Add Lambchop failure escalation and severity audit trail",
+      "status": "todo",
+      "priority": 67,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "This is where Lambchop should classify itself as broken instead of silently asking for reprompts."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Add the first behavior test around severity-gated escalation.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-36-production-floor-prototype-comparison",
+      "title": "Produce and compare the studio production floor prototype",
+      "status": "blocked",
+      "priority": 68,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "This remains human-in-the-loop by design. Use Huashu Design before changing user-facing UI."
+      ],
+      "commit": null,
+      "blocker": "Requires human review of the visual metaphor after the underlying portfolio, story, and evidence slices exist.",
+      "next_step": "Wait for the core runtime slices, then build prototype options for Bill to compare.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-37-office-workshop-floor-managers",
+      "title": "Add office and workshop floor managers",
+      "status": "todo",
+      "priority": 69,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "These are role managers, not free-floating chatter bots."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Write the first behavior test for a floor manager declining a non-productive meeting and reallocating work.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-38-mvp0-self-hosting-proof",
+      "title": "Prove MVPv0 self-hosting inside Lambchop",
+      "status": "todo",
+      "priority": 70,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "This is the MVPv0 proof gate Bill asked for before multi-project expansion."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Stage the self-hosting proof once the prerequisite runtime slices are green.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
+    },
+    {
+      "key": "task-39-mvp1-second-project-admission",
+      "title": "Add MVPv1 second-project admission tracer bullet",
+      "status": "todo",
+      "priority": 71,
+      "parallel_group": null,
+      "assigned_subagent": null,
+      "dispatch_status": "not_dispatched",
+      "integration_status": "not_ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
+      "validation": [],
+      "implementation_notes": [
+        "This is the first proof step for Bill’s multi-project requirement."
+      ],
+      "commit": null,
+      "blocker": null,
+      "next_step": "Start after MVPv0 self-hosting proof is complete.",
+      "lease": {
+        "run_id": null,
+        "owner": null,
+        "claimed_at": null,
+        "expires_at": null,
+        "heartbeat_at": null
+      },
+      "updated_at": "2026-06-10T19:45:00Z"
     }
   ],
   "proposal_backlog": [
@@ -1114,22 +1430,16 @@
       "next_step": "Proceed with task-27 to add monitoring HUD, agent presence, validation/backoff/trust signals, and world-event feed."
     },
     {
-      "key": "task-24-github-triage-labels-afk-hitl",
-      "title": "Create canonical GitHub triage labels for AFK/HITL routing",
-      "blocker": "Waiting for Bill approval to mutate GitHub labels or for an automation-approved label setup action; cannot mark AFK/HITL lanes correctly without canonical labels.",
-      "next_step": "Bill approves creating the canonical GitHub triage labels, then apply labels and re-triage open issues into AFK/HITL lanes."
-    },
-    {
       "key": "task-25-godot-dashboard-issue-breakdown-publication",
       "title": "Publish Godot dashboard tracer-bullet issue breakdown",
       "blocker": "Waiting for Bill approval of the proposed to-issues breakdown and for canonical triage labels or an explicit label fallback decision.",
       "next_step": "Bill approves/edits the 8-slice breakdown, then publish issues in dependency order after label blocker is resolved."
     },
     {
-      "key": "task-26-github-issue-1-triage-state-reconcile",
-      "title": "Reconcile GitHub issue #1 triage state with local queue truth",
-      "blocker": "Blocked by missing canonical triage labels and source-of-truth disagreement between progress/state/dashboard for issue #1/task-22/task-18.",
-      "next_step": "Bill approves creating canonical labels, then reconcile task-22/task-18 source-of-truth and triage issue #1 as ready-for-agent or ready-for-human/closure based on verified state."
+      "key": "task-36-production-floor-prototype-comparison",
+      "title": "Produce and compare the studio production floor prototype",
+      "blocker": "Requires human review of the visual metaphor after the underlying portfolio, story, and evidence slices exist.",
+      "next_step": "Wait for the core runtime slices, then build prototype options for Bill to compare."
     }
   ],
   "active_lanes": [],
@@ -1211,7 +1521,9 @@
     "Focused RED/GREEN completed for task-27: the Godot HUD test failed until verifier mood switched to a dedicated red-validation helper, then the focused and full suites passed.",
     "Removed the intake-vs-implementation split from the live/template workflow, hooks, state defaults, and issue-tracker docs so Lambchop now uses one diagnose-first execution model for ordinary chats.",
     "Maintenance pause blocker remains: app-native automation_update tooling was unavailable in this session, so no maintenance pause/unpause or run-now trigger was performed.",
-    "Validation GREEN: node --test tests\\lambchop-hooks.test.mjs tests\\workflow-contract.test.mjs and node --test tests\\*.test.mjs both passed; the full suite reported 34 passing tests."
+    "Validation GREEN: node --test tests\\lambchop-hooks.test.mjs tests\\workflow-contract.test.mjs and node --test tests\\*.test.mjs both passed; the full suite reported 34 passing tests.",
+    "2026-06-10 GREEN: gh issue list confirms the GitHub-first portfolio backlog exists as issues #2-#12 and canonical triage labels are present.",
+    "2026-06-10 GREEN: node --test tests\\cli-agent-adapter.test.mjs passed after adding the Codex-first CLI adapter seam."
   ],
   "commits": [
     "ddbfd57",
@@ -1221,18 +1533,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260610-chat-execution-contract",
-    "started_at": "2026-06-10T11:53:49.7867613-05:00",
-    "work_item_key": null,
+    "run_id": "run-20260610-portfolio-backlog-and-cli-seam",
+    "started_at": "2026-06-10T14:45:00-05:00",
+    "work_item_key": "task-29-cli-agent-adapter-seam-codex-first",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T11:53:49.7867613-05:00",
-    "next_action": "Run task-18-reconcile-trigger-afterwork-ledger-drift so the queued repair work matches the current source-of-truth contract.",
-    "timestamp": "2026-06-10T11:53:49.7867613-05:00",
-    "summary": "Removed Lambchop's intake-vs-implementation split and replaced it with a single diagnose-first execution model for ordinary chats.",
+    "dashboard_updated_at": "2026-06-10T14:45:00-05:00",
+    "next_action": "Run task-30-portfolio-project-admission-heartbeat to establish the first project-capacity heartbeat slice.",
+    "timestamp": "2026-06-10T14:45:00-05:00",
+    "summary": "Published the GitHub-first portfolio-orchestrator backlog and completed the Codex-first CLI adapter seam through TDD.",
     "active_work_item": null,
-    "validation_note": "Hook, workflow, state, and issue-tracker contracts now allow bounded direct implementation with source-of-truth evidence and reserve automation handoff for intentional deferral.",
-    "validation": "Validation GREEN: node --test tests\\lambchop-hooks.test.mjs tests\\workflow-contract.test.mjs passed; node --test tests\\*.test.mjs then passed with 34 tests."
+    "validation_note": "GitHub issues #2-#12 are the current MVPv0/v1 backlog, and the first executable seam now launches and observes Codex CLI-backed work without depending on the host app.",
+    "validation": "Validation GREEN: gh issue list shows issues #2-#12 live; node --test tests\\cli-agent-adapter.test.mjs passed after the CLI runtime seam was added."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1281,7 +1593,7 @@
     "status": "validated"
   },
   "latest_progress": [
-    "2026-06-10: removed the intake-vs-implementation split; Lambchop now uses one diagnose-first execution model for ordinary chats.",
-    "2026-06-08: task-27 monitoring HUD fix validated green; next runnable queue item is task-18 reconciliation."
+    "2026-06-10: published GitHub issues #2-#12 for the portfolio orchestrator MVP backlog and completed the Codex-first CLI adapter seam.",
+    "2026-06-10: canonical GitHub triage labels now exist, so local queue items can point at ready-for-agent or ready-for-human truthfully."
   ]
 }

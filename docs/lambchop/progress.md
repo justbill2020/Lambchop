@@ -2,6 +2,31 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-10 14:45 - portfolio backlog published and issue-2 CLI seam finished
+- Status: done
+- Run id: `run-20260610-portfolio-backlog-and-cli-seam`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- GitHub-first backlog:
+  - Confirmed the new portfolio-orchestrator backlog is live as issues `#2` through `#12`.
+  - Confirmed canonical GitHub triage labels now exist: `needs-triage`, `needs-info`, `ready-for-agent`, and `ready-for-human`.
+  - Recorded the new MVPv0/MVPv1 queue locally so Lambchop's machine-readable state and dashboard now point at the GitHub-first portfolio backlog instead of the older milestone.
+- Work completed:
+  - Added `src/cli-agent-runtime.mjs` as the first local CLI agent execution seam.
+  - Wired Codex CLI as the first production-ready adapter behind that seam.
+  - Added a public behavior test in `tests/cli-agent-adapter.test.mjs` plus a local fake CLI fixture so the traced path launches and observes work without depending on Codex-the-host.
+  - Corrected queue truth while touching the ledgers: canonical labels are no longer missing, `task-22` is recorded as done, `task-18` is back to todo, and issue `#1` reconciliation is now unblocked for later triage work.
+- Validation:
+  - RED: `node --test tests\cli-agent-adapter.test.mjs` failed because `src/cli-agent-runtime.mjs` did not exist.
+  - GREEN: `node --test tests\cli-agent-adapter.test.mjs` passed after the CLI runtime seam was added.
+  - GitHub GREEN: `gh issue list --repo justbill2020/Lambchop --state open --limit 40 --json number,title,labels,url` confirmed issues `#2` through `#12` are live with the expected AFK/HITL labels.
+  - GitHub GREEN: `gh label list --repo justbill2020/Lambchop --limit 100` confirmed the canonical triage labels are present.
+- Scheduler:
+  - No scheduler-visible run-now was requested in this manual chat execution.
+  - The last recorded automation status remains ACTIVE with the previously recorded parked weekly anchor evidence.
+- Next step:
+  - Run `task-30-portfolio-project-admission-heartbeat`.
+
 ## 2026-06-08 12:05 - task-27 monitoring HUD reconciliation finished
 - Status: done
 - Run id: `run-20260608-task27-monitoring-hud-green`
