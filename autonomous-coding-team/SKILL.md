@@ -57,7 +57,7 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Use cooperative leases; a live `in_progress` item is not a global lock.
 - Prefer adaptive parallel sprint packets of 2 to 5 independent work items when dependencies and `exclusive_scope` allow it.
 - Keep the main automation run as orchestrator for subagent dispatch, integration, validation, dashboard regeneration, commits, and scheduler finalization.
-- Treat ordinary project chats about new needs, feature requests, bugs, regressions, or "this is broken" reports as intake and handoff only: investigate, document evidence, create a task-creation plan, queue bounded work items, unpause or confirm active automation status, and trigger scheduler-visible run-now for the recurring automation instead of implementing fixes in that chat.
+- Treat ordinary project chats about new needs, feature requests, bugs, regressions, or "this is broken" reports as diagnose-first execution: investigate, implement directly when the work is bounded and can leave source-of-truth evidence in the same turn, or queue bounded work items plus scheduler handoff when deferral is the safer path.
 - Use TDD for production behavior and record RED/GREEN evidence.
 - Use Superpowers `dispatching-parallel-agents` for bounded non-overlapping subagent lanes when available and useful.
 - Fall back to single-item local work when fewer than 2 independent tasks exist or multi-agent support is unavailable, and record why.
@@ -90,8 +90,8 @@ These notes are informational and do not change the Codex-first v1 workflow.
 - Triggering the next run while the automation is paused.
 - Doing implementation work in the main checkout.
 - Editing workflow or automation settings without first creating a pause-protected maintenance window.
-- Letting an ordinary project chat fix a feature request or bug instead of creating documented work items for the recurring automation.
-- Letting an ordinary project chat stop after queuing tasks without unpausing or confirming active automation status and triggering scheduler-visible run-now.
+- Jumping into implementation without first diagnosing the real failure and deciding whether bounded direct work or automation deferral is the better path.
+- Letting an ordinary project chat defer work without unpausing or confirming active automation status and triggering scheduler-visible run-now.
 - Treating one live lease as a global lock.
 - Serializing independent sprint work when 2 to 5 safe subagent lanes are available.
 - Letting a subagent act as orchestrator, update scheduler fields, or overwrite another lane.

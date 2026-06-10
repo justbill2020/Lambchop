@@ -1215,3 +1215,16 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
 - Validation:
   - `gh issue view 1 --comments --json number,title,body,labels,state,url` confirmed the PRD issue is open and unlabeled.
   - Validation RED: JSON parse failed for `docs/lambchop/dashboard-data.json` after the PRD ledger update because a comma was missing in the validation array; the failure was recorded and corrected.
+
+## 2026-06-10 11:53 - remove intake-vs-implementation split
+- Request (Bill): remove the broken intake-mode versus implementation-mode design and make Lambchop use one diagnose-first execution model.
+- Change:
+  - Updated live and template workflows to describe ordinary project chats as direct execution when the work is bounded and source-of-truth evidence can be left in the same turn, with automation handoff reserved for intentional deferral.
+  - Reworked live and template prompt/stop hooks to stop blocking bounded direct implementation summaries while still enforcing source-of-truth evidence, branch reconciliation, terminal run-now handoff, and commit/push evidence when publishing is enabled.
+  - Renamed `project.chat_policy.mode` default semantics from `intake` to `default` in live/template state, and rewrote issue-tracker and workflow-architecture docs to match the single execution model.
+- Maintenance pause evidence:
+  - Codex app-native automation pause/unpause tooling is still unavailable in this session, so the required maintenance pause could not be performed.
+  - No scheduler DB fallback was used, no run-now trigger was requested, and the automation remains recorded as ACTIVE with parked Monday anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`.
+- Validation:
+  - RED/GREEN: `node --test tests\\lambchop-hooks.test.mjs tests\\workflow-contract.test.mjs` passed after the hook/workflow/state/doc updates.
+  - Full suite: `node --test tests\\*.test.mjs` passed with 34 tests.

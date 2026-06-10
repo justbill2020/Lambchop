@@ -3,7 +3,7 @@ import re
 import sys
 
 
-INTAKE_PATTERN = re.compile(
+EXECUTION_PATTERN = re.compile(
     r"\b(bug|broken|breaks|failing|failure|fix|feature|add|implement|regression|issue|problem)\b",
     re.IGNORECASE,
 )
@@ -20,19 +20,19 @@ def main():
         payload = {}
 
     prompt = str(payload.get("prompt", ""))
-    if not INTAKE_PATTERN.search(prompt) and not DESIGN_PATTERN.search(prompt):
+    if not EXECUTION_PATTERN.search(prompt) and not DESIGN_PATTERN.search(prompt):
         return
 
     context_parts = []
-    if INTAKE_PATTERN.search(prompt):
+    if EXECUTION_PATTERN.search(prompt):
         context_parts.append(
-            "This prompt looks like Lambchop project intake. Do not implement the "
-            "feature or bug fix in this chat unless the user explicitly says to "
-            "override intake-only mode. Investigate enough to capture source-backed "
-            "evidence, create a small task-creation plan, queue bounded work in the "
-            "state ledger, update progress/dashboard evidence, unpause the project "
-            "automation if needed, then trigger a scheduler-visible run-now handoff "
-            "so the automation implements the queued task."
+            "This prompt looks like Lambchop execution work. Diagnose the problem "
+            "first, then implement directly when the work is bounded and you can "
+            "leave source-of-truth evidence on the integration branch in this turn. "
+            "Keep the change inside the smallest responsible work scope, use TDD, "
+            "update progress/dashboard/backoff/state evidence, and only use a "
+            "scheduler-visible run-now handoff when you intentionally defer the "
+            "remaining work instead of finishing it now."
         )
     if DESIGN_PATTERN.search(prompt):
         context_parts.append(

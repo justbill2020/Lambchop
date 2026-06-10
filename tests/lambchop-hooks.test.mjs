@@ -80,11 +80,10 @@ test('prompt and session hooks add Lambchop operating context', () => {
     hook_event_name: 'UserPromptSubmit',
     prompt: 'This feature is broken, please fix it',
   });
-  assert.match(prompt.hookSpecificOutput.additionalContext, /intake/i);
-  assert.match(prompt.hookSpecificOutput.additionalContext, /queue/i);
-  assert.match(prompt.hookSpecificOutput.additionalContext, /do not implement/i);
-  assert.match(prompt.hookSpecificOutput.additionalContext, /unpause/i);
-  assert.match(prompt.hookSpecificOutput.additionalContext, /trigger/i);
+  assert.match(prompt.hookSpecificOutput.additionalContext, /diagnose/i);
+  assert.match(prompt.hookSpecificOutput.additionalContext, /bounded/i);
+  assert.match(prompt.hookSpecificOutput.additionalContext, /source-of-truth|integration branch/i);
+  assert.doesNotMatch(prompt.hookSpecificOutput.additionalContext, /do not implement/i);
 
   const design = runPython(join(templateRoot, 'hooks', 'lambchop_user_prompt_submit.py'), {
     prompt: 'Please improve the dashboard GUI layout and visual polish.',
@@ -112,49 +111,20 @@ test('PostToolUse and Stop hooks request evidence when workflow quality is at ri
   assert.match(stop.reason, /ledger|validation|dashboard/i);
 });
 
-test('Stop hook blocks feature-chat endings that skip automation handoff', () => {
+test('Stop hook allows direct implementation summaries when they include evidence', () => {
   const scriptPath = join(templateRoot, 'hooks', 'lambchop_stop.py');
-  const queuedOnly = runPython(scriptPath, {
-    hook_event_name: 'Stop',
-    stop_hook_active: false,
-    last_assistant_message: 'Queued TASK-123 for the automation.',
-  });
-  assert.equal(queuedOnly.decision, 'block');
-  assert.match(queuedOnly.reason, /trigger/i);
-
-  const twoPhaseSummaryOnly = runPython(scriptPath, {
-    hook_event_name: 'Stop',
-    stop_hook_active: false,
-    last_assistant_message: 'Two-phase loop: planning/scheduling only. Updated state.json and progress.md with notes.',
-  });
-  assert.equal(twoPhaseSummaryOnly.decision, 'block');
-  assert.match(twoPhaseSummaryOnly.reason, /queue/i);
-
-  const queuedAndImplementedSameTask = runPython(scriptPath, {
-    hook_event_name: 'Stop',
-    stop_hook_active: false,
-    last_assistant_message: (
-      'Queued task-123, implemented task-123, unpaused the automation, triggered scheduler-visible run-now, '
-      + 'and recorded progress/dashboard evidence.'
-    ),
-  });
-  assert.equal(queuedAndImplementedSameTask.decision, 'block');
-  assert.match(queuedAndImplementedSameTask.reason, /two-phase|schedule|queue/i);
 
   const implementedInChat = runPython(scriptPath, {
     hook_event_name: 'Stop',
     stop_hook_active: false,
-    last_assistant_message: 'Implemented the requested feature and updated the tests.',
+    git_branch: 'main',
+    integration_branch: 'main',
+    last_assistant_message: (
+      'Implemented the requested feature on the integration branch, validated tests, '
+      + 'and updated progress.md, state.json, dashboard, and backoff evidence.'
+    ),
   });
-  assert.equal(implementedInChat.decision, 'block');
-  assert.match(implementedInChat.reason, /intake|automation/i);
-
-  const handedOff = runPython(scriptPath, {
-    hook_event_name: 'Stop',
-    stop_hook_active: false,
-    last_assistant_message: 'Queued TASK-123, recorded progress/dashboard evidence, confirmed the automation was already active, and triggered scheduler-visible run-now.',
-  });
-  assert.equal(handedOff.continue, true);
+  assert.equal(implementedInChat.continue, true);
 
   const handoffThenMoreWork = runPython(scriptPath, {
     hook_event_name: 'Stop',
@@ -221,7 +191,7 @@ test('Stop hook allows maintenance mode override from state chat_policy', () => 
     const state = JSON.parse(original);
     state.project.chat_policy = {
       mode: 'maintenance',
-      modes: ['intake', 'maintenance'],
+      modes: ['default', 'maintenance'],
       notes: 'test override',
     };
     writeFileSync(statePath, JSON.stringify(state, null, 2));

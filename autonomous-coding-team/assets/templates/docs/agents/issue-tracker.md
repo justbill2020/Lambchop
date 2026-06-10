@@ -21,7 +21,7 @@ Every issue body or issue comment created through triage must start with:
 
 ## When a skill says "publish to the issue tracker"
 
-Create a GitHub issue unless the workflow says the current chat is intake-only and should only queue local work. GitHub Issues is the durable external discussion tracker, while `docs/<PROJECT_SLUG>/state.json` remains the executable automation queue.
+Create a GitHub issue when the workflow or current task benefits from durable external discussion or tracking. GitHub Issues is the durable external discussion tracker, while `docs/<PROJECT_SLUG>/state.json` remains the executable automation queue.
 
 ## When a skill says "fetch the relevant ticket"
 

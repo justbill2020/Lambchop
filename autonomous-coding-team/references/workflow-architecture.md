@@ -20,7 +20,7 @@ Every configured repo should contain:
 - scheduled work plan path and planner rules
 - automation memory paths
 - allowed and forbidden actions
-- project chat intake rules for turning user-reported needs or breakages into queued work without implementing them in the chat session
+- project chat execution rules for diagnosing user-reported needs or breakages, implementing bounded work directly when safe, and deferring only when the work should continue in automation
 - run loop and git preflight
 - worktree and branch conventions
 - work item schema and statuses
@@ -62,15 +62,15 @@ Every automation run:
 21. If the automation is ACTIVE and the no-progress guard did not pause or block triggering, first repair the parked weekly anchor to yesterday's weekday at noon, then trigger the next scheduler-visible run; if PAUSED or inactive, skip the trigger and record why.
 22. Stop safely if blocked.
 
-## Project Chat Intake
-Interactive project chats are intake sessions by default when the user says they need something, reports a bug, or says something is broken. They investigate and document; they do not implement.
+## Project Chat Execution
+Interactive project chats may diagnose, plan, and implement directly when the work is bounded enough to leave validated source-of-truth evidence in the same turn.
 
-An intake chat may inspect files, run diagnostic or reproduction checks, and identify likely ownership. It must then create a brief task-creation plan, create or update bounded work items in the generated state file, append an intake note to progress, refresh dashboard data when applicable, and leave the item `todo` or `blocked`. After that, it must hand off to the project automation: verify the parked weekly anchor, unpause the automation if needed or record that it was already active, trigger a scheduler-visible run-now for the same automation, and record the handoff evidence. Production code changes, bug fixes, feature implementation, refactors, and done-state promotion are reserved for the recurring coding automation unless the user explicitly overrides the intake-only rule for that chat.
+A project chat may inspect files, run diagnostic or reproduction checks, identify likely ownership, and either implement the fix directly or defer it. When it implements directly, it still updates progress/dashboard/backoff/state, validates the change, and commits coherent source-of-truth work when appropriate. When it defers instead, it creates or updates bounded work items in the generated state file, appends a progress note, refreshes dashboard data when applicable, then hands off to the project automation: verify the parked weekly anchor, unpause the automation if needed or record that it was already active, trigger a scheduler-visible run-now for the same automation, and record the handoff evidence.
 
 Completion must follow a source-of-truth gate. Validated work on a task branch is not done until the integration branch reflects the change and the state/progress/dashboard/backoff ledgers are reconciled from that canonical branch state. Memory-only notes, dashboard-only movement, or branch-local commits must not reset no-progress guards or advance dashboard next actions by themselves.
 
 ## Repo-Local Codex Hooks
-When Codex project hooks are available and trusted, setup and in-place upgrades install or repair `.codex/hooks.json` plus `.codex/hooks/lambchop_*.py`. Hooks are Lambchop's active-session quality layer: they add workflow context at session start, reinforce intake behavior for user prompts, block clearly forbidden local actions before supported tool calls, remind Codex to record evidence after risky or failed tool calls, and continue a turn when required Lambchop completion evidence is missing. For feature/bug chats, hooks must discourage direct coding and require queue + unpause/active-status + scheduler-visible trigger evidence before the chat stops. For GitHub repos where pushing is enabled or explicitly requested, the Stop hook must require commit and push evidence before completion, while still recording a blocker instead of publishing when workflow safety forbids push.
+When Codex project hooks are available and trusted, setup and in-place upgrades install or repair `.codex/hooks.json` plus `.codex/hooks/lambchop_*.py`. Hooks are Lambchop's active-session quality layer: they add workflow context at session start, reinforce diagnose-first behavior for user prompts, block clearly forbidden local actions before supported tool calls, remind Codex to record evidence after risky or failed tool calls, and continue a turn when required Lambchop completion evidence is missing. For feature/bug chats, hooks must allow bounded direct implementation when the current turn can leave validated source-of-truth evidence, and otherwise require queue + automation-status + scheduler-visible trigger evidence before the chat stops. For GitHub repos where pushing is enabled or explicitly requested, the Stop hook must require commit and push evidence before completion, while still recording a blocker instead of publishing when workflow safety forbids push.
 
 Hook installation uses merge-namespaced behavior. Preserve unrelated existing hook handlers, remove stale Lambchop-owned handlers identified by `lambchop_` commands, then append the current Lambchop hook groups. If hooks are unavailable, untrusted, or malformed, record `hooks.status` as `unavailable` or `blocked` in state/progress/dashboard data and continue with the automation-only contract.
 

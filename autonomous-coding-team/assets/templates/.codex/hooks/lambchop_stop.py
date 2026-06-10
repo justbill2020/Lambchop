@@ -128,18 +128,6 @@ def main():
         }))
         return
 
-    overlap = sorted(queued_task_ids.intersection(implemented_task_ids))
-    if overlap:
-        print(json.dumps({
-            "decision": "block",
-            "reason": (
-                "Two-phase contract: do not schedule/queue and implement the same work item in one turn. "
-                f"Detected queued+implemented overlap: {', '.join(overlap)}. Queue the runnable work, "
-                "record handoff evidence, and rely on a fresh scheduler-visible automation run to execute it."
-            ),
-        }))
-        return
-
     run_now_match = RUN_NOW_PATTERN.search(message)
     if run_now_match:
         after_handoff = message[run_now_match.end():]
@@ -166,44 +154,33 @@ def main():
         }))
         return
 
-    if TWO_PHASE_PATTERN.search(message) and not QUEUED_PATTERN.search(message):
+    if TWO_PHASE_PATTERN.search(message) and not (QUEUED_PATTERN.search(message) or IMPLEMENTED_CHAT_PATTERN.search(message)):
         print(json.dumps({
             "decision": "block",
             "reason": (
-                "Two-phase loop explanations must not stop at a summary. Queue a concrete bounded work item, "
-                "record progress/dashboard/backoff evidence, unpause or confirm ACTIVE automation status, "
-                "and trigger a scheduler-visible run-now handoff (or record the exact blocker)."
+                "Two-phase loop explanations must not stop at a summary. Either implement the bounded work with "
+                "validation and ledger evidence in this turn, or queue/defer the work with a clear scheduler handoff "
+                "or blocker."
             ),
         }))
         return
 
-    if QUEUED_PATTERN.search(message) and not HANDOFF_PATTERN.search(message):
+    if QUEUED_PATTERN.search(message) and not HANDOFF_PATTERN.search(message) and not IMPLEMENTED_CHAT_PATTERN.search(message):
         print(json.dumps({
             "decision": "block",
             "reason": (
-                "Feature/bug intake must not stop after only queuing work. Record the queued task, "
-                "unpause the project automation if needed, trigger a scheduler-visible run-now handoff, "
-                "and record progress/dashboard/backoff evidence."
+                "Queued work without implementation needs a clear follow-up path. Record whether you are deferring "
+                "to a scheduler-visible handoff now or leaving the item blocked with an exact next step."
             ),
         }))
         return
 
-    if QUEUED_PATTERN.search(message) and not UNPAUSE_PATTERN.search(message):
+    if QUEUED_PATTERN.search(message) and HANDOFF_PATTERN.search(message) and not UNPAUSE_PATTERN.search(message):
         print(json.dumps({
             "decision": "block",
             "reason": (
-                "Feature/bug intake handoff must record whether the automation was unpaused or already active "
-                "before the scheduler-visible trigger."
-            ),
-        }))
-        return
-
-    if IMPLEMENTED_CHAT_PATTERN.search(message) and not AUTOMATION_CONTEXT_PATTERN.search(message):
-        print(json.dumps({
-            "decision": "block",
-            "reason": (
-                "This looks like implementation work in an ordinary chat. Lambchop feature/bug chats "
-                "should act as intake: create tasks, hand off to automation, or state an explicit user override."
+                "Scheduler-visible handoff evidence must still record whether the automation was unpaused or already active "
+                "before the trigger."
             ),
         }))
         return

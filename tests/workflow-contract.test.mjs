@@ -128,3 +128,20 @@ test('workflow contract requires source-of-truth completion on the integration b
     assert.match(content, /side-branch|branch-only|ledger-only|memory-only/i, `${name} must reject branch-only or ledger-only completion`);
   }
 });
+
+test('workflow contract uses one execution model instead of chat intake-only mode', () => {
+  const currentWorkflow = readRepoFile('WORKFLOW.md');
+  const templateWorkflow = readRepoFile('autonomous-coding-team', 'assets', 'templates', 'WORKFLOW.md');
+  const automationSkill = readRepoFile('autonomous-coding-team', 'SKILL.md');
+  const architectureNotes = readRepoFile('autonomous-coding-team', 'references', 'workflow-architecture.md');
+
+  for (const [name, content] of [
+    ['current workflow', currentWorkflow],
+    ['template workflow', templateWorkflow],
+    ['skill', automationSkill],
+    ['workflow architecture', architectureNotes],
+  ]) {
+    assert.doesNotMatch(content, /intake-only|intake\/planning-only|must act as an intake agent/i, `${name} must not preserve intake-only execution rules`);
+    assert.match(content, /diagnose|bounded direct work|implement directly when safe|single execution model/i, `${name} must describe direct execution for bounded work`);
+  }
+});

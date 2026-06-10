@@ -28,7 +28,7 @@ IMPLEMENTED_CHAT_PATTERN = re.compile(
     re.IGNORECASE,
 )
 AUTOMATION_CONTEXT_PATTERN = re.compile(
-    r"\b(automation run|scheduled run|work item|queued|intake|run-now|scheduler-visible|explicit override)\b",
+    r"\b(automation run|scheduled run|work item|queued|run-now|scheduler-visible|explicit override|integration branch|source-of-truth|validated|progress\.md|state\.json|dashboard|backoff)\b",
     re.IGNORECASE,
 )
 TWO_PHASE_PATTERN = re.compile(
@@ -194,16 +194,6 @@ def main():
             "reason": (
                 "Feature/bug intake handoff must record whether the automation was unpaused or already active "
                 "before the scheduler-visible trigger."
-            ),
-        }))
-        return
-
-    if IMPLEMENTED_CHAT_PATTERN.search(message) and not AUTOMATION_CONTEXT_PATTERN.search(message):
-        print(json.dumps({
-            "decision": "block",
-            "reason": (
-                "This looks like implementation work in an ordinary chat. Lambchop feature/bug chats "
-                "should act as intake: create tasks, hand off to automation, or state an explicit user override."
             ),
         }))
         return

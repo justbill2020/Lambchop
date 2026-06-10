@@ -1208,7 +1208,10 @@
     "Godot dashboard launch evidence: Huashu Design capability checked as installed/current; created runnable Godot project at C:/Users/BillMartin/plugins/lambchop-godot-dashboard/godot with project.godot, scenes/dashboard.tscn, scripts/dashboard.gd, and icon.svg. Godot 4.6.3 installed via winget because no local Godot executable was found. Visible process Godot_v4.6.3-stable_win64 pid=1124 is running with window title Lambchop Godot Dashboard (DEBUG). Headless smoke launch returned Godot Engine v4.6.3 without script errors. Automation remained ACTIVE; no pause/unpause was performed; parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO; existing scheduler run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a remains PENDING_REVIEW, so no duplicate trigger was initiated.",
     "Gamified monitoring intake: Bill said the Godot dashboard is a good kanban start and asked about gamified status and monitoring capabilities. Huashu Design capability was checked as installed/current. Queued task-27 to add an operational monitoring HUD with agent presence/moods, scheduler heartbeat, run timeline, validation lights, backoff/no-progress meter, trust/source-of-truth meter, and world-event feed. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered.",
     "TDD RED/tooling failure: initial parallel file/test inspection failed with Windows paging file / OutOfMemory errors while the Godot dashboard process was running. Stopped the visible Godot process to free memory, then continued with smaller sequential checks. This is recorded before moving on per Lambchop validation evidence rules.",
-    "Focused RED/GREEN completed for task-27: the Godot HUD test failed until verifier mood switched to a dedicated red-validation helper, then the focused and full suites passed."
+    "Focused RED/GREEN completed for task-27: the Godot HUD test failed until verifier mood switched to a dedicated red-validation helper, then the focused and full suites passed.",
+    "Removed the intake-vs-implementation split from the live/template workflow, hooks, state defaults, and issue-tracker docs so Lambchop now uses one diagnose-first execution model for ordinary chats.",
+    "Maintenance pause blocker remains: app-native automation_update tooling was unavailable in this session, so no maintenance pause/unpause or run-now trigger was performed.",
+    "Validation GREEN: node --test tests\\lambchop-hooks.test.mjs tests\\workflow-contract.test.mjs and node --test tests\\*.test.mjs both passed; the full suite reported 34 passing tests."
   ],
   "commits": [
     "ddbfd57",
@@ -1218,20 +1221,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260608-task27-monitoring-hud-green",
-    "started_at": "2026-06-08T17:05:02Z",
-    "work_item_key": "task-27-godot-dashboard-gamified-monitoring-hud",
+    "run_id": "run-20260610-chat-execution-contract",
+    "started_at": "2026-06-10T11:53:49.7867613-05:00",
+    "work_item_key": null,
     "parallel_group": null,
-    "subagent_lanes": [
-      "explorer-019e8e50-a690-7860-b212-8f57e736c476"
-    ],
-    "dashboard_updated_at": "2026-06-08T17:05:02Z",
+    "subagent_lanes": [],
+    "dashboard_updated_at": "2026-06-10T11:53:49.7867613-05:00",
     "next_action": "Run task-18-reconcile-trigger-afterwork-ledger-drift so the queued repair work matches the current source-of-truth contract.",
-    "timestamp": "2026-06-08T17:05:02Z",
-    "summary": "Completed task-27 monitoring HUD reconciliation and validated the Godot tracer bullet.",
-    "active_work_item": "task-27-godot-dashboard-gamified-monitoring-hud",
-    "validation_note": "Focused RED/GREEN completed for task-27: the Godot HUD test failed until verifier mood switched to a dedicated red-validation helper, then the focused and full suites passed.",
-    "validation": "TDD GREEN: node --test tests\\godot-dashboard.test.mjs passed after switching verifier mood to _has_red_validation(); full suite then passed with 33 tests and JSON parse checks stayed green."
+    "timestamp": "2026-06-10T11:53:49.7867613-05:00",
+    "summary": "Removed Lambchop's intake-vs-implementation split and replaced it with a single diagnose-first execution model for ordinary chats.",
+    "active_work_item": null,
+    "validation_note": "Hook, workflow, state, and issue-tracker contracts now allow bounded direct implementation with source-of-truth evidence and reserve automation handoff for intentional deferral.",
+    "validation": "Validation GREEN: node --test tests\\lambchop-hooks.test.mjs tests\\workflow-contract.test.mjs passed; node --test tests\\*.test.mjs then passed with 34 tests."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1280,6 +1281,7 @@
     "status": "validated"
   },
   "latest_progress": [
+    "2026-06-10: removed the intake-vs-implementation split; Lambchop now uses one diagnose-first execution model for ordinary chats.",
     "2026-06-08: task-27 monitoring HUD fix validated green; next runnable queue item is task-18 reconciliation."
   ]
 }

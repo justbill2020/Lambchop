@@ -101,14 +101,14 @@
       "may_use_external_trackers": true
     },
     "chat_policy": {
-      "mode": "intake",
+      "mode": "default",
       "modes": [
-        "intake",
+        "default",
         "maintenance"
       ],
-      "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit override (no intake warnings). Default remains intake."
+      "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit maintenance override. Default mode allows diagnose-first direct execution for bounded work and deferral only when needed."
     },
-    "updated_at": "2026-06-08T17:05:02Z",
+    "updated_at": "2026-06-10T11:53:49.7867613-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -2176,19 +2176,17 @@
     }
   ],
   "last_run": {
-    "run_id": "run-20260608-task27-monitoring-hud-green",
-    "started_at": "2026-06-08T17:05:02Z",
-    "work_item_key": "task-27-godot-dashboard-gamified-monitoring-hud",
+    "run_id": "run-20260610-chat-execution-contract",
+    "started_at": "2026-06-10T11:53:49.7867613-05:00",
+    "work_item_key": null,
     "parallel_group": null,
-    "subagent_lanes": [
-      "explorer-019e8e50-a690-7860-b212-8f57e736c476"
-    ],
-    "dashboard_updated_at": "2026-06-08T17:05:02Z",
+    "subagent_lanes": [],
+    "dashboard_updated_at": "2026-06-10T11:53:49.7867613-05:00",
     "next_action": "Run task-18-reconcile-trigger-afterwork-ledger-drift so the queued repair work matches the current source-of-truth contract.",
-    "timestamp": "2026-06-08T17:05:02Z",
-    "summary": "Completed task-27 monitoring HUD reconciliation and validated the Godot tracer bullet.",
-    "active_work_item": "task-27-godot-dashboard-gamified-monitoring-hud",
-    "validation_note": "Focused RED/GREEN completed for task-27: the Godot HUD test failed until verifier mood switched to a dedicated red-validation helper, then the focused and full suites passed.",
-    "validation": "TDD GREEN: node --test tests\\godot-dashboard.test.mjs passed after switching verifier mood to _has_red_validation(); full suite then passed with 33 tests and JSON parse checks stayed green."
+    "timestamp": "2026-06-10T11:53:49.7867613-05:00",
+    "summary": "Removed Lambchop's intake-vs-implementation split and replaced it with a single diagnose-first execution model for ordinary chats.",
+    "active_work_item": null,
+    "validation_note": "Hook, workflow, state, and issue-tracker contracts now allow bounded direct implementation with source-of-truth evidence and reserve automation handoff for intentional deferral.",
+    "validation": "Validation GREEN: node --test tests\\lambchop-hooks.test.mjs tests\\workflow-contract.test.mjs passed; node --test tests\\*.test.mjs then passed with 34 tests."
   }
 }

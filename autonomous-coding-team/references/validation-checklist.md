@@ -22,8 +22,8 @@ Before claiming a setup is complete, confirm:
 - project registration is stable: stale projects remain visible with health metadata, partial/zero-byte registration files do not hide valid projects, and registration writes are atomic.
 - dashboard control requests are queued through `POST /api/dashboard-command` or hub forwarding through `POST /api/project-command/<slug>`; dashboard servers do not directly execute updates.
 - The workflow states local-only safety defaults.
-- The workflow includes project chat intake rules: ordinary chats investigate user-reported needs or breakages, create/update queued work items and progress evidence, and do not implement unless explicitly overridden.
-- The workflow requires intake chats to hand off queued work by unpausing or confirming active automation status, triggering scheduler-visible run-now, and recording trigger evidence.
+- The workflow includes project chat execution rules: ordinary chats diagnose user-reported needs or breakages, implement directly when the work is bounded and source-of-truth evidence can be left in the same turn, and otherwise create/update queued work with progress evidence.
+- The workflow requires deferred chat work to hand off by unpausing or confirming active automation status, triggering scheduler-visible run-now, and recording trigger evidence.
 - The workflow defines a source-of-truth completion gate: side-branch-only, ledger-only, or memory-only movement cannot mark work done until the integration branch and ledgers agree.
 - The workflow enforces a two-phase loop: automation turns execute only already-scheduled runnable work first; planning/scheduling that creates runnable new tasks records evidence and defers execution to the next scheduler-visible run instead of implementing newly created tasks in the same turn.
 - Push, PR, deploy, production config mutation, non-GitHub external tracker mutation, and user-work reverts are forbidden by default. GitHub Issues is the default issue tracker for GitHub-backed repos.
@@ -85,8 +85,8 @@ Use these scenarios when validating the skill with another agent or a fresh sess
 - GitHub Stop hook: when push is enabled or explicitly requested for a GitHub repo, does the Stop hook require commit and push evidence before completion while recording a blocker instead of publishing when push remains forbidden?
 - Review consolidation: does the agent re-run evidence before moving review items to done?
 - Private local input: does the agent require ignored paths or environment-only configuration and log only bounded public evidence?
-- Project chat intake: when the user says "I need this" or "this is broken" in a normal chat, does the agent investigate, document, and queue bounded work for automation instead of fixing it directly?
-- Project chat handoff: after queuing intake work, does the agent unpause or confirm active automation status, trigger scheduler-visible run-now, and record the handoff evidence instead of stopping at a plan?
+- Project chat execution: when the user says "I need this" or "this is broken" in a normal chat, does the agent diagnose first, then either finish bounded work directly with source-of-truth evidence or defer it explicitly into queued work?
+- Project chat handoff: after deferring work, does the agent unpause or confirm active automation status, trigger scheduler-visible run-now, and record the handoff evidence instead of stopping at a plan?
 - "Fully autonomous" pressure: does the agent keep push, PR, deploy, and non-GitHub external trackers disabled until explicitly enabled while using GitHub Issues only through the documented `gh issue ...` path?
 - Local skill deployment: can the skill be installed/linked into `$CODEX_HOME/skills/` and then discovered by Codex?
 
