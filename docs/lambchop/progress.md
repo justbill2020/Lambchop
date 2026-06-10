@@ -2,6 +2,28 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-10 16:05 - task-31 story mission floor state finished
+- Status: done
+- Run id: `run-20260610-story-mission-floor-state`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Parallel-dispatch decision:
+  - Kept this slice single-lane as well. Story/Mission identity and floor ownership live behind one shared state model, so splitting it across agents would have created more merge risk than speed.
+- Work completed:
+  - Added [src/story-runtime.mjs](C:/Users/BillMartin/dev/Lambchop/src/story-runtime.mjs) as the first public Story/Mission state model.
+  - Added [tests/story-mission-floor-state.test.mjs](C:/Users/BillMartin/dev/Lambchop/tests/story-mission-floor-state.test.mjs) to prove Story remains the durable work record, Mission is spawned from Story rather than replacing it, Mission outcomes can be accepted back into Story, and the full floor ownership vocabulary is available.
+  - Advanced the local queue to the run-evidence/dashboard-projection slice.
+- Validation:
+  - RED: `node --test tests\story-mission-floor-state.test.mjs` failed because `src/story-runtime.mjs` did not exist.
+  - GREEN: `node --test tests\story-mission-floor-state.test.mjs` passed after the Story/Mission runtime model was added.
+  - Focused GREEN: `node --test tests\story-mission-floor-state.test.mjs tests\portfolio-heartbeat.test.mjs tests\cli-agent-adapter.test.mjs` passed.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 37 tests.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` parsed successfully.
+- Production floor review:
+  - Still not ready. The reviewable visual production-floor slice is still issue `#9`, and it remains blocked behind the run-evidence/dashboard-projection layer plus later prototype work.
+- Next step:
+  - Run `task-32-run-evidence-dashboard-projection`.
+
 ## 2026-06-10 15:25 - task-30 portfolio admission heartbeat finished
 - Status: done
 - Run id: `run-20260610-portfolio-heartbeat-slice`

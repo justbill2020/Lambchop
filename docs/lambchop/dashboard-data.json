@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-10T20:25:00Z",
+    "updated_at": "2026-06-10T21:05:00Z",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -21,14 +21,14 @@
     }
   },
   "summary": {
-    "todo": 13,
+    "todo": 12,
     "in_progress": 0,
     "blocked": 3,
-    "done": 25,
+    "done": 26,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Run task-31-story-mission-floor-state-model to establish Story -> Mission identity and floor ownership states."
+    "next_action": "Run task-32-run-evidence-dashboard-projection to build the first drilldownable run-evidence projection slice."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -1121,7 +1121,7 @@
     {
       "key": "task-31-story-mission-floor-state-model",
       "title": "Model story, mission, and floor ownership state",
-      "status": "todo",
+      "status": "done",
       "priority": 63,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -1129,13 +1129,18 @@
       "integration_status": "not_ready",
       "branch": "main",
       "worktree": "REPO_ROOT",
-      "validation": [],
+      "validation": [
+        "TDD RED: node --test tests\\story-mission-floor-state.test.mjs failed because src/story-runtime.mjs did not exist.",
+        "TDD GREEN: added src/story-runtime.mjs with durable Story records, spawned Missions, accepted outcomes, and explicit floor ownership states; node --test tests\\story-mission-floor-state.test.mjs then passed.",
+        "Focused GREEN: node --test tests\\story-mission-floor-state.test.mjs tests\\portfolio-heartbeat.test.mjs tests\\cli-agent-adapter.test.mjs passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 37 tests."
+      ],
       "implementation_notes": [
         "The model should preserve Bill’s approved vocabulary and handoff rules."
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Write the first public behavior around Story spawning a Mission while preserving Story identity and floor ownership state.",
+      "next_step": "Proceed to task-32 and introduce the run evidence module plus dashboard projection seam.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1143,7 +1148,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T20:25:00Z"
+      "updated_at": "2026-06-10T21:05:00Z"
     },
     {
       "key": "task-32-run-evidence-dashboard-projection",
@@ -1162,7 +1167,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Add the first tracer bullet that projects one completed run into dashboard-facing status.",
+      "next_step": "Write the first public behavior that appends a run evidence event and projects it into dashboard-facing status.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1170,7 +1175,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-10T21:05:00Z"
     },
     {
       "key": "task-33-material-progress-wheel-spin-gate",
@@ -1530,7 +1535,9 @@
     "2026-06-10 GREEN: gh issue list confirms the GitHub-first portfolio backlog exists as issues #2-#12 and canonical triage labels are present.",
     "2026-06-10 GREEN: node --test tests\\cli-agent-adapter.test.mjs passed after adding the Codex-first CLI adapter seam.",
     "2026-06-10 GREEN: node --test tests\\portfolio-heartbeat.test.mjs passed after the portfolio heartbeat controller was added.",
-    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 36 tests after the issue #3 slice landed."
+    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 36 tests after the issue #3 slice landed.",
+    "2026-06-10 GREEN: node --test tests\\story-mission-floor-state.test.mjs passed after the Story/Mission runtime model was added.",
+    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 37 tests after the issue #4 slice landed."
   ],
   "commits": [
     "ddbfd57",
@@ -1540,18 +1547,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260610-portfolio-heartbeat-slice",
-    "started_at": "2026-06-10T15:25:00-05:00",
-    "work_item_key": "task-30-portfolio-project-admission-heartbeat",
+    "run_id": "run-20260610-story-mission-floor-state",
+    "started_at": "2026-06-10T16:05:00-05:00",
+    "work_item_key": "task-31-story-mission-floor-state-model",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T15:25:00-05:00",
-    "next_action": "Run task-31-story-mission-floor-state-model to establish Story -> Mission identity and floor ownership states.",
-    "timestamp": "2026-06-10T15:25:00-05:00",
-    "summary": "Completed the portfolio/project admission heartbeat tracer bullet through TDD and confirmed issue #3 behavior.",
+    "dashboard_updated_at": "2026-06-10T16:05:00-05:00",
+    "next_action": "Run task-32-run-evidence-dashboard-projection to build the first drilldownable run-evidence projection slice.",
+    "timestamp": "2026-06-10T16:05:00-05:00",
+    "summary": "Completed the Story/Mission/floor-state tracer bullet through TDD and advanced the queue to run evidence.",
     "active_work_item": null,
-    "validation_note": "The portfolio runtime now tracks registered vs active projects, keeps Lambchop as a first-class active project, reserves one protected lane per active project, and denies activation when capacity is exhausted.",
-    "validation": "Validation GREEN: node --test tests\\portfolio-heartbeat.test.mjs, node --test tests\\portfolio-heartbeat.test.mjs tests\\cli-agent-adapter.test.mjs, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "Story is now the durable execution unit, Missions spawn from Stories instead of replacing them, accepted outcomes attach back to Stories, and the full floor-state vocabulary is represented publicly.",
+    "validation": "Validation GREEN: node --test tests\\story-mission-floor-state.test.mjs, the focused runtime trio, and node --test tests\\*.test.mjs all passed."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1600,7 +1607,7 @@
     "status": "validated"
   },
   "latest_progress": [
-    "2026-06-10: completed issue #3 by adding the portfolio/project admission heartbeat tracer bullet.",
-    "2026-06-10: production floor visual review is still not ready; issue #9 remains blocked behind the runtime and evidence slices."
+    "2026-06-10: completed issue #4 by adding the Story/Mission/floor-state runtime model.",
+    "2026-06-10: production floor visual review is still not ready; issue #9 remains blocked behind the run-evidence slice and later visual prototype work."
   ]
 }
