@@ -2,6 +2,28 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-10 15:25 - task-30 portfolio admission heartbeat finished
+- Status: done
+- Run id: `run-20260610-portfolio-heartbeat-slice`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Parallel-dispatch decision:
+  - Reviewed the parallel-agent dispatch guidance and kept this slice single-lane because portfolio admission is one shared public interface, not an independent set of domains.
+- Work completed:
+  - Added [src/portfolio-heartbeat.mjs](C:/Users/BillMartin/dev/Lambchop/src/portfolio-heartbeat.mjs) as the first portfolio-level orchestration controller slice.
+  - Added [tests/portfolio-heartbeat.test.mjs](C:/Users/BillMartin/dev/Lambchop/tests/portfolio-heartbeat.test.mjs) to prove the public behavior for registered-versus-active Projects, protected lane reservation, heartbeat-based denial when capacity is exhausted, and Lambchop appearing as a first-class Project.
+  - Updated Lambchop's local ledgers and dashboard queue so issue `#3` is reflected as completed and the next runtime slice is issue `#4`.
+- Validation:
+  - RED: `node --test tests\portfolio-heartbeat.test.mjs` failed because `src/portfolio-heartbeat.mjs` did not exist.
+  - GREEN: `node --test tests\portfolio-heartbeat.test.mjs` passed after the portfolio heartbeat controller was added.
+  - Focused GREEN: `node --test tests\portfolio-heartbeat.test.mjs tests\cli-agent-adapter.test.mjs` passed.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 36 tests.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` parsed successfully.
+- Production floor review:
+  - Not ready yet. The visual production-floor review item remains issue `#9`, and it still depends on the story/mission and run-evidence slices landing first.
+- Next step:
+  - Run `task-31-story-mission-floor-state-model`.
+
 ## 2026-06-10 14:45 - portfolio backlog published and issue-2 CLI seam finished
 - Status: done
 - Run id: `run-20260610-portfolio-backlog-and-cli-seam`

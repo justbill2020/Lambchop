@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-10T19:45:00Z",
+    "updated_at": "2026-06-10T20:25:00Z",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -21,14 +21,14 @@
     }
   },
   "summary": {
-    "todo": 14,
+    "todo": 13,
     "in_progress": 0,
     "blocked": 3,
-    "done": 24,
+    "done": 25,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Run task-30-portfolio-project-admission-heartbeat to establish the first project-capacity heartbeat slice."
+    "next_action": "Run task-31-story-mission-floor-state-model to establish Story -> Mission identity and floor ownership states."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -1089,7 +1089,7 @@
     {
       "key": "task-30-portfolio-project-admission-heartbeat",
       "title": "Add portfolio and project admission heartbeat tracer bullet",
-      "status": "todo",
+      "status": "done",
       "priority": 62,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -1097,13 +1097,18 @@
       "integration_status": "not_ready",
       "branch": "main",
       "worktree": "REPO_ROOT",
-      "validation": [],
+      "validation": [
+        "TDD RED: node --test tests\\portfolio-heartbeat.test.mjs failed because src/portfolio-heartbeat.mjs did not exist.",
+        "TDD GREEN: added src/portfolio-heartbeat.mjs with registered-vs-active project state, one protected lane per active project, and heartbeat-based admission denial; node --test tests\\portfolio-heartbeat.test.mjs then passed.",
+        "Validation GREEN: node --test tests\\portfolio-heartbeat.test.mjs tests\\cli-agent-adapter.test.mjs passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 36 tests."
+      ],
       "implementation_notes": [
         "This is the first orchestration slice above the CLI execution seam."
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Write the first public test for project admission under capacity.",
+      "next_step": "Proceed to task-31 and model Story, Mission, and floor ownership state on top of the portfolio/project runtime.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1111,7 +1116,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-10T20:25:00Z"
     },
     {
       "key": "task-31-story-mission-floor-state-model",
@@ -1130,7 +1135,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Define the first public behavior around story-to-mission and floor-state transitions.",
+      "next_step": "Write the first public behavior around Story spawning a Mission while preserving Story identity and floor ownership state.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1138,7 +1143,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-10T20:25:00Z"
     },
     {
       "key": "task-32-run-evidence-dashboard-projection",
@@ -1523,7 +1528,9 @@
     "Maintenance pause blocker remains: app-native automation_update tooling was unavailable in this session, so no maintenance pause/unpause or run-now trigger was performed.",
     "Validation GREEN: node --test tests\\lambchop-hooks.test.mjs tests\\workflow-contract.test.mjs and node --test tests\\*.test.mjs both passed; the full suite reported 34 passing tests.",
     "2026-06-10 GREEN: gh issue list confirms the GitHub-first portfolio backlog exists as issues #2-#12 and canonical triage labels are present.",
-    "2026-06-10 GREEN: node --test tests\\cli-agent-adapter.test.mjs passed after adding the Codex-first CLI adapter seam."
+    "2026-06-10 GREEN: node --test tests\\cli-agent-adapter.test.mjs passed after adding the Codex-first CLI adapter seam.",
+    "2026-06-10 GREEN: node --test tests\\portfolio-heartbeat.test.mjs passed after the portfolio heartbeat controller was added.",
+    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 36 tests after the issue #3 slice landed."
   ],
   "commits": [
     "ddbfd57",
@@ -1533,18 +1540,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260610-portfolio-backlog-and-cli-seam",
-    "started_at": "2026-06-10T14:45:00-05:00",
-    "work_item_key": "task-29-cli-agent-adapter-seam-codex-first",
+    "run_id": "run-20260610-portfolio-heartbeat-slice",
+    "started_at": "2026-06-10T15:25:00-05:00",
+    "work_item_key": "task-30-portfolio-project-admission-heartbeat",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T14:45:00-05:00",
-    "next_action": "Run task-30-portfolio-project-admission-heartbeat to establish the first project-capacity heartbeat slice.",
-    "timestamp": "2026-06-10T14:45:00-05:00",
-    "summary": "Published the GitHub-first portfolio-orchestrator backlog and completed the Codex-first CLI adapter seam through TDD.",
+    "dashboard_updated_at": "2026-06-10T15:25:00-05:00",
+    "next_action": "Run task-31-story-mission-floor-state-model to establish Story -> Mission identity and floor ownership states.",
+    "timestamp": "2026-06-10T15:25:00-05:00",
+    "summary": "Completed the portfolio/project admission heartbeat tracer bullet through TDD and confirmed issue #3 behavior.",
     "active_work_item": null,
-    "validation_note": "GitHub issues #2-#12 are the current MVPv0/v1 backlog, and the first executable seam now launches and observes Codex CLI-backed work without depending on the host app.",
-    "validation": "Validation GREEN: gh issue list shows issues #2-#12 live; node --test tests\\cli-agent-adapter.test.mjs passed after the CLI runtime seam was added."
+    "validation_note": "The portfolio runtime now tracks registered vs active projects, keeps Lambchop as a first-class active project, reserves one protected lane per active project, and denies activation when capacity is exhausted.",
+    "validation": "Validation GREEN: node --test tests\\portfolio-heartbeat.test.mjs, node --test tests\\portfolio-heartbeat.test.mjs tests\\cli-agent-adapter.test.mjs, and node --test tests\\*.test.mjs all passed."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1593,7 +1600,7 @@
     "status": "validated"
   },
   "latest_progress": [
-    "2026-06-10: published GitHub issues #2-#12 for the portfolio orchestrator MVP backlog and completed the Codex-first CLI adapter seam.",
-    "2026-06-10: canonical GitHub triage labels now exist, so local queue items can point at ready-for-agent or ready-for-human truthfully."
+    "2026-06-10: completed issue #3 by adding the portfolio/project admission heartbeat tracer bullet.",
+    "2026-06-10: production floor visual review is still not ready; issue #9 remains blocked behind the runtime and evidence slices."
   ]
 }
