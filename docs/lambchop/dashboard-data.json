@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-10T22:05:00Z",
+    "updated_at": "2026-06-10T22:35:00Z",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -21,14 +21,14 @@
     }
   },
   "summary": {
-    "todo": 10,
+    "todo": 9,
     "in_progress": 0,
     "blocked": 3,
-    "done": 28,
+    "done": 29,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Run task-34-party-mode-meeting-gate to enforce meeting pass/fail and next-action discipline."
+    "next_action": "Run task-35-failure-escalation-severity-audit to add the first severity-gated Lambchop failure audit trail."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -1217,7 +1217,7 @@
     {
       "key": "task-34-party-mode-meeting-gate",
       "title": "Add office party-mode meeting gate and next-action discipline",
-      "status": "todo",
+      "status": "done",
       "priority": 66,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -1225,13 +1225,18 @@
       "integration_status": "not_ready",
       "branch": "main",
       "worktree": "REPO_ROOT",
-      "validation": [],
+      "validation": [
+        "TDD RED: node --test tests\\meeting-gate.test.mjs failed because src/meeting-gate.mjs did not exist.",
+        "TDD GREEN: added src/meeting-gate.mjs with party-mode request capture, per-attendee accept/decline, failed-meeting next actions, and thread-level gating; node --test tests\\meeting-gate.test.mjs then passed.",
+        "Focused GREEN: node --test tests\\meeting-gate.test.mjs tests\\material-progress-controller.test.mjs tests\\run-evidence-dashboard-projection.test.mjs tests\\story-mission-floor-state.test.mjs tests\\portfolio-heartbeat.test.mjs tests\\cli-agent-adapter.test.mjs passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 40 tests."
+      ],
       "implementation_notes": [
         "Agents may decline meetings, and the organizer should learn from the decline reason."
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Write the first public behavior for failed meetings spawning a required next action before another meeting is allowed.",
+      "next_step": "Proceed to task-35 and add the first failure-escalation severity audit trail.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1239,7 +1244,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T22:05:00Z"
+      "updated_at": "2026-06-10T22:35:00Z"
     },
     {
       "key": "task-35-failure-escalation-severity-audit",
@@ -1258,7 +1263,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Add the first behavior test around severity-gated escalation.",
+      "next_step": "Write the first public behavior for severity-gated escalation and audit visibility.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1266,7 +1271,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-10T22:35:00Z"
     },
     {
       "key": "task-36-production-floor-prototype-comparison",
@@ -1551,7 +1556,9 @@
     "2026-06-10 GREEN: node --test tests\\run-evidence-dashboard-projection.test.mjs passed after the run-evidence seam was added.",
     "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 38 tests after the issue #5 slice landed.",
     "2026-06-10 GREEN: node --test tests\\material-progress-controller.test.mjs passed after the controller gate was added.",
-    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 39 tests after the issue #6 slice landed."
+    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 39 tests after the issue #6 slice landed.",
+    "2026-06-10 GREEN: node --test tests\\meeting-gate.test.mjs passed after the first Office meeting gate was added.",
+    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 40 tests after the issue #7 slice landed."
   ],
   "commits": [
     "ddbfd57",
@@ -1561,18 +1568,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260610-material-progress-controller",
-    "started_at": "2026-06-10T17:05:00-05:00",
-    "work_item_key": "task-33-material-progress-wheel-spin-gate",
+    "run_id": "run-20260610-meeting-gate",
+    "started_at": "2026-06-10T17:35:00-05:00",
+    "work_item_key": "task-34-party-mode-meeting-gate",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T17:05:00-05:00",
-    "next_action": "Run task-34-party-mode-meeting-gate to enforce meeting pass/fail and next-action discipline.",
-    "timestamp": "2026-06-10T17:05:00-05:00",
-    "summary": "Completed the material-progress and wheel-spin controller tracer bullet through TDD and advanced the queue to the meeting gate.",
+    "dashboard_updated_at": "2026-06-10T17:35:00-05:00",
+    "next_action": "Run task-35-failure-escalation-severity-audit to add the first severity-gated Lambchop failure audit trail.",
+    "timestamp": "2026-06-10T17:35:00-05:00",
+    "summary": "Completed the office meeting gate tracer bullet through TDD and advanced the queue to failure escalation.",
     "active_work_item": null,
-    "validation_note": "The controller now counts only material progress categories, flags the first wheel-spin signals, and exposes pass/fail pressure through a public interface.",
-    "validation": "Validation GREEN: node --test tests\\material-progress-controller.test.mjs, the focused runtime stack, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "Meetings now capture organizer, required/optional attendees, expected output, accountable owner, per-attendee accept/decline, and the rule that a failed meeting must spawn worked next action before the thread can meet again.",
+    "validation": "Validation GREEN: node --test tests\\meeting-gate.test.mjs, the focused runtime stack, and node --test tests\\*.test.mjs all passed."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1621,7 +1628,7 @@
     "status": "validated"
   },
   "latest_progress": [
-    "2026-06-10: completed issue #6 by adding the material-progress and wheel-spin controller gate.",
-    "2026-06-10: production floor visual review is still not ready; issue #9 remains blocked behind later coordination work and the prototype comparison."
+    "2026-06-10: completed issue #7 by adding the office party-mode meeting gate and next-action discipline.",
+    "2026-06-10: production floor visual review is still not ready; issue #9 remains blocked behind later governance and manager slices plus the prototype comparison."
   ]
 }
