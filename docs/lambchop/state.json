@@ -107,7 +107,7 @@
       ],
       "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit maintenance override. Default mode allows diagnose-first direct execution for bounded work and deferral only when needed."
     },
-    "updated_at": "2026-06-10T16:05:00-05:00",
+    "updated_at": "2026-06-10T16:35:00-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -2339,7 +2339,7 @@
       "key": "task-32-run-evidence-dashboard-projection",
       "title": "Build the run evidence module and unified dashboard projection",
       "type": "orchestrator-evidence",
-      "status": "todo",
+      "status": "done",
       "priority": 64,
       "dependencies": [
         "task-31-story-mission-floor-state-model"
@@ -2357,7 +2357,12 @@
       "implementation_notes": [
         "This should become the truth layer for drilldownable AFK runs."
       ],
-      "validation": [],
+      "validation": [
+        "TDD RED: node --test tests\\run-evidence-dashboard-projection.test.mjs failed because src/run-evidence.mjs did not exist.",
+        "TDD GREEN: added src/run-evidence.mjs with an append-only evidence ledger and dashboard projection interface; node --test tests\\run-evidence-dashboard-projection.test.mjs then passed.",
+        "Focused GREEN: node --test tests\\run-evidence-dashboard-projection.test.mjs tests\\story-mission-floor-state.test.mjs tests\\portfolio-heartbeat.test.mjs tests\\cli-agent-adapter.test.mjs passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 38 tests."
+      ],
       "branch": "main",
       "worktree": "REPO_ROOT",
       "commit": null,
@@ -2370,7 +2375,7 @@
         "docs/lambchop/progress.md",
         "docs/lambchop/dashboard-data.json"
       ],
-      "next_step": "Write the first public behavior that appends a run evidence event and projects it into dashboard-facing status.",
+      "next_step": "Proceed to task-33 and add the material-progress / wheel-spin controller gate.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -2383,7 +2388,7 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
       "created_at": "2026-06-10T19:45:00Z",
-      "updated_at": "2026-06-10T21:05:00Z"
+      "updated_at": "2026-06-10T21:35:00Z"
     },
     {
       "key": "task-33-material-progress-wheel-spin-gate",
@@ -2420,7 +2425,7 @@
         "docs/lambchop/progress.md",
         "docs/lambchop/dashboard-data.json"
       ],
-      "next_step": "Write the first public test for heartbeat pressure reducing concurrency after a no-progress streak.",
+      "next_step": "Write the first public behavior for heartbeat pressure reducing capacity after no-progress evidence.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -2433,7 +2438,7 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
       "created_at": "2026-06-10T19:45:00Z",
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-10T21:35:00Z"
     },
     {
       "key": "task-34-party-mode-meeting-gate",
@@ -2817,17 +2822,17 @@
     }
   ],
   "last_run": {
-    "run_id": "run-20260610-story-mission-floor-state",
-    "started_at": "2026-06-10T16:05:00-05:00",
-    "work_item_key": "task-31-story-mission-floor-state-model",
+    "run_id": "run-20260610-run-evidence-projection",
+    "started_at": "2026-06-10T16:35:00-05:00",
+    "work_item_key": "task-32-run-evidence-dashboard-projection",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T16:05:00-05:00",
-    "next_action": "Run task-32-run-evidence-dashboard-projection to build the first drilldownable run-evidence projection slice.",
-    "timestamp": "2026-06-10T16:05:00-05:00",
-    "summary": "Completed the Story/Mission/floor-state tracer bullet through TDD and advanced the queue to run evidence.",
+    "dashboard_updated_at": "2026-06-10T16:35:00-05:00",
+    "next_action": "Run task-33-material-progress-wheel-spin-gate to add the first global material-progress controller rule.",
+    "timestamp": "2026-06-10T16:35:00-05:00",
+    "summary": "Completed the run-evidence/dashboard-projection tracer bullet through TDD and advanced the queue to the wheel-spin controller.",
     "active_work_item": null,
-    "validation_note": "Story is now the durable execution unit, Missions spawn from Stories instead of replacing them, accepted outcomes attach back to Stories, and the full floor-state vocabulary is represented publicly.",
-    "validation": "Validation GREEN: node --test tests\\story-mission-floor-state.test.mjs, the focused runtime trio, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "Run evidence is now recorded once through an append-only public seam, and dashboard-facing status can be derived from that evidence plus canonical work state for the covered behavior.",
+    "validation": "Validation GREEN: node --test tests\\run-evidence-dashboard-projection.test.mjs, the focused runtime quartet, and node --test tests\\*.test.mjs all passed."
   }
 }

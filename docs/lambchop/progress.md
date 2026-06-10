@@ -2,6 +2,28 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-10 16:35 - task-32 run evidence projection finished
+- Status: done
+- Run id: `run-20260610-run-evidence-projection`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Parallel-dispatch decision:
+  - Kept this slice single-lane. The append-only evidence seam and its first dashboard projection are one shared public interface, so splitting the work would have created overlapping truth-shape edits.
+- Work completed:
+  - Added [src/run-evidence.mjs](C:/Users/BillMartin/dev/Lambchop/src/run-evidence.mjs) as the first append-only run evidence seam.
+  - Added [tests/run-evidence-dashboard-projection.test.mjs](C:/Users/BillMartin/dev/Lambchop/tests/run-evidence-dashboard-projection.test.mjs) to prove Lambchop can append orchestration facts once and derive dashboard-facing status from evidence plus canonical work state.
+  - Advanced the local queue to the material-progress / wheel-spin controller slice.
+- Validation:
+  - RED: `node --test tests\run-evidence-dashboard-projection.test.mjs` failed because `src/run-evidence.mjs` did not exist.
+  - GREEN: `node --test tests\run-evidence-dashboard-projection.test.mjs` passed after the run-evidence seam was added.
+  - Focused GREEN: `node --test tests\run-evidence-dashboard-projection.test.mjs tests\story-mission-floor-state.test.mjs tests\portfolio-heartbeat.test.mjs tests\cli-agent-adapter.test.mjs` passed.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 38 tests.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` parsed successfully.
+- Production floor review:
+  - Still not ready. The reviewable visual production-floor slice is still issue `#9`, and it remains blocked behind later controller work plus the human prototype comparison itself.
+- Next step:
+  - Run `task-33-material-progress-wheel-spin-gate`.
+
 ## 2026-06-10 16:05 - task-31 story mission floor state finished
 - Status: done
 - Run id: `run-20260610-story-mission-floor-state`
