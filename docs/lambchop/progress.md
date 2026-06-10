@@ -2,6 +2,29 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-10 18:35 - task-37 floor managers finished
+- Status: done
+- Run id: `run-20260610-floor-managers`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Parallel-dispatch decision:
+  - Kept this slice single-lane. The Office/Workshop manager behavior is one shared coordination seam that depends on heartbeat, meeting-gate, and story-state rules staying consistent.
+- Work completed:
+  - Added [src/floor-managers.mjs](C:/Users/BillMartin/dev/Lambchop/src/floor-managers.mjs) as the first Office/Workshop coordination-agent seam.
+  - Added [tests/floor-manager.test.mjs](C:/Users/BillMartin/dev/Lambchop/tests/floor-manager.test.mjs) to prove managers respond to heartbeat pressure, schedule meetings through the meeting gate, accept declines, and reallocate work without creating a second control system.
+  - Cleared the AFK blocker in front of the human visual prototype comparison. Issue `#9` is now ready for your review when you want to compare directions.
+  - Advanced the AFK queue to the MVPv0 self-hosting proof.
+- Validation:
+  - RED: `node --test tests\floor-manager.test.mjs` failed because `src/floor-managers.mjs` did not exist.
+  - GREEN: `node --test tests\floor-manager.test.mjs` passed after the floor-manager module was added.
+  - Focused GREEN: `node --test tests\floor-manager.test.mjs tests\failure-severity-audit.test.mjs tests\meeting-gate.test.mjs tests\material-progress-controller.test.mjs tests\run-evidence-dashboard-projection.test.mjs tests\story-mission-floor-state.test.mjs tests\portfolio-heartbeat.test.mjs tests\cli-agent-adapter.test.mjs` passed.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 42 tests.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` parsed successfully.
+- Production floor review:
+  - Ready for your human visual review through issue `#9`. AFK work still remains on issue `#11` and issue `#12`, but the visual production-floor comparison itself is now unblocked.
+- Next step:
+  - Run `task-38-mvp0-self-hosting-proof`.
+
 ## 2026-06-10 18:05 - task-35 failure severity audit finished
 - Status: done
 - Run id: `run-20260610-failure-severity-audit`

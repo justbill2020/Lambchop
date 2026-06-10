@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-10T23:05:00Z",
+    "updated_at": "2026-06-10T23:35:00Z",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -21,14 +21,14 @@
     }
   },
   "summary": {
-    "todo": 8,
+    "todo": 7,
     "in_progress": 0,
     "blocked": 3,
-    "done": 30,
+    "done": 31,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Run task-37-office-workshop-floor-managers to advance the last AFK runtime slice before the human prototype comparison."
+    "next_action": "Run task-38-mvp0-self-hosting-proof and, separately, review issue #9 when you want to compare the production-floor visual directions."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -1294,8 +1294,8 @@
         "This remains human-in-the-loop by design. Use Huashu Design before changing user-facing UI."
       ],
       "commit": null,
-      "blocker": "Requires human review of the visual metaphor after the underlying portfolio, story, and evidence slices exist.",
-      "next_step": "Wait for the floor-manager and self-hosting proof slices before the human prototype comparison.",
+      "blocker": "AFK runtime slices are now in place; the remaining blocker is the human prototype comparison itself.",
+      "next_step": "The production floor implementation is ready for human visual review on issue #9 when Bill wants to compare prototype directions.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1303,12 +1303,12 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-10T23:35:00Z"
     },
     {
       "key": "task-37-office-workshop-floor-managers",
       "title": "Add office and workshop floor managers",
-      "status": "todo",
+      "status": "done",
       "priority": 69,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -1316,13 +1316,18 @@
       "integration_status": "not_ready",
       "branch": "main",
       "worktree": "REPO_ROOT",
-      "validation": [],
+      "validation": [
+        "TDD RED: node --test tests\\floor-manager.test.mjs failed because src/floor-managers.mjs did not exist.",
+        "TDD GREEN: added src/floor-managers.mjs with Office/Workshop coordination behavior that stays subordinate to the meeting gate and heartbeat pressure; node --test tests\\floor-manager.test.mjs then passed.",
+        "Focused GREEN: node --test tests\\floor-manager.test.mjs tests\\failure-severity-audit.test.mjs tests\\meeting-gate.test.mjs tests\\material-progress-controller.test.mjs tests\\run-evidence-dashboard-projection.test.mjs tests\\story-mission-floor-state.test.mjs tests\\portfolio-heartbeat.test.mjs tests\\cli-agent-adapter.test.mjs passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 42 tests."
+      ],
       "implementation_notes": [
         "These are role managers, not free-floating chatter bots."
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Write the first public behavior for a floor manager responding to heartbeat pressure and meeting discipline.",
+      "next_step": "Proceed to task-38 and prove MVPv0 self-hosting through the Lambchop project model.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1330,7 +1335,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T23:05:00Z"
+      "updated_at": "2026-06-10T23:35:00Z"
     },
     {
       "key": "task-38-mvp0-self-hosting-proof",
@@ -1349,7 +1354,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Stage the self-hosting proof once the prerequisite runtime slices are green.",
+      "next_step": "Write the first public behavior proving Lambchop can continue Lambchop development through its own project model.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1357,7 +1362,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-10T23:35:00Z"
     },
     {
       "key": "task-39-mvp1-second-project-admission",
@@ -1468,8 +1473,8 @@
     {
       "key": "task-36-production-floor-prototype-comparison",
       "title": "Produce and compare the studio production floor prototype",
-      "blocker": "Requires human review of the visual metaphor after the underlying portfolio, story, and evidence slices exist.",
-      "next_step": "Wait for the floor-manager and self-hosting proof slices before the human prototype comparison."
+      "blocker": "AFK runtime slices are now in place; the remaining blocker is the human prototype comparison itself.",
+      "next_step": "The production floor implementation is ready for human visual review on issue #9 when Bill wants to compare prototype directions."
     }
   ],
   "active_lanes": [],
@@ -1565,7 +1570,9 @@
     "2026-06-10 GREEN: node --test tests\\meeting-gate.test.mjs passed after the first Office meeting gate was added.",
     "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 40 tests after the issue #7 slice landed.",
     "2026-06-10 GREEN: node --test tests\\failure-severity-audit.test.mjs passed after the severity audit module was added.",
-    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 41 tests after the issue #8 slice landed."
+    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 41 tests after the issue #8 slice landed.",
+    "2026-06-10 GREEN: node --test tests\\floor-manager.test.mjs passed after the Office/Workshop floor-manager behavior was added.",
+    "2026-06-10 GREEN: full suite node --test tests\\*.test.mjs passed with 42 tests after the issue #10 slice landed."
   ],
   "commits": [
     "ddbfd57",
@@ -1575,18 +1582,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260610-failure-severity-audit",
-    "started_at": "2026-06-10T18:05:00-05:00",
-    "work_item_key": "task-35-failure-escalation-severity-audit",
+    "run_id": "run-20260610-floor-managers",
+    "started_at": "2026-06-10T18:35:00-05:00",
+    "work_item_key": "task-37-office-workshop-floor-managers",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T18:05:00-05:00",
-    "next_action": "Run task-37-office-workshop-floor-managers to advance the last AFK runtime slice before the human prototype comparison.",
-    "timestamp": "2026-06-10T18:05:00-05:00",
-    "summary": "Completed the severity-gated failure escalation tracer bullet through TDD and advanced the queue toward floor managers.",
+    "dashboard_updated_at": "2026-06-10T18:35:00-05:00",
+    "next_action": "Run task-38-mvp0-self-hosting-proof and, separately, review issue #9 when you want to compare the production-floor visual directions.",
+    "timestamp": "2026-06-10T18:35:00-05:00",
+    "summary": "Completed the Office and Workshop floor-manager tracer bullet through TDD and cleared the AFK blocker in front of the visual production-floor review.",
     "active_work_item": null,
-    "validation_note": "Lambchop failures now have categories, severity proposals, controller raises, human overrides, and an auditable timeline, while reprompt-only recovery is treated as a Lambchop failure instead of legitimate blocked state.",
-    "validation": "Validation GREEN: node --test tests\\failure-severity-audit.test.mjs, the focused runtime stack, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "Office and Workshop floor managers now respond to heartbeat pressure, schedule meetings through the meeting gate, accept declines, and reallocate work without becoming a second control system.",
+    "validation": "Validation GREEN: node --test tests\\floor-manager.test.mjs, the focused runtime stack, and node --test tests\\*.test.mjs all passed."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1635,7 +1642,7 @@
     "status": "validated"
   },
   "latest_progress": [
-    "2026-06-10: completed issue #8 by adding the severity-gated failure escalation and audit trail.",
-    "2026-06-10: production floor visual review is still not ready; issue #9 remains blocked behind the floor-manager slice and the human prototype comparison."
+    "2026-06-10: completed issue #10 by adding the Office and Workshop floor-manager behavior.",
+    "2026-06-10: the production floor is now ready for human visual review through issue #9 while AFK work continues on MVPv0 self-hosting."
   ]
 }
