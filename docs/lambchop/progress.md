@@ -2,6 +2,28 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-10 18:05 - task-35 failure severity audit finished
+- Status: done
+- Run id: `run-20260610-failure-severity-audit`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Parallel-dispatch decision:
+  - Kept this slice single-lane. The severity model, escalation authority, and audit timeline are one shared governance seam, so parallel edits would have overlapped heavily.
+- Work completed:
+  - Added [src/failure-severity-audit.mjs](C:/Users/BillMartin/dev/Lambchop/src/failure-severity-audit.mjs) as the first Lambchop failure-governance seam.
+  - Added [tests/failure-severity-audit.test.mjs](C:/Users/BillMartin/dev/Lambchop/tests/failure-severity-audit.test.mjs) to prove categorized failures, proposed severity, controller auto-raise, human override, and an auditable timeline, while treating reprompt-only recovery as a Lambchop failure instead of legitimate blocked state.
+  - Advanced the local queue toward the floor-manager slice that still sits in front of the human visual prototype review.
+- Validation:
+  - RED: `node --test tests\failure-severity-audit.test.mjs` failed because `src/failure-severity-audit.mjs` did not exist.
+  - GREEN: `node --test tests\failure-severity-audit.test.mjs` passed after the severity audit module was added.
+  - Focused GREEN: `node --test tests\failure-severity-audit.test.mjs tests\meeting-gate.test.mjs tests\material-progress-controller.test.mjs tests\run-evidence-dashboard-projection.test.mjs tests\story-mission-floor-state.test.mjs tests\portfolio-heartbeat.test.mjs tests\cli-agent-adapter.test.mjs` passed.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 41 tests.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` parsed successfully.
+- Production floor review:
+  - Still not ready. The reviewable visual production-floor slice is still issue `#9`, and it remains blocked behind the floor-manager slice plus the prototype comparison itself.
+- Next step:
+  - Run `task-37-office-workshop-floor-managers`.
+
 ## 2026-06-10 17:35 - task-34 office meeting gate finished
 - Status: done
 - Run id: `run-20260610-meeting-gate`
