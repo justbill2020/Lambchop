@@ -2,6 +2,28 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-10 17:05 - task-33 material progress controller finished
+- Status: done
+- Run id: `run-20260610-material-progress-controller`
+- Branch: `main`
+- Worktree: `REPO_ROOT`
+- Parallel-dispatch decision:
+  - Kept this slice single-lane. The progress controller and wheel-spin signals are one shared control-loop surface, so splitting the work would have created overlapping policy edits.
+- Work completed:
+  - Added [src/material-progress-controller.mjs](C:/Users/BillMartin/dev/Lambchop/src/material-progress-controller.mjs) as the first public material-progress gate.
+  - Added [tests/material-progress-controller.test.mjs](C:/Users/BillMartin/dev/Lambchop/tests/material-progress-controller.test.mjs) to prove non-material activity does not count as progress and the first wheel-spin signals are exposed publicly.
+  - Advanced the local queue to the office meeting gate slice.
+- Validation:
+  - RED: `node --test tests\material-progress-controller.test.mjs` failed because `src/material-progress-controller.mjs` did not exist.
+  - GREEN: `node --test tests\material-progress-controller.test.mjs` passed after the controller was added.
+  - Focused GREEN: `node --test tests\material-progress-controller.test.mjs tests\run-evidence-dashboard-projection.test.mjs tests\story-mission-floor-state.test.mjs tests\portfolio-heartbeat.test.mjs tests\cli-agent-adapter.test.mjs` passed.
+  - Full suite GREEN: `node --test tests\*.test.mjs` passed with 39 tests.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, and `docs/lambchop/backoff.json` parsed successfully.
+- Production floor review:
+  - Still not ready. The reviewable visual production-floor slice is still issue `#9`, and it remains blocked behind later coordination work plus the prototype comparison itself.
+- Next step:
+  - Run `task-34-party-mode-meeting-gate`.
+
 ## 2026-06-10 16:35 - task-32 run evidence projection finished
 - Status: done
 - Run id: `run-20260610-run-evidence-projection`

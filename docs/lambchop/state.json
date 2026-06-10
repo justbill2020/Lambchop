@@ -107,7 +107,7 @@
       ],
       "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit maintenance override. Default mode allows diagnose-first direct execution for bounded work and deferral only when needed."
     },
-    "updated_at": "2026-06-10T16:35:00-05:00",
+    "updated_at": "2026-06-10T17:05:00-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -2394,7 +2394,7 @@
       "key": "task-33-material-progress-wheel-spin-gate",
       "title": "Add the material progress and wheel-spin controller gate",
       "type": "orchestrator-control-loop",
-      "status": "todo",
+      "status": "done",
       "priority": 65,
       "dependencies": [
         "task-32-run-evidence-dashboard-projection"
@@ -2412,7 +2412,12 @@
       "implementation_notes": [
         "This is the global heartbeat gate that should keep AFK work from devolving into meeting-only motion."
       ],
-      "validation": [],
+      "validation": [
+        "TDD RED: node --test tests\\material-progress-controller.test.mjs failed because src/material-progress-controller.mjs did not exist.",
+        "TDD GREEN: added src/material-progress-controller.mjs with material-progress counting and first wheel-spin signals; node --test tests\\material-progress-controller.test.mjs then passed.",
+        "Focused GREEN: node --test tests\\material-progress-controller.test.mjs tests\\run-evidence-dashboard-projection.test.mjs tests\\story-mission-floor-state.test.mjs tests\\portfolio-heartbeat.test.mjs tests\\cli-agent-adapter.test.mjs passed.",
+        "Full suite GREEN: node --test tests\\*.test.mjs passed with 39 tests."
+      ],
       "branch": "main",
       "worktree": "REPO_ROOT",
       "commit": null,
@@ -2425,7 +2430,7 @@
         "docs/lambchop/progress.md",
         "docs/lambchop/dashboard-data.json"
       ],
-      "next_step": "Write the first public behavior for heartbeat pressure reducing capacity after no-progress evidence.",
+      "next_step": "Proceed to task-34 and add the first office meeting gate plus next-action discipline.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -2438,7 +2443,7 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
       "created_at": "2026-06-10T19:45:00Z",
-      "updated_at": "2026-06-10T21:35:00Z"
+      "updated_at": "2026-06-10T22:05:00Z"
     },
     {
       "key": "task-34-party-mode-meeting-gate",
@@ -2476,7 +2481,7 @@
         "docs/lambchop/progress.md",
         "docs/lambchop/dashboard-data.json"
       ],
-      "next_step": "Write the first behavior test for declining or failing a meeting without producing the required next action.",
+      "next_step": "Write the first public behavior for failed meetings spawning a required next action before another meeting is allowed.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -2489,7 +2494,7 @@
       "dispatch_status": "not_dispatched",
       "integration_status": "not_ready",
       "created_at": "2026-06-10T19:45:00Z",
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-10T22:05:00Z"
     },
     {
       "key": "task-35-failure-escalation-severity-audit",
@@ -2822,17 +2827,17 @@
     }
   ],
   "last_run": {
-    "run_id": "run-20260610-run-evidence-projection",
-    "started_at": "2026-06-10T16:35:00-05:00",
-    "work_item_key": "task-32-run-evidence-dashboard-projection",
+    "run_id": "run-20260610-material-progress-controller",
+    "started_at": "2026-06-10T17:05:00-05:00",
+    "work_item_key": "task-33-material-progress-wheel-spin-gate",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T16:35:00-05:00",
-    "next_action": "Run task-33-material-progress-wheel-spin-gate to add the first global material-progress controller rule.",
-    "timestamp": "2026-06-10T16:35:00-05:00",
-    "summary": "Completed the run-evidence/dashboard-projection tracer bullet through TDD and advanced the queue to the wheel-spin controller.",
+    "dashboard_updated_at": "2026-06-10T17:05:00-05:00",
+    "next_action": "Run task-34-party-mode-meeting-gate to enforce meeting pass/fail and next-action discipline.",
+    "timestamp": "2026-06-10T17:05:00-05:00",
+    "summary": "Completed the material-progress and wheel-spin controller tracer bullet through TDD and advanced the queue to the meeting gate.",
     "active_work_item": null,
-    "validation_note": "Run evidence is now recorded once through an append-only public seam, and dashboard-facing status can be derived from that evidence plus canonical work state for the covered behavior.",
-    "validation": "Validation GREEN: node --test tests\\run-evidence-dashboard-projection.test.mjs, the focused runtime quartet, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "The controller now counts only material progress categories, flags the first wheel-spin signals, and exposes pass/fail pressure through a public interface.",
+    "validation": "Validation GREEN: node --test tests\\material-progress-controller.test.mjs, the focused runtime stack, and node --test tests\\*.test.mjs all passed."
   }
 }
