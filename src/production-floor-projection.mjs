@@ -48,6 +48,95 @@ function blockerSummary(floorState, evidence) {
   return evidence.find((event) => event.type.includes('blocked'))?.summary ?? 'Blocked';
 }
 
+function blockedPosture(floorState, evidence) {
+  if (floorState !== 'blocked') {
+    return null;
+  }
+
+  if (evidence.some((event) => event.type === 'human_blocked')) {
+    return 'waiting-on-human';
+  }
+
+  if (evidence.some((event) => event.type === 'agent_blocked')) {
+    return 'waiting-on-agent';
+  }
+
+  return 'blocked';
+}
+
+function studioPlacement(missionType, floorState) {
+  if (floorState === 'blocked') {
+    return {
+      floor: 'downstairs',
+      room: 'workshop',
+      station: 'blocked-bay',
+      handoffTarget: null,
+    };
+  }
+
+  if (floorState === 'office') {
+    return {
+      floor: 'upstairs',
+      room: 'office',
+      station: missionType === 'brief' ? 'briefing-desk' : 'story-shaping-desk',
+      handoffTarget: null,
+    };
+  }
+
+  if (floorState === 'handoff-to-workshop') {
+    return {
+      floor: 'upstairs',
+      room: 'office',
+      station: 'story-shaping-desk',
+      handoffTarget: {
+        floor: 'downstairs',
+        room: 'workshop',
+        station: 'build-bay',
+      },
+    };
+  }
+
+  if (floorState === 'handoff-to-office') {
+    return {
+      floor: 'downstairs',
+      room: 'workshop',
+      station: 'integration-bay',
+      handoffTarget: {
+        floor: 'upstairs',
+        room: 'office',
+        station: 'course-correction-desk',
+      },
+    };
+  }
+
+  switch (missionType) {
+    case 'asset':
+    case 'prototype':
+      return {
+        floor: 'downstairs',
+        room: 'workshop',
+        station: 'asset-bench',
+        handoffTarget: null,
+      };
+    case 'integrate':
+    case 'validate':
+    case 'review':
+      return {
+        floor: 'downstairs',
+        room: 'workshop',
+        station: 'integration-bay',
+        handoffTarget: null,
+      };
+    default:
+      return {
+        floor: 'downstairs',
+        room: 'workshop',
+        station: 'build-bay',
+        handoffTarget: null,
+      };
+  }
+}
+
 export function createProductionFloorProjection() {
   return {
     projectFloor({ project, stories = [], missions = [], evidence = [] }) {
@@ -71,6 +160,7 @@ export function createProductionFloorProjection() {
             ? 'office'
             : 'workshop';
         const zone = missionZone(mission?.type ?? null, story.floorState);
+        const studio = studioPlacement(mission?.type ?? null, story.floorState);
 
         return {
           key: story.key,
@@ -81,14 +171,45 @@ export function createProductionFloorProjection() {
           placement: {
             region,
             zone,
+            floor: studio.floor,
+            room: studio.room,
+            station: studio.station,
+            handoffTarget: studio.handoffTarget,
           },
           validation: validationState(storyEvidence),
           blocker: blockerSummary(story.floorState, storyEvidence),
+          blockedPosture: blockedPosture(story.floorState, storyEvidence),
+          crewLocation: {
+            floor: studio.floor,
+            room: studio.room,
+            station: studio.station,
+            ...(story.floorState === 'blocked'
+              ? { posture: blockedPosture(story.floorState, storyEvidence) }
+              : {}),
+          },
         };
       });
 
       return {
         project: clone(project),
+        studio: {
+          floors: {
+            upstairs: {
+              label: 'Office',
+              roomKeys: ['office'],
+              storyKeys: projectedStories
+                .filter((story) => story.placement.floor === 'upstairs')
+                .map((story) => story.key),
+            },
+            downstairs: {
+              label: 'Workshop',
+              roomKeys: ['workshop'],
+              storyKeys: projectedStories
+                .filter((story) => story.placement.floor === 'downstairs')
+                .map((story) => story.key),
+            },
+          },
+        },
         regions: {
           office: {
             storyKeys: projectedStories
