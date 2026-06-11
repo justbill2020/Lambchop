@@ -16,6 +16,23 @@ const projectRegistrationFile = path.join(registryRoot, `${projectSlug}.json`);
 const controlRequestsFile = "dashboard-control-requests.json";
 const watchFiles = ["state.json", "dashboard-data.json", "backoff.json", "progress.md", "scheduled-work-plan.md", controlRequestsFile];
 const liveProjectWindowMs = Number(process.env.LAMBCHOP_LIVE_PROJECT_WINDOW_MS || 120000);
+const operatorSurfaces = {
+  shared_evidence: [
+    "state.json",
+    "dashboard-data.json",
+    "progress.md",
+    "scheduled-work-plan.md",
+    "backoff.json"
+  ],
+  web_dashboard: {
+    role: "truth/debug operator surface",
+    contract: "Reads and queues workflow evidence without inventing production-floor state."
+  },
+  godot_prototype: {
+    role: "expressive production-floor adapter",
+    contract: "Projects the same evidence into a studio-floor metaphor and must not outrank the web dashboard on truth/debug questions."
+  }
+};
 
 const statusClients = new Set();
 const registryClients = new Set();
@@ -130,6 +147,7 @@ export async function statusPayload(options = {}) {
       next_backlog_seeds: planSeeds
     },
     scheduler: backoff,
+    operator_surfaces: operatorSurfaces,
     dashboard_control: controlRequests || { version: 1, requests: [] },
     progress_tail: progressTail,
     progress_highlights: progressHighlights(progressTail),

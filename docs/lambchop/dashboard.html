@@ -72,7 +72,7 @@
 <body>
   <header>
     <h1 id="project-name">Lambchop Dashboard Hub</h1>
-    <p class="subhead" id="project-purpose">Select a registered project to view its current automation run.</p>
+    <p class="subhead" id="project-purpose">Select a registered project to view the truth/debug operator surface for its live Lambchop evidence.</p>
     <div class="toolbar">
       <label class="meta" for="project-select">Project</label>
       <select id="project-select" aria-label="Registered project"></select>
@@ -102,6 +102,10 @@
       <section class="panel">
         <h2>Registered Projects</h2>
         <div id="registered-projects"><p class="meta">Waiting for project registrations.</p></div>
+      </section>
+      <section class="panel">
+        <h2>Operator Surfaces</h2>
+        <div id="operator-surfaces" class="readout"><p class="meta">Waiting for project contract.</p></div>
       </section>
       <section class="panel">
         <h2>Roadmap</h2>
@@ -271,9 +275,21 @@
       byId("latest-work").innerHTML = latestItems.length ? latestItems.map(renderItem).join("") : `<p class="meta">No work items${activeFilter ? " for this filter" : " yet"}.</p>`;
       byId("proposal-backlog").innerHTML = data.proposal_backlog?.length ? data.proposal_backlog.map(renderProposal).join("") : `<p class="meta">No proposals need review.</p>`;
       byId("blocked").innerHTML = data.blocked?.length ? data.blocked.map(renderItem).join("") : `<p class="meta">No blocked work.</p>`;
+      renderOperatorSurfaces(data);
       renderRoadmap(data);
       renderProgress(data);
       renderFilterBar();
+    }
+
+    function renderOperatorSurfaces(data) {
+      const surfaces = data.operator_surfaces || {};
+      const evidence = Array.isArray(surfaces.shared_evidence) ? surfaces.shared_evidence.join(", ") : "state.json, dashboard-data.json, progress.md, scheduled-work-plan.md, backoff.json";
+      byId("operator-surfaces").innerHTML = `
+        <p><strong>Web dashboard</strong>${escapeHtml(surfaces.web_dashboard?.role || "truth/debug operator surface")}</p>
+        <p>${escapeHtml(surfaces.web_dashboard?.contract || "Reads and queues workflow evidence without inventing production-floor state.")}</p>
+        <p><strong>Godot prototype</strong>${escapeHtml(surfaces.godot_prototype?.role || "expressive production-floor adapter")}</p>
+        <p>${escapeHtml(surfaces.godot_prototype?.contract || "Projects the same evidence into a studio-floor metaphor and must not outrank the web dashboard on truth/debug questions.")}</p>
+        <p><strong>Shared evidence</strong>${escapeHtml(evidence)}</p>`;
     }
 
     function renderRoadmap(data) {
