@@ -111,6 +111,22 @@ test('Godot dashboard keeps story identity as a card while anchoring a physical 
   assert.doesNotMatch(dashboardScript, /drag_data/);
 });
 
+test('Godot dashboard represents office-to-workshop transfer as a station handoff across floors', () => {
+  for (const expectedText of [
+    'handoff route',
+    'Office -> Workshop',
+    'planning station',
+    'build station',
+  ]) {
+    assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
+  }
+
+  assert.match(dashboardScript, /_handoff_route_text/);
+  assert.match(dashboardScript, /_story_station_mode/);
+  assert.match(dashboardScript, /handoff-to-workshop/);
+  assert.doesNotMatch(dashboardScript, /drag preview/);
+});
+
 test('Godot dashboard attaches crew and blocker posture to story cards', () => {
   for (const expectedText of [
     'Crew on Story',
