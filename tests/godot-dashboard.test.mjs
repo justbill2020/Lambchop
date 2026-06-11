@@ -63,19 +63,21 @@ test('Godot dashboard verifier mood uses actual red validation evidence', () => 
 
 test('Godot dashboard renders a studio production floor skeleton instead of generic workflow buckets', () => {
   for (const expectedText of [
-    'Office',
-    'Workshop',
-    'Build',
-    'Asset',
-    'Integration',
+    'Upstairs Office',
+    'Downstairs Workshop',
+    'Stairwell Handoff',
+    'Build Bay',
+    'Asset Bench',
+    'Integration Bay',
   ]) {
     assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
   }
 
   assert.doesNotMatch(dashboardScript, /const BUCKETS :=/);
-  assert.match(dashboardScript, /_build_office_floor/);
-  assert.match(dashboardScript, /_build_workshop_floor/);
-  assert.match(dashboardScript, /_build_workshop_zone/);
+  assert.match(dashboardScript, /_build_studio_scene/);
+  assert.match(dashboardScript, /_build_isometric_floor_plate/);
+  assert.match(dashboardScript, /_build_stair_connector/);
+  assert.match(dashboardScript, /position = Vector2/);
 });
 
 test('Godot dashboard attaches crew and blocker posture to story cards', () => {
