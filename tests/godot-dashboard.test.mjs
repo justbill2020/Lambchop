@@ -96,6 +96,21 @@ test('Godot dashboard keeps both floors visible while allowing floor focus drill
   assert.match(dashboardScript, /_focus_scale/);
 });
 
+test('Godot dashboard keeps story identity as a card while anchoring a physical job object at the station', () => {
+  for (const expectedText of [
+    'Story Anchor',
+    'Job Object',
+    'station marker',
+  ]) {
+    assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
+  }
+
+  assert.match(dashboardScript, /_build_story_station_cluster/);
+  assert.match(dashboardScript, /_build_job_object/);
+  assert.match(dashboardScript, /_story_station_label/);
+  assert.doesNotMatch(dashboardScript, /drag_data/);
+});
+
 test('Godot dashboard attaches crew and blocker posture to story cards', () => {
   for (const expectedText of [
     'Crew on Story',
