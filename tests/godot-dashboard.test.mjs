@@ -80,6 +80,22 @@ test('Godot dashboard renders a studio production floor skeleton instead of gene
   assert.match(dashboardScript, /position = Vector2/);
 });
 
+test('Godot dashboard keeps both floors visible while allowing floor focus drill-in', () => {
+  for (const expectedText of [
+    'All Floors',
+    'Focus Office',
+    'Focus Workshop',
+    'floor focus',
+  ]) {
+    assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
+  }
+
+  assert.match(dashboardScript, /var focused_floor := "all"/);
+  assert.match(dashboardScript, /_set_floor_focus/);
+  assert.match(dashboardScript, /_focus_tint/);
+  assert.match(dashboardScript, /_focus_scale/);
+});
+
 test('Godot dashboard attaches crew and blocker posture to story cards', () => {
   for (const expectedText of [
     'Crew on Story',
