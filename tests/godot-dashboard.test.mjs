@@ -127,6 +127,22 @@ test('Godot dashboard represents office-to-workshop transfer as a station handof
   assert.doesNotMatch(dashboardScript, /drag preview/);
 });
 
+test('Godot dashboard expresses blocked work mainly through nearby crew posture at stations', () => {
+  for (const expectedText of [
+    'Crew Presence',
+    'nearby crew',
+    'waiting-on-human',
+    'waiting stance',
+  ]) {
+    assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
+  }
+
+  assert.match(dashboardScript, /_build_station_crew_presence/);
+  assert.match(dashboardScript, /_crew_presence_for_item/);
+  assert.match(dashboardScript, /_crew_posture_text/);
+  assert.match(dashboardScript, /waiting-on-agent/);
+});
+
 test('Godot dashboard attaches crew and blocker posture to story cards', () => {
   for (const expectedText of [
     'Crew on Story',
