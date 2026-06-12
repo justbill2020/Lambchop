@@ -92,8 +92,72 @@ test('Godot dashboard keeps both floors visible while allowing floor focus drill
 
   assert.match(dashboardScript, /var focused_floor := "all"/);
   assert.match(dashboardScript, /_set_floor_focus/);
+  assert.match(dashboardScript, /_is_floor_visible/);
+  assert.match(dashboardScript, /_focus_scene_position/);
+  assert.match(dashboardScript, /_focus_scene_size/);
   assert.match(dashboardScript, /_focus_tint/);
   assert.match(dashboardScript, /_focus_scale/);
+  assert.match(dashboardScript, /stack\.add_child\(_build_floor_toolbar\(\)\)/);
+});
+
+test('Godot dashboard keeps the studio scene inside a scrollable viewport instead of spilling off screen', () => {
+  for (const expectedText of [
+    'ScrollContainer',
+    'clip_contents',
+  ]) {
+    assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
+  }
+
+  assert.match(dashboardScript, /var scene_scroll: ScrollContainer/);
+  assert.match(dashboardScript, /var scene_stage: Control/);
+  assert.match(dashboardScript, /_build_scene_stage/);
+  assert.match(dashboardScript, /_mount_studio_scene/);
+});
+
+test('Godot dashboard keeps floor controls outside the physical floor hit area', () => {
+  assert.doesNotMatch(dashboardScript, /controls\.position = Vector2\(24, 12\)/);
+  assert.match(dashboardScript, /return Vector2\(278, 84\) if floor_key == "office" else Vector2\(44, 390\)/);
+  assert.match(dashboardScript, /return Vector2\(900, 930\)/);
+});
+
+test('Godot dashboard supports zooming the production floor without moving the toolbar', () => {
+  for (const expectedText of [
+    'Zoom -',
+    'Zoom +',
+    'Reset Zoom',
+  ]) {
+    assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
+  }
+
+  assert.match(dashboardScript, /var floor_zoom := 1.0/);
+  assert.match(dashboardScript, /_set_floor_zoom/);
+  assert.match(dashboardScript, /_build_floor_toolbar/);
+  assert.match(dashboardScript, /scene\.scale = Vector2\.ONE \* floor_zoom/);
+});
+
+test('Godot dashboard collapses the right detail rail until selection or explicit toggle opens it', () => {
+  for (const expectedText of [
+    'Show Crew Log',
+    'Hide Crew Log',
+    'Crew Log',
+    'Operator next action',
+    'Next useful action',
+    'Human-facing blocker',
+    'Proof / accepted outcomes',
+    'Mission:',
+    'Station:',
+    'Validation:',
+  ]) {
+    assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
+  }
+
+  assert.match(dashboardScript, /var detail_panel: PanelContainer/);
+  assert.match(dashboardScript, /var detail_open := false/);
+  assert.match(dashboardScript, /_set_detail_open/);
+  assert.match(dashboardScript, /_detail_panel_width/);
+  assert.match(dashboardScript, /header\.add_child\(detail_toggle\)/);
+  assert.match(dashboardScript, /detail_label\.custom_minimum_size = Vector2\(0, 520\)/);
+  assert.match(dashboardScript, /detail_label\.size_flags_vertical = Control\.SIZE_EXPAND_FILL/);
 });
 
 test('Godot dashboard keeps story identity as a card while anchoring a physical job object at the station', () => {
@@ -101,10 +165,14 @@ test('Godot dashboard keeps story identity as a card while anchoring a physical 
     'Story Anchor',
     'Job Object',
     'station marker',
+    'projectFloor',
   ]) {
     assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
   }
 
+  assert.match(dashboardScript, /_floor_stories/);
+  assert.match(dashboardScript, /_story_station/);
+  assert.match(dashboardScript, /_story_mission_type/);
   assert.match(dashboardScript, /_build_story_station_cluster/);
   assert.match(dashboardScript, /_build_job_object/);
   assert.match(dashboardScript, /_story_station_label/);
@@ -155,4 +223,22 @@ test('Godot dashboard attaches crew and blocker posture to story cards', () => {
 
   assert.match(dashboardScript, /_story_assigned_agents/);
   assert.match(dashboardScript, /_story_posture/);
+});
+
+test('Godot dashboard renders visible crew actors with motion on the floor', () => {
+  for (const expectedText of [
+    'crew-marker',
+    'crew actor',
+    'base_position',
+  ]) {
+    assert.match(dashboardScript, new RegExp(expectedText), `dashboard should render ${expectedText}`);
+  }
+
+  assert.match(dashboardScript, /var actor_layer: Control/);
+  assert.match(dashboardScript, /var actor_clock := 0.0/);
+  assert.match(dashboardScript, /func _process\(delta: float\)/);
+  assert.match(dashboardScript, /_mount_crew_actors/);
+  assert.match(dashboardScript, /_build_crew_actor/);
+  assert.match(dashboardScript, /_crew_initials/);
+  assert.match(dashboardScript, /_animate_crew_actors/);
 });

@@ -1658,5 +1658,349 @@
   "latest_progress": [
     "2026-06-11: completed issue #12 by adding the MVPv1 second-project admission proof.",
     "2026-06-11: all AFK issue slices are complete, and the production floor is ready for your human review in issue #9."
-  ]
+  ],
+  "projectFloor": {
+    "project": {
+      "name": "Lambchop",
+      "slug": "lambchop",
+      "phase": "portfolio-orchestrator-mvp0",
+      "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
+      "automation_id": "lambchop-autonomous-coding-team",
+      "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
+      "updated_at": "2026-06-11T00:25:00Z",
+      "issue_tracker": {
+        "type": "github",
+        "repository": "justbill2020/Lambchop",
+        "url": "https://github.com/justbill2020/Lambchop/issues",
+        "cli": "gh",
+        "default_for_github_remotes": true,
+        "label_status": {
+          "checked_at": "2026-06-10T19:45:00Z",
+          "missing_canonical_labels": [],
+          "blocker": null
+        }
+      }
+    },
+    "studio": {
+      "floors": {
+        "upstairs": {
+          "label": "Office",
+          "roomKeys": [
+            "office"
+          ],
+          "storyKeys": [
+            "task-03-github-repo-deployment-method",
+            "task-20-target-repo-upgrade-fixture",
+            "task-21-public-release-readiness"
+          ]
+        },
+        "downstairs": {
+          "label": "Workshop",
+          "roomKeys": [
+            "workshop"
+          ],
+          "storyKeys": [
+            "task-18-reconcile-trigger-afterwork-ledger-drift",
+            "task-23-godot-dashboard-plugin-architecture",
+            "task-25-godot-dashboard-issue-breakdown-publication",
+            "task-26-github-issue-1-triage-state-reconcile",
+            "task-36-production-floor-prototype-comparison"
+          ]
+        }
+      }
+    },
+    "regions": {
+      "office": {
+        "storyKeys": [
+          "task-03-github-repo-deployment-method",
+          "task-20-target-repo-upgrade-fixture",
+          "task-21-public-release-readiness"
+        ]
+      },
+      "workshop": {
+        "zones": {
+          "build": {
+            "storyKeys": []
+          },
+          "asset": {
+            "storyKeys": []
+          },
+          "integration": {
+            "storyKeys": [
+              "task-18-reconcile-trigger-afterwork-ledger-drift",
+              "task-26-github-issue-1-triage-state-reconcile"
+            ]
+          }
+        }
+      },
+      "blocked": {
+        "storyKeys": [
+          "task-23-godot-dashboard-plugin-architecture",
+          "task-25-godot-dashboard-issue-breakdown-publication",
+          "task-36-production-floor-prototype-comparison"
+        ]
+      }
+    },
+    "stories": [
+      {
+        "key": "task-03-github-repo-deployment-method",
+        "title": "Add reusable GitHub repo deployment method",
+        "floorState": "handoff-to-workshop",
+        "mission": {
+          "key": "mission-task-03-github-repo-deployment-method",
+          "storyKey": "task-03-github-repo-deployment-method",
+          "type": "implement",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-03-github-repo-deployment-method",
+        "nextAction": "Continue validation scenarios.",
+        "placement": {
+          "region": "office",
+          "zone": "planning",
+          "floor": "upstairs",
+          "room": "office",
+          "station": "story-shaping-desk",
+          "handoffTarget": {
+            "floor": "downstairs",
+            "room": "workshop",
+            "station": "build-bay"
+          }
+        },
+        "validation": "unknown",
+        "blocker": null,
+        "blockedPosture": null,
+        "crewLocation": {
+          "floor": "upstairs",
+          "room": "office",
+          "station": "story-shaping-desk"
+        }
+      },
+      {
+        "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
+        "title": "Reconcile ledgers so run-now handoff evidence is not followed by additional work",
+        "floorState": "handoff-to-office",
+        "mission": {
+          "key": "mission-task-18-reconcile-trigger-afterwork-ledger-drift",
+          "storyKey": "task-18-reconcile-trigger-afterwork-ledger-drift",
+          "type": "validate",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-18-reconcile-trigger-afterwork-ledger-drift",
+        "nextAction": "Reconcile the historical 2026-05-20 handoff ledgers when that repair becomes the active queue item again.",
+        "placement": {
+          "region": "workshop",
+          "zone": "integration",
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "integration-bay",
+          "handoffTarget": {
+            "floor": "upstairs",
+            "room": "office",
+            "station": "course-correction-desk"
+          }
+        },
+        "validation": "unknown",
+        "blocker": null,
+        "blockedPosture": null,
+        "crewLocation": {
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "integration-bay"
+        }
+      },
+      {
+        "key": "task-20-target-repo-upgrade-fixture",
+        "title": "Prove target repo upgrade with a safe fixture",
+        "floorState": "office",
+        "mission": {
+          "key": "mission-task-20-target-repo-upgrade-fixture",
+          "storyKey": "task-20-target-repo-upgrade-fixture",
+          "type": "brief",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-20-target-repo-upgrade-fixture",
+        "nextAction": "Build an older-install fixture, run upgrade validation, and record proof without private repo details.",
+        "placement": {
+          "region": "office",
+          "zone": "planning",
+          "floor": "upstairs",
+          "room": "office",
+          "station": "briefing-desk",
+          "handoffTarget": null
+        },
+        "validation": "unknown",
+        "blocker": null,
+        "blockedPosture": null,
+        "crewLocation": {
+          "floor": "upstairs",
+          "room": "office",
+          "station": "briefing-desk"
+        }
+      },
+      {
+        "key": "task-21-public-release-readiness",
+        "title": "Prepare Lambchop public release readiness",
+        "floorState": "handoff-to-workshop",
+        "mission": {
+          "key": "mission-task-21-public-release-readiness",
+          "storyKey": "task-21-public-release-readiness",
+          "type": "implement",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-21-public-release-readiness",
+        "nextAction": "Review public-facing docs and release gates after task-20 proves upgrade behavior.",
+        "placement": {
+          "region": "office",
+          "zone": "planning",
+          "floor": "upstairs",
+          "room": "office",
+          "station": "story-shaping-desk",
+          "handoffTarget": {
+            "floor": "downstairs",
+            "room": "workshop",
+            "station": "build-bay"
+          }
+        },
+        "validation": "unknown",
+        "blocker": null,
+        "blockedPosture": null,
+        "crewLocation": {
+          "floor": "upstairs",
+          "room": "office",
+          "station": "story-shaping-desk"
+        }
+      },
+      {
+        "key": "task-23-godot-dashboard-plugin-architecture",
+        "title": "Define shared Godot dashboard plugin architecture",
+        "floorState": "blocked",
+        "mission": {
+          "key": "mission-task-23-godot-dashboard-plugin-architecture",
+          "storyKey": "task-23-godot-dashboard-plugin-architecture",
+          "type": "implement",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-23-godot-dashboard-plugin-architecture",
+        "nextAction": "Proceed with task-27 to add monitoring HUD, agent presence, validation/backoff/trust signals, and world-event feed.",
+        "placement": {
+          "region": "blocked",
+          "zone": "blocked",
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "handoffTarget": null
+        },
+        "validation": "unknown",
+        "blocker": "Design architecture remains open, but first actionable next slice is task-27 gamified monitoring HUD.",
+        "blockedPosture": "waiting-on-human",
+        "crewLocation": {
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "posture": "waiting-on-human"
+        }
+      },
+      {
+        "key": "task-25-godot-dashboard-issue-breakdown-publication",
+        "title": "Publish Godot dashboard tracer-bullet issue breakdown",
+        "floorState": "blocked",
+        "mission": {
+          "key": "mission-task-25-godot-dashboard-issue-breakdown-publication",
+          "storyKey": "task-25-godot-dashboard-issue-breakdown-publication",
+          "type": "implement",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-25-godot-dashboard-issue-breakdown-publication",
+        "nextAction": "Bill approves/edits the 8-slice breakdown, then publish issues in dependency order after label blocker is resolved.",
+        "placement": {
+          "region": "blocked",
+          "zone": "blocked",
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "handoffTarget": null
+        },
+        "validation": "unknown",
+        "blocker": "Waiting for Bill approval of the proposed to-issues breakdown and for canonical triage labels or an explicit label fallback decision.",
+        "blockedPosture": "waiting-on-human",
+        "crewLocation": {
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "posture": "waiting-on-human"
+        }
+      },
+      {
+        "key": "task-26-github-issue-1-triage-state-reconcile",
+        "title": "Reconcile GitHub issue #1 triage state with local queue truth",
+        "floorState": "handoff-to-office",
+        "mission": {
+          "key": "mission-task-26-github-issue-1-triage-state-reconcile",
+          "storyKey": "task-26-github-issue-1-triage-state-reconcile",
+          "type": "validate",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-26-github-issue-1-triage-state-reconcile",
+        "nextAction": "Comment on GitHub issue #1 with corrected source-of-truth evidence and leave it ready for maintainer closure/review.",
+        "placement": {
+          "region": "workshop",
+          "zone": "integration",
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "integration-bay",
+          "handoffTarget": {
+            "floor": "upstairs",
+            "room": "office",
+            "station": "course-correction-desk"
+          }
+        },
+        "validation": "unknown",
+        "blocker": null,
+        "blockedPosture": null,
+        "crewLocation": {
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "integration-bay"
+        }
+      },
+      {
+        "key": "task-36-production-floor-prototype-comparison",
+        "title": "Produce and compare the studio production floor prototype",
+        "floorState": "blocked",
+        "mission": {
+          "key": "mission-task-36-production-floor-prototype-comparison",
+          "storyKey": "task-36-production-floor-prototype-comparison",
+          "type": "asset",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-36-production-floor-prototype-comparison",
+        "nextAction": "The production floor implementation is ready for human visual review on issue #9 when Bill wants to compare prototype directions.",
+        "placement": {
+          "region": "blocked",
+          "zone": "blocked",
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "handoffTarget": null
+        },
+        "validation": "unknown",
+        "blocker": "AFK runtime slices are now in place; the remaining blocker is the human prototype comparison itself.",
+        "blockedPosture": "waiting-on-human",
+        "crewLocation": {
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "posture": "waiting-on-human"
+        }
+      }
+    ]
+  }
 }

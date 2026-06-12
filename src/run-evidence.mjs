@@ -32,7 +32,7 @@ export function createRunEvidence() {
       return clone(ledger);
     },
 
-    projectDashboard({ project, workItems, nextAction }) {
+    projectDashboard({ project, workItems, nextAction, projectFloor = null }) {
       const counts = countStatuses(workItems);
       const latestEvents = [...ledger].sort((left, right) => right.at.localeCompare(left.at));
       const completedRun = latestEvents.find((event) => event.type === 'run_completed') ?? null;
@@ -40,6 +40,7 @@ export function createRunEvidence() {
 
       return {
         project: clone(project),
+        ...(projectFloor ? { projectFloor: clone(projectFloor) } : {}),
         summary: {
           ...counts,
           proposals_need_review: 0,

@@ -4,6 +4,7 @@ import { createStoryRuntime } from './story-runtime.mjs';
 import { createRunEvidence } from './run-evidence.mjs';
 import { createMaterialProgressController } from './material-progress-controller.mjs';
 import { createMeetingGate } from './meeting-gate.mjs';
+import { createProductionFloorProjection } from './production-floor-projection.mjs';
 
 export async function runSelfHostingProof({ codexCliPath, codexCliArgs, storyKey }) {
   const runtime = createCliAgentRuntime({ codexCliPath });
@@ -84,6 +85,17 @@ export async function runSelfHostingProof({ codexCliPath, codexCliArgs, storyKey
       { key: 'task-38-mvp0-self-hosting-proof', status: 'done', title: 'Self hosting proof' },
     ],
     nextAction: 'Continue self-hosting work.',
+    projectFloor: createProductionFloorProjection().projectFloor({
+      project: {
+        name: 'Lambchop',
+        slug: 'lambchop',
+      },
+      stories: [storyRuntime.getStory(storyKey)],
+      missions: [
+        { key: 'mission-self-hosting', storyKey, type: 'implement', status: 'passed' },
+      ],
+      evidence: runEvidence.entries(),
+    }),
   });
 
   return {
