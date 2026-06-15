@@ -2,6 +2,24 @@
 
 This file is the human-readable proof-of-work log for the Lambchop autonomous workflow. Automation runs append entries here after inspecting the workflow, state, repository, and active work item.
 
+## 2026-06-15 12:04 - task-18 handoff ledger reconciliation finished
+- Status: done
+- Run id: `run-20260615-task18-ledger-reconcile`
+- Branch: `codex/lambchop-task-18-reconcile-trigger-afterwork-ledger-drift`
+- Worktree: `.worktrees\task-18-reconcile-trigger-afterwork-ledger-drift`
+- Parallel-dispatch decision:
+  - Kept this slice single-lane. It is a source-of-truth reconciliation across shared ledgers, so parallel edits would only have created conflicting historical evidence.
+- Work completed:
+  - Rewrote the stale May 20, 2026 scheduler handoff evidence so it records initiation-only run-now wording instead of claiming the same run verified a new automation thread and then kept working.
+  - Promoted `task-18-reconcile-trigger-afterwork-ledger-drift` to done and advanced the queue to `task-26-github-issue-1-triage-state-reconcile`.
+  - Consumed the queued dashboard control request `dashboard-command-20260611T145228458Z` as completed by this normal Lambchop update run.
+- Validation:
+  - Scheduler evidence check: `lambchop-autonomous-coding-team` is currently `ACTIVE` in `C:\Users\BillMartin\.codex\sqlite\codex-dev.db`; the persisted parked anchor is still `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO`, while the expected parked anchor for Monday, June 15, 2026 is `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU`.
+  - Scheduler evidence check: latest automation run remains `019ecc3b-a8c9-7443-aa00-1e5ada51f01d` with status `IN_PROGRESS`; this reconciliation run did not rewrite scheduler state or request another run-now trigger.
+  - JSON GREEN: `docs/lambchop/state.json`, `docs/lambchop/dashboard-data.json`, `docs/lambchop/backoff.json`, and `docs/lambchop/dashboard-control-requests.json` parsed successfully after the repair.
+- Next step:
+  - Run `task-26-github-issue-1-triage-state-reconcile` and reconcile the already-closed GitHub issue with the current local queue truth.
+
 ## 2026-06-10 19:25 - task-39 second project admission finished
 - Status: done
 - Run id: `run-20260610-second-project-admission`
@@ -1185,7 +1203,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - On Wednesday, May 20, 2026, the parked weekly anchor should be Tuesday at noon: `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
   - Paused `lambchop-autonomous-coding-team` through Codex app automation tooling and repaired the app-visible parked anchor to `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
   - Unpaused `lambchop-autonomous-coding-team` through Codex app automation tooling; status is ACTIVE.
-  - Backed up scheduler DB to `C:\Users\BillMartin\.codex\backups\automation-run-now-lambchop-20260520T1705\codex-dev.db`, nudged `next_run_at`, and verified new automation run `019e4695-2d61-75c3-b257-e3cb5bdc06cf` with status `IN_PROGRESS`.
+  - Backed up scheduler DB to `C:\Users\BillMartin\.codex\backups\automation-run-now-lambchop-20260520T1705\codex-dev.db`, nudged `next_run_at`, and initiated the scheduler-visible run-now handoff.
   - After the scheduler-visible run-now trigger, the persisted automation remains ACTIVE and parked at `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=TU`.
 - TDD requirement:
   - Bill explicitly requested the `tdd` skill for coding now and in the future for this and all Lambchop-enabled projects.
@@ -1210,7 +1228,7 @@ This file is the human-readable proof-of-work log for the Lambchop autonomous wo
   - `task-17-trigger-terminalization-guardrail` (todo): enforce 'run-now is the last step' via workflow + Stop hook + tests.
   - `task-18-reconcile-trigger-afterwork-ledger-drift` (todo): repair evidence so handoff entries are terminal and counts/next_action match reality.
 - Scheduler status:
-  - automation_runs shows thread_id `019e4695-2d61-75c3-b257-e3cb5bdc06cf` is still `IN_PROGRESS`; no new run-now trigger was requested in this intake.
+  - No new run-now trigger was requested in this intake because the earlier May 20 handoff had already been initiated and later same-run work made additional scheduler claims unsafe.
 
 
 - Clarification (Bill): after a scheduler-visible run-now handoff, log only that the run was initiated. Do not log whether it actually ran; the next automation run confirms execution by recognizing itself. (2026-05-20T18:39:45Z)

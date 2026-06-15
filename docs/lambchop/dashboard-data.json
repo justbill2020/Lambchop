@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-11T00:25:00Z",
+    "updated_at": "2026-06-15T12:04:51.0621148-05:00",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -21,14 +21,14 @@
     }
   },
   "summary": {
-    "todo": 5,
+    "todo": 4,
     "in_progress": 0,
     "blocked": 3,
-    "done": 33,
+    "done": 34,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "AFK issue backlog is complete. Review issue #9 for the production-floor visual direction and then continue with any follow-up changes from that review."
+    "next_action": "Run task-26-github-issue-1-triage-state-reconcile and reconcile the closed issue with the corrected local queue truth."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -159,7 +159,7 @@
     {
       "key": "task-03-github-repo-deployment-method",
       "title": "Add reusable GitHub repo deployment method",
-      "status": "todo",
+      "status": "done",
       "priority": 25,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -666,15 +666,18 @@
     {
       "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
       "title": "Reconcile ledgers so run-now handoff evidence is not followed by additional work",
-      "status": "todo",
+      "status": "done",
       "priority": 28,
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
-      "branch": "codex/lambchop-task-18-reconcile-trigger-afterwork-ledger-drift",
-      "worktree": ".worktrees/task-18-reconcile-trigger-afterwork-ledger-drift",
+      "integration_status": "ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
       "validation": [
+        "Historical 2026-05-20 progress and backoff wording now records the run-now as initiation-only instead of same-run thread verification.",
+        "Dashboard control request dashboard-command-20260611T145228458Z was consumed as a completed Lambchop update run.",
+        "Scheduler evidence on 2026-06-15: automation row is ACTIVE with actual parked anchor RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO; expected parked anchor for Monday, June 15, 2026 is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU; latest run thread 019ecc3b-a8c9-7443-aa00-1e5ada51f01d remains IN_PROGRESS, so this repair run did not request another run-now trigger.",
         "JSON parse passes for docs/lambchop/*.json."
       ],
       "implementation_notes": [
@@ -683,7 +686,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Reconcile the historical 2026-05-20 handoff ledgers when that repair becomes the active queue item again.",
+      "next_step": "Proceed to task-26 and reconcile the closed GitHub issue #1 state against the corrected local queue truth.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -691,7 +694,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T14:45:00-05:00"
+      "updated_at": "2026-06-15T12:04:51.0621148-05:00"
     },
     {
       "key": "task-19-dashboard-proposal-review-ui",
@@ -1596,18 +1599,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260610-second-project-admission",
-    "started_at": "2026-06-10T19:25:00-05:00",
-    "work_item_key": "task-39-mvp1-second-project-admission",
+    "run_id": "run-20260615-task18-ledger-reconcile",
+    "started_at": "2026-06-15T12:04:51.0621148-05:00",
+    "work_item_key": "task-18-reconcile-trigger-afterwork-ledger-drift",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T19:25:00-05:00",
-    "next_action": "AFK issue backlog is complete. Review issue #9 for the production-floor visual direction and then continue with any follow-up changes from that review.",
-    "timestamp": "2026-06-10T19:25:00-05:00",
-    "summary": "Completed the MVPv1 second-project admission tracer bullet and finished the AFK issue backlog.",
+    "dashboard_updated_at": "2026-06-15T12:04:51.0621148-05:00",
+    "next_action": "Run task-26-github-issue-1-triage-state-reconcile and reconcile the closed issue with the corrected local queue truth.",
+    "timestamp": "2026-06-15T12:04:51.0621148-05:00",
+    "summary": "Reconciled the stale May 20 handoff ledgers and consumed the queued dashboard Lambchop update request.",
     "active_work_item": null,
-    "validation_note": "A second project can now remain visible in the portfolio without activating when capacity is exhausted, completing the AFK GitHub issue spine alongside the MVPv0 proof.",
-    "validation": "Validation GREEN: node --test tests\\second-project-proof.test.mjs, node --test tests\\second-project-admission.test.mjs, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "Historical run-now evidence now uses initiation-only wording, task-18 is done on main, and the queue now advances to task-26 with the dashboard request marked completed.",
+    "validation": "Validation GREEN: scheduler DB inspection confirmed ACTIVE status and exposed a stale Monday parked anchor versus the expected Sunday anchor for June 15, 2026; JSON parse passed for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1652,12 +1655,12 @@
       "lambchop-update",
       "dashboard-refresh"
     ],
-    "last_checked_at": "2026-05-15T18:15:00Z",
-    "status": "validated"
+    "last_checked_at": "2026-06-15T12:04:51.0621148-05:00",
+    "status": "processed_request_queue"
   },
   "latest_progress": [
-    "2026-06-11: completed issue #12 by adding the MVPv1 second-project admission proof.",
-    "2026-06-11: all AFK issue slices are complete, and the production floor is ready for your human review in issue #9."
+    "2026-06-15: completed task-18 by correcting the May 20 initiation-only handoff evidence and consuming the queued dashboard Lambchop update request.",
+    "2026-06-15: queue now advances to task-26 to reconcile the already-closed GitHub issue #1 with current local truth."
   ],
   "projectFloor": {
     "project": {
@@ -1700,7 +1703,6 @@
             "workshop"
           ],
           "storyKeys": [
-            "task-18-reconcile-trigger-afterwork-ledger-drift",
             "task-23-godot-dashboard-plugin-architecture",
             "task-25-godot-dashboard-issue-breakdown-publication",
             "task-26-github-issue-1-triage-state-reconcile",
@@ -1727,7 +1729,6 @@
           },
           "integration": {
             "storyKeys": [
-              "task-18-reconcile-trigger-afterwork-ledger-drift",
               "task-26-github-issue-1-triage-state-reconcile"
             ]
           }
@@ -1774,40 +1775,6 @@
           "floor": "upstairs",
           "room": "office",
           "station": "story-shaping-desk"
-        }
-      },
-      {
-        "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
-        "title": "Reconcile ledgers so run-now handoff evidence is not followed by additional work",
-        "floorState": "handoff-to-office",
-        "mission": {
-          "key": "mission-task-18-reconcile-trigger-afterwork-ledger-drift",
-          "storyKey": "task-18-reconcile-trigger-afterwork-ledger-drift",
-          "type": "validate",
-          "status": "active"
-        },
-        "acceptedOutcomes": [],
-        "sourceWorkItemKey": "task-18-reconcile-trigger-afterwork-ledger-drift",
-        "nextAction": "Reconcile the historical 2026-05-20 handoff ledgers when that repair becomes the active queue item again.",
-        "placement": {
-          "region": "workshop",
-          "zone": "integration",
-          "floor": "downstairs",
-          "room": "workshop",
-          "station": "integration-bay",
-          "handoffTarget": {
-            "floor": "upstairs",
-            "room": "office",
-            "station": "course-correction-desk"
-          }
-        },
-        "validation": "unknown",
-        "blocker": null,
-        "blockedPosture": null,
-        "crewLocation": {
-          "floor": "downstairs",
-          "room": "workshop",
-          "station": "integration-bay"
         }
       },
       {
@@ -1948,7 +1915,7 @@
         },
         "acceptedOutcomes": [],
         "sourceWorkItemKey": "task-26-github-issue-1-triage-state-reconcile",
-        "nextAction": "Comment on GitHub issue #1 with corrected source-of-truth evidence and leave it ready for maintainer closure/review.",
+        "nextAction": "Reconcile the closed GitHub issue #1 state with the corrected local queue truth and record whether any final triage comment or labels are still needed.",
         "placement": {
           "region": "workshop",
           "zone": "integration",
