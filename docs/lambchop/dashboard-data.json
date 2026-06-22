@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-15T12:04:51.0621148-05:00",
+    "updated_at": "2026-06-22T12:05:28.7545695-05:00",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -21,14 +21,14 @@
     }
   },
   "summary": {
-    "todo": 4,
+    "todo": 3,
     "in_progress": 0,
     "blocked": 3,
-    "done": 34,
+    "done": 35,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "Run task-26-github-issue-1-triage-state-reconcile and reconcile the closed issue with the corrected local queue truth."
+    "next_action": "Run task-03-github-repo-deployment-method and continue the remaining GitHub deployment validation scenarios."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -51,8 +51,8 @@
       "autonomous-coding-team/assets/templates/"
     ],
     "next_backlog_seeds": [
-      "Run issue #3 to establish capacity-gated portfolio and project admission.",
-      "Resolve issue #1 with corrected source-of-truth evidence so legacy queue drift stops distracting the new backlog.",
+      "Finish the reusable GitHub deployment-method validation so Lambchop can install into another repo safely.",
+      "Prove the target-repo upgrade fixture path after the dashboard proposal work already on record.",
       "Prepare the human-review visual comparison in issue #9 after the runtime evidence slices are in place."
     ]
   },
@@ -961,18 +961,19 @@
     {
       "key": "task-26-github-issue-1-triage-state-reconcile",
       "title": "Reconcile GitHub issue #1 triage state with local queue truth",
-      "status": "todo",
+      "status": "done",
       "priority": 48,
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
-      "branch": "main",
-      "worktree": "REPO_ROOT",
+      "integration_status": "ready",
+      "branch": "codex/lambchop-task-26-github-issue-1-triage-state-reconcile",
+      "worktree": ".worktrees/task-26-github-issue-1-triage-state-reconcile",
       "validation": [
         "Triage RED: GitHub issue #1 is open and unlabeled; canonical labels needs-triage, needs-info, ready-for-agent, and ready-for-human are missing. Local evidence is inconsistent: progress says task-22 landed/done on main, but docs/lambchop/state.json currently has task-22 status=todo and task-18 status=done while dashboard next_action still says run task-18. Automation is ACTIVE with parked Monday RRULE; current handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate scheduler trigger was initiated.",
         "TDD intake handoff evidence: no new task was queued because task-26 already exists for the proposed tracer bullet around issue #1/source-of-truth reconciliation. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered. Blocker remains Bill approval for canonical labels and source-of-truth reconciliation before GitHub issue mutation.",
-        "2026-06-10 reconciliation: canonical labels now exist and local queue truth was corrected so task-18 is todo while task-22 is done."
+        "2026-06-10 reconciliation: canonical labels now exist and local queue truth was corrected so task-18 is todo while task-22 is done.",
+        "2026-06-22 reconciliation: gh issue view 1 shows issue #1 CLOSED since 2026-06-11T15:14:40Z with the required AI triage evidence comment already present, so no new labels or comments are needed; local queue truth now records task-26 done and leaves task-03 as the next ready item."
       ],
       "implementation_notes": [
         "Created by triage session on 2026-06-02 after issue #1 was found open/unlabeled and local ledgers disagreed about task-22/task-18 truth.",
@@ -981,7 +982,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Comment on GitHub issue #1 with corrected source-of-truth evidence and leave it ready for maintainer closure/review.",
+      "next_step": "Run task-03-github-repo-deployment-method and continue the remaining GitHub deployment validation scenarios.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -989,7 +990,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-22T12:05:28.7545695-05:00"
     },
     {
       "key": "task-27-godot-dashboard-gamified-monitoring-hud",
@@ -1599,18 +1600,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260615-task18-ledger-reconcile",
-    "started_at": "2026-06-15T12:04:51.0621148-05:00",
-    "work_item_key": "task-18-reconcile-trigger-afterwork-ledger-drift",
+    "run_id": "run-20260622-task26-issue1-triage-reconcile",
+    "started_at": "2026-06-22T12:05:28.7545695-05:00",
+    "work_item_key": "task-26-github-issue-1-triage-state-reconcile",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-15T12:04:51.0621148-05:00",
-    "next_action": "Run task-26-github-issue-1-triage-state-reconcile and reconcile the closed issue with the corrected local queue truth.",
-    "timestamp": "2026-06-15T12:04:51.0621148-05:00",
-    "summary": "Reconciled the stale May 20 handoff ledgers and consumed the queued dashboard Lambchop update request.",
+    "dashboard_updated_at": "2026-06-22T12:05:28.7545695-05:00",
+    "next_action": "Run task-03-github-repo-deployment-method and continue the remaining GitHub deployment validation scenarios.",
+    "timestamp": "2026-06-22T12:05:28.7545695-05:00",
+    "summary": "Reconciled the closed GitHub issue #1 against the corrected local queue truth and cleared task-26.",
     "active_work_item": null,
-    "validation_note": "Historical run-now evidence now uses initiation-only wording, task-18 is done on main, and the queue now advances to task-26 with the dashboard request marked completed.",
-    "validation": "Validation GREEN: scheduler DB inspection confirmed ACTIVE status and exposed a stale Monday parked anchor versus the expected Sunday anchor for June 15, 2026; JSON parse passed for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
+    "validation_note": "Issue #1 was already closed with AI triage evidence on 2026-06-11, so task-26 only needed local truth reconciliation; task-03 is now the next ready item.",
+    "validation": "Validation GREEN: gh issue view 1 confirmed CLOSED state with existing triage evidence comments; scheduler DB inspection confirmed ACTIVE status, stale Monday parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO` versus the expected Sunday anchor for Sunday, June 21, 2026 `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU`, and latest run thread `019ef048-2a3b-7d72-84d8-df8ac1f7807e` remains IN_PROGRESS; JSON parse passed for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1655,12 +1656,12 @@
       "lambchop-update",
       "dashboard-refresh"
     ],
-    "last_checked_at": "2026-06-15T12:04:51.0621148-05:00",
+    "last_checked_at": "2026-06-22T12:05:28.7545695-05:00",
     "status": "processed_request_queue"
   },
   "latest_progress": [
-    "2026-06-15: completed task-18 by correcting the May 20 initiation-only handoff evidence and consuming the queued dashboard Lambchop update request.",
-    "2026-06-15: queue now advances to task-26 to reconcile the already-closed GitHub issue #1 with current local truth."
+    "2026-06-22: completed task-26 by reconciling closed GitHub issue #1 with the corrected local queue truth and confirming no new triage mutation is needed.",
+    "2026-06-22: queue now advances to task-03 for the remaining reusable GitHub deployment-method validation work."
   ],
   "projectFloor": {
     "project": {
@@ -1705,7 +1706,6 @@
           "storyKeys": [
             "task-23-godot-dashboard-plugin-architecture",
             "task-25-godot-dashboard-issue-breakdown-publication",
-            "task-26-github-issue-1-triage-state-reconcile",
             "task-36-production-floor-prototype-comparison"
           ]
         }
@@ -1728,9 +1728,7 @@
             "storyKeys": []
           },
           "integration": {
-            "storyKeys": [
-              "task-26-github-issue-1-triage-state-reconcile"
-            ]
+            "storyKeys": []
           }
         }
       },
@@ -1901,40 +1899,6 @@
           "room": "workshop",
           "station": "blocked-bay",
           "posture": "waiting-on-human"
-        }
-      },
-      {
-        "key": "task-26-github-issue-1-triage-state-reconcile",
-        "title": "Reconcile GitHub issue #1 triage state with local queue truth",
-        "floorState": "handoff-to-office",
-        "mission": {
-          "key": "mission-task-26-github-issue-1-triage-state-reconcile",
-          "storyKey": "task-26-github-issue-1-triage-state-reconcile",
-          "type": "validate",
-          "status": "active"
-        },
-        "acceptedOutcomes": [],
-        "sourceWorkItemKey": "task-26-github-issue-1-triage-state-reconcile",
-        "nextAction": "Reconcile the closed GitHub issue #1 state with the corrected local queue truth and record whether any final triage comment or labels are still needed.",
-        "placement": {
-          "region": "workshop",
-          "zone": "integration",
-          "floor": "downstairs",
-          "room": "workshop",
-          "station": "integration-bay",
-          "handoffTarget": {
-            "floor": "upstairs",
-            "room": "office",
-            "station": "course-correction-desk"
-          }
-        },
-        "validation": "unknown",
-        "blocker": null,
-        "blockedPosture": null,
-        "crewLocation": {
-          "floor": "downstairs",
-          "room": "workshop",
-          "station": "integration-bay"
         }
       },
       {
