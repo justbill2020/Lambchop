@@ -1933,5 +1933,244 @@
         }
       }
     ]
-  }
+  },
+  "managed_projects": [
+    {
+      "slug": "lambchop",
+      "name": "Lambchop",
+      "repository": "justbill2020/Lambchop",
+      "default_branch": "main",
+      "dashboard": {
+        "title": "Lambchop",
+        "role": "first-managed-project"
+      },
+      "policy": {
+        "source_of_truth": "github-issues-and-prs",
+        "auto_merge": false,
+        "worker_sandbox_required": true
+      }
+    }
+  ],
+  "mvp": {
+    "active_goal": {
+      "number": 42,
+      "title": "Dogfood Lambchop as the first managed AI engineering project",
+      "url": "https://github.com/justbill2020/Lambchop/issues/42"
+    },
+    "next_issue": {
+      "number": 43,
+      "title": "Bootstrap Lambchop-operated MVP planning loop",
+      "url": "https://github.com/justbill2020/Lambchop/issues/43"
+    },
+    "counts": {
+      "child_issues": 13,
+      "ready": 1,
+      "blocked": 12,
+      "done": 0,
+      "human": 0
+    },
+    "blockers": [
+      {
+        "number": 44,
+        "title": "Add Lambchop feedback intake and decision queue",
+        "blocked_by": [
+          43
+        ]
+      },
+      {
+        "number": 45,
+        "title": "Create standalone coordinator CLI skeleton",
+        "blocked_by": [
+          43,
+          44
+        ]
+      },
+      {
+        "number": 46,
+        "title": "Register Lambchop as the first managed project",
+        "blocked_by": [
+          45
+        ]
+      },
+      {
+        "number": 47,
+        "title": "Implement GitHub Issues intake and coordinator assignment leases",
+        "blocked_by": [
+          46
+        ]
+      },
+      {
+        "number": 48,
+        "title": "Add machine peer registry and heartbeat for dogfood runners",
+        "blocked_by": [
+          45
+        ]
+      },
+      {
+        "number": 49,
+        "title": "Add project sandbox and issue worktree manager",
+        "blocked_by": [
+          47,
+          48
+        ]
+      },
+      {
+        "number": 50,
+        "title": "Define worker adapter contract with fake worker",
+        "blocked_by": [
+          49
+        ]
+      },
+      {
+        "number": 51,
+        "title": "Implement Codex CLI and Claude CLI MVP worker adapters",
+        "blocked_by": [
+          50
+        ]
+      },
+      {
+        "number": 52,
+        "title": "Add run event log and OFK-style work log for session analytics",
+        "blocked_by": [
+          50
+        ]
+      },
+      {
+        "number": 53,
+        "title": "Add GitHub issue comments, branch push, and linked PR loop",
+        "blocked_by": [
+          51,
+          52
+        ]
+      },
+      {
+        "number": 54,
+        "title": "Build MVP single-pane dashboard with feedback controls and analytics v0",
+        "blocked_by": [
+          47,
+          48,
+          52,
+          53
+        ]
+      },
+      {
+        "number": 55,
+        "title": "Dogfood one complete Lambchop issue-to-PR loop",
+        "blocked_by": [
+          54
+        ]
+      }
+    ],
+    "parallelizable_candidates": [
+      {
+        "number": 43,
+        "title": "Bootstrap Lambchop-operated MVP planning loop",
+        "url": "https://github.com/justbill2020/Lambchop/issues/43"
+      }
+    ]
+  },
+  "peers": [
+    {
+      "runner_id": "bill-windows",
+      "machine_label": "Windows workstation",
+      "platform": "windows",
+      "health": "active",
+      "availability": {
+        "status": "available",
+        "repositories": [
+          "justbill2020/Lambchop"
+        ],
+        "load": 0
+      },
+      "capabilities": [
+        "node",
+        "gh",
+        "codex-cli"
+      ],
+      "workspace_roots": [
+        {
+          "label": "lambchop-sandbox-root"
+        }
+      ]
+    }
+  ],
+  "assignment": {
+    "assignment_state": "assigned",
+    "assigned_issue": 43,
+    "assigned_runner": "bill-windows",
+    "branch": "codex/lambchop-issue-43",
+    "expires_at": "2026-06-24T01:24:12.670Z"
+  },
+  "run_containers": [
+    {
+      "run_id": "run-54-dashboard-mvp-local",
+      "issue_number": 54,
+      "sandbox": {
+        "project_sandbox_path": "C:/Users/BillMartin/.lambchop/sandboxes/projects/lambchop",
+        "worktree_path": "C:/Users/BillMartin/.lambchop/sandboxes/projects/lambchop/worktrees/issue-54"
+      },
+      "worker": {
+        "adapter": "codex-cli",
+        "model": "gpt-5-codex"
+      },
+      "branch": "local-chat-worktree",
+      "pull_request": null,
+      "validation": {
+        "status": "passed",
+        "commands": [
+          "node --test tests/dashboard-mvp-status.test.mjs tests/mvp-dashboard-projection.test.mjs"
+        ],
+        "failures": 0
+      },
+      "blockers": []
+    }
+  ],
+  "feedback": {
+    "allowed_intents": [
+      "approve",
+      "reject",
+      "revise",
+      "pause",
+      "resume",
+      "retry",
+      "reassign",
+      "escalate"
+    ],
+    "queue": []
+  },
+  "analytics": {
+    "retry_count": 0,
+    "validation_failures": 2,
+    "churned_files": [
+      "docs/lambchop/dashboard.html",
+      "docs/lambchop/dashboard-server/server.mjs",
+      "src/mvp-dashboard-projection.mjs",
+      "tests/dashboard-mvp-status.test.mjs",
+      "tests/mvp-dashboard-projection.test.mjs"
+    ],
+    "time_to_pr_minutes": null,
+    "blocker_count": 0,
+    "adapter_used": "codex-cli",
+    "human_intervention_points": [
+      "policy:open-linked-pr"
+    ]
+  },
+  "policy_requests": [
+    {
+      "action": "policy-authorization-request",
+      "status": "needs-human-approval",
+      "repository": "justbill2020/Lambchop",
+      "issue_number": 55,
+      "requested_capability": "open-linked-pr",
+      "reason": "Dogfood proof requires opening a linked PR, but policy has may_open_pr=false.",
+      "constraints": {
+        "may_push": true,
+        "may_open_pr": false,
+        "auto_merge": false,
+        "requested_auto_merge": false
+      },
+      "approval_comment": "/lambchop-feedback\nintent: approve\ntarget: #55\nmessage: allow one coordinator-owned linked PR for the dogfood proof; auto-merge remains disabled.",
+      "next_step": "Bill or the workflow must explicitly allow PR opening for the dogfood proof run."
+    }
+  ]
 }

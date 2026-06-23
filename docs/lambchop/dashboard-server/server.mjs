@@ -3,6 +3,7 @@ import { mkdir, readFile, readdir, rename, stat, writeFile } from "node:fs/promi
 import { existsSync, watch } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createMvpDashboardProjection } from "../../../src/mvp-dashboard-projection.mjs";
 
 const role = process.env.LAMBCHOP_DASHBOARD_ROLE || "project-api";
 const root = process.env.LAMBCHOP_STATUS_ROOT || "/data";
@@ -33,6 +34,7 @@ const operatorSurfaces = {
     contract: "Projects the same evidence into a studio-floor metaphor and must not outrank the web dashboard on truth/debug questions."
   }
 };
+const feedbackIntents = new Set(["approve", "reject", "revise", "pause", "resume", "retry", "reassign", "escalate"]);
 
 const statusClients = new Set();
 const registryClients = new Set();
@@ -119,6 +121,24 @@ export async function statusPayload(options = {}) {
   const active = items.filter((item) => item.status === "in_progress");
   const blocked = items.filter((item) => item.status === "blocked");
   const planSeeds = planLines.filter((line) => line.trim().startsWith("- ")).slice(-8);
+  const mvpProjection = createMvpDashboardProjection().project({
+    managedProjects: dashboard?.managed_projects || [{
+      slug: (state?.project || dashboard?.project)?.slug || projectSlug,
+      name: (state?.project || dashboard?.project)?.name || projectName,
+      repository: (state?.project || dashboard?.project)?.issue_tracker?.repository,
+      dashboard: { role: "first-managed-project" }
+    }],
+    planning: dashboard?.mvp || {},
+    peers: dashboard?.peers || [],
+    assignment: dashboard?.assignment || null,
+    runContainers: dashboard?.run_containers || [],
+    feedback: dashboard?.feedback || {
+      allowed_intents: Array.from(feedbackIntents),
+      queue: []
+    },
+    analytics: dashboard?.analytics || {},
+    policyRequests: dashboard?.policy_requests || []
+  });
 
   return {
     generated_at: new Date().toISOString(),
@@ -149,6 +169,13 @@ export async function statusPayload(options = {}) {
     scheduler: backoff,
     operator_surfaces: operatorSurfaces,
     dashboard_control: controlRequests || { version: 1, requests: [] },
+    mvp: mvpProjection.mvp,
+    peers: mvpProjection.peers,
+    assignment: mvpProjection.assignment,
+    run_containers: mvpProjection.run_containers,
+    feedback: mvpProjection.feedback,
+    analytics: mvpProjection.analytics,
+    policy_requests: mvpProjection.policy_requests,
     progress_tail: progressTail,
     progress_highlights: progressHighlights(progressTail),
     evidence_sources: {
@@ -287,11 +314,31 @@ function dashboardCommandUrls(project) {
 
 function normalizeDashboardCommand(input) {
   const action = String(input?.action || "lambchop-update").trim();
-  const allowed = new Set(["lambchop-update", "dashboard-refresh"]);
+  const allowed = new Set(["lambchop-update", "dashboard-refresh", "feedback"]);
   if (!allowed.has(action)) {
     const error = new Error(`Unsupported dashboard command action: ${action}`);
     error.status = 400;
     throw error;
+  }
+  if (action === "feedback") {
+    const intent = String(input?.intent || "").trim();
+    if (!feedbackIntents.has(intent)) {
+      const error = new Error(`Unsupported feedback intent: ${intent}`);
+      error.status = 400;
+      throw error;
+    }
+    return {
+      id: `dashboard-command-${new Date().toISOString().replace(/[^0-9A-Za-z]/g, "")}`,
+      action,
+      intent,
+      target: String(input?.target || "").slice(0, 80),
+      message: String(input?.message || "").slice(0, 1000),
+      status: "queued",
+      requested_by: String(input?.requested_by || "dashboard-api").slice(0, 80),
+      requested_at: new Date().toISOString(),
+      source: "dashboard-api",
+      execution: "coordinator-feedback-intake"
+    };
   }
   return {
     id: `dashboard-command-${new Date().toISOString().replace(/[^0-9A-Za-z]/g, "")}`,

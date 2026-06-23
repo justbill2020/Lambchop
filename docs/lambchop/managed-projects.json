@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "source_of_truth": "github-issues-and-prs",
+  "note": "Local registry is configuration/cache for the Lambchop coordinator. GitHub Issues and PRs remain work truth.",
+  "projects": [
+    {
+      "slug": "lambchop",
+      "name": "Lambchop",
+      "github_repository": "justbill2020/Lambchop",
+      "local_checkout": "C:/Users/BillMartin/dev/Lambchop",
+      "default_branch": "main",
+      "labels": {
+        "ready_for_agent": "ready-for-agent",
+        "ready_for_human": "ready-for-human"
+      },
+      "policy": {
+        "source_of_truth": "github-issues-and-prs",
+        "auto_merge": false,
+        "worker_sandbox_required": true
+      },
+      "dashboard": {
+        "title": "Lambchop",
+        "role": "first-managed-project"
+      }
+    }
+  ]
+}

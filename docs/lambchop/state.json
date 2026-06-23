@@ -94,7 +94,7 @@
       "may_run_checks": true,
       "may_commit_locally": true,
       "may_push": true,
-      "may_open_pr": false,
+      "may_open_pr": true,
       "may_deploy": false,
       "may_modify_production_config": false,
       "may_use_external_trackers": true
