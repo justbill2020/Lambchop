@@ -6,7 +6,7 @@
     "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
     "automation_id": "lambchop-autonomous-coding-team",
     "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
-    "updated_at": "2026-06-11T00:25:00Z",
+    "updated_at": "2026-06-22T12:05:28.7545695-05:00",
     "issue_tracker": {
       "type": "github",
       "repository": "justbill2020/Lambchop",
@@ -21,14 +21,14 @@
     }
   },
   "summary": {
-    "todo": 5,
+    "todo": 3,
     "in_progress": 0,
     "blocked": 3,
-    "done": 33,
+    "done": 35,
     "skipped": 0,
     "proposals_need_review": 0,
     "active_parallel_lanes": 0,
-    "next_action": "AFK issue backlog is complete. Review issue #9 for the production-floor visual direction and then continue with any follow-up changes from that review."
+    "next_action": "Run task-03-github-repo-deployment-method and continue the remaining GitHub deployment validation scenarios."
   },
   "parallel_execution": {
     "mode": "adaptive-subagents",
@@ -51,8 +51,8 @@
       "autonomous-coding-team/assets/templates/"
     ],
     "next_backlog_seeds": [
-      "Run issue #3 to establish capacity-gated portfolio and project admission.",
-      "Resolve issue #1 with corrected source-of-truth evidence so legacy queue drift stops distracting the new backlog.",
+      "Finish the reusable GitHub deployment-method validation so Lambchop can install into another repo safely.",
+      "Prove the target-repo upgrade fixture path after the dashboard proposal work already on record.",
       "Prepare the human-review visual comparison in issue #9 after the runtime evidence slices are in place."
     ]
   },
@@ -159,7 +159,7 @@
     {
       "key": "task-03-github-repo-deployment-method",
       "title": "Add reusable GitHub repo deployment method",
-      "status": "todo",
+      "status": "done",
       "priority": 25,
       "parallel_group": null,
       "assigned_subagent": null,
@@ -666,15 +666,18 @@
     {
       "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
       "title": "Reconcile ledgers so run-now handoff evidence is not followed by additional work",
-      "status": "todo",
+      "status": "done",
       "priority": 28,
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
-      "branch": "codex/lambchop-task-18-reconcile-trigger-afterwork-ledger-drift",
-      "worktree": ".worktrees/task-18-reconcile-trigger-afterwork-ledger-drift",
+      "integration_status": "ready",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
       "validation": [
+        "Historical 2026-05-20 progress and backoff wording now records the run-now as initiation-only instead of same-run thread verification.",
+        "Dashboard control request dashboard-command-20260611T145228458Z was consumed as a completed Lambchop update run.",
+        "Scheduler evidence on 2026-06-15: automation row is ACTIVE with actual parked anchor RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO; expected parked anchor for Monday, June 15, 2026 is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU; latest run thread 019ecc3b-a8c9-7443-aa00-1e5ada51f01d remains IN_PROGRESS, so this repair run did not request another run-now trigger.",
         "JSON parse passes for docs/lambchop/*.json."
       ],
       "implementation_notes": [
@@ -683,7 +686,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Reconcile the historical 2026-05-20 handoff ledgers when that repair becomes the active queue item again.",
+      "next_step": "Proceed to task-26 and reconcile the closed GitHub issue #1 state against the corrected local queue truth.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -691,7 +694,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T14:45:00-05:00"
+      "updated_at": "2026-06-15T12:04:51.0621148-05:00"
     },
     {
       "key": "task-19-dashboard-proposal-review-ui",
@@ -958,18 +961,19 @@
     {
       "key": "task-26-github-issue-1-triage-state-reconcile",
       "title": "Reconcile GitHub issue #1 triage state with local queue truth",
-      "status": "todo",
+      "status": "done",
       "priority": 48,
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
-      "branch": "main",
-      "worktree": "REPO_ROOT",
+      "integration_status": "ready",
+      "branch": "codex/lambchop-task-26-github-issue-1-triage-state-reconcile",
+      "worktree": ".worktrees/task-26-github-issue-1-triage-state-reconcile",
       "validation": [
         "Triage RED: GitHub issue #1 is open and unlabeled; canonical labels needs-triage, needs-info, ready-for-agent, and ready-for-human are missing. Local evidence is inconsistent: progress says task-22 landed/done on main, but docs/lambchop/state.json currently has task-22 status=todo and task-18 status=done while dashboard next_action still says run task-18. Automation is ACTIVE with parked Monday RRULE; current handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate scheduler trigger was initiated.",
         "TDD intake handoff evidence: no new task was queued because task-26 already exists for the proposed tracer bullet around issue #1/source-of-truth reconciliation. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered. Blocker remains Bill approval for canonical labels and source-of-truth reconciliation before GitHub issue mutation.",
-        "2026-06-10 reconciliation: canonical labels now exist and local queue truth was corrected so task-18 is todo while task-22 is done."
+        "2026-06-10 reconciliation: canonical labels now exist and local queue truth was corrected so task-18 is todo while task-22 is done.",
+        "2026-06-22 reconciliation: gh issue view 1 shows issue #1 CLOSED since 2026-06-11T15:14:40Z with the required AI triage evidence comment already present, so no new labels or comments are needed; local queue truth now records task-26 done and leaves task-03 as the next ready item."
       ],
       "implementation_notes": [
         "Created by triage session on 2026-06-02 after issue #1 was found open/unlabeled and local ledgers disagreed about task-22/task-18 truth.",
@@ -978,7 +982,7 @@
       ],
       "commit": null,
       "blocker": null,
-      "next_step": "Comment on GitHub issue #1 with corrected source-of-truth evidence and leave it ready for maintainer closure/review.",
+      "next_step": "Run task-03-github-repo-deployment-method and continue the remaining GitHub deployment validation scenarios.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -986,7 +990,7 @@
         "expires_at": null,
         "heartbeat_at": null
       },
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-22T12:05:28.7545695-05:00"
     },
     {
       "key": "task-27-godot-dashboard-gamified-monitoring-hud",
@@ -1596,18 +1600,18 @@
     "1753bf1"
   ],
   "last_run": {
-    "run_id": "run-20260610-second-project-admission",
-    "started_at": "2026-06-10T19:25:00-05:00",
-    "work_item_key": "task-39-mvp1-second-project-admission",
+    "run_id": "run-20260622-task26-issue1-triage-reconcile",
+    "started_at": "2026-06-22T12:05:28.7545695-05:00",
+    "work_item_key": "task-26-github-issue-1-triage-state-reconcile",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T19:25:00-05:00",
-    "next_action": "AFK issue backlog is complete. Review issue #9 for the production-floor visual direction and then continue with any follow-up changes from that review.",
-    "timestamp": "2026-06-10T19:25:00-05:00",
-    "summary": "Completed the MVPv1 second-project admission tracer bullet and finished the AFK issue backlog.",
+    "dashboard_updated_at": "2026-06-22T12:05:28.7545695-05:00",
+    "next_action": "Run task-03-github-repo-deployment-method and continue the remaining GitHub deployment validation scenarios.",
+    "timestamp": "2026-06-22T12:05:28.7545695-05:00",
+    "summary": "Reconciled the closed GitHub issue #1 against the corrected local queue truth and cleared task-26.",
     "active_work_item": null,
-    "validation_note": "A second project can now remain visible in the portfolio without activating when capacity is exhausted, completing the AFK GitHub issue spine alongside the MVPv0 proof.",
-    "validation": "Validation GREEN: node --test tests\\second-project-proof.test.mjs, node --test tests\\second-project-admission.test.mjs, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "Issue #1 was already closed with AI triage evidence on 2026-06-11, so task-26 only needed local truth reconciliation; task-03 is now the next ready item.",
+    "validation": "Validation GREEN: gh issue view 1 confirmed CLOSED state with existing triage evidence comments; scheduler DB inspection confirmed ACTIVE status, stale Monday parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO` versus the expected Sunday anchor for Sunday, June 21, 2026 `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU`, and latest run thread `019ef048-2a3b-7d72-84d8-df8ac1f7807e` remains IN_PROGRESS; JSON parse passed for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
   },
   "hooks": {
     "mode": "repo-local",
@@ -1652,11 +1656,521 @@
       "lambchop-update",
       "dashboard-refresh"
     ],
-    "last_checked_at": "2026-05-15T18:15:00Z",
-    "status": "validated"
+    "last_checked_at": "2026-06-22T12:05:28.7545695-05:00",
+    "status": "processed_request_queue"
   },
   "latest_progress": [
-    "2026-06-11: completed issue #12 by adding the MVPv1 second-project admission proof.",
-    "2026-06-11: all AFK issue slices are complete, and the production floor is ready for your human review in issue #9."
+    "2026-06-22: completed task-26 by reconciling closed GitHub issue #1 with the corrected local queue truth and confirming no new triage mutation is needed.",
+    "2026-06-22: queue now advances to task-03 for the remaining reusable GitHub deployment-method validation work."
+  ],
+  "projectFloor": {
+    "project": {
+      "name": "Lambchop",
+      "slug": "lambchop",
+      "phase": "portfolio-orchestrator-mvp0",
+      "purpose": "Reusable Codex skill project for deploying autonomous coding teams into new or existing repositories.",
+      "automation_id": "lambchop-autonomous-coding-team",
+      "contract_version": "lambchop-current-2026-05-15-dashboard-control-api",
+      "updated_at": "2026-06-11T00:25:00Z",
+      "issue_tracker": {
+        "type": "github",
+        "repository": "justbill2020/Lambchop",
+        "url": "https://github.com/justbill2020/Lambchop/issues",
+        "cli": "gh",
+        "default_for_github_remotes": true,
+        "label_status": {
+          "checked_at": "2026-06-10T19:45:00Z",
+          "missing_canonical_labels": [],
+          "blocker": null
+        }
+      }
+    },
+    "studio": {
+      "floors": {
+        "upstairs": {
+          "label": "Office",
+          "roomKeys": [
+            "office"
+          ],
+          "storyKeys": [
+            "task-03-github-repo-deployment-method",
+            "task-20-target-repo-upgrade-fixture",
+            "task-21-public-release-readiness"
+          ]
+        },
+        "downstairs": {
+          "label": "Workshop",
+          "roomKeys": [
+            "workshop"
+          ],
+          "storyKeys": [
+            "task-23-godot-dashboard-plugin-architecture",
+            "task-25-godot-dashboard-issue-breakdown-publication",
+            "task-36-production-floor-prototype-comparison"
+          ]
+        }
+      }
+    },
+    "regions": {
+      "office": {
+        "storyKeys": [
+          "task-03-github-repo-deployment-method",
+          "task-20-target-repo-upgrade-fixture",
+          "task-21-public-release-readiness"
+        ]
+      },
+      "workshop": {
+        "zones": {
+          "build": {
+            "storyKeys": []
+          },
+          "asset": {
+            "storyKeys": []
+          },
+          "integration": {
+            "storyKeys": []
+          }
+        }
+      },
+      "blocked": {
+        "storyKeys": [
+          "task-23-godot-dashboard-plugin-architecture",
+          "task-25-godot-dashboard-issue-breakdown-publication",
+          "task-36-production-floor-prototype-comparison"
+        ]
+      }
+    },
+    "stories": [
+      {
+        "key": "task-03-github-repo-deployment-method",
+        "title": "Add reusable GitHub repo deployment method",
+        "floorState": "handoff-to-workshop",
+        "mission": {
+          "key": "mission-task-03-github-repo-deployment-method",
+          "storyKey": "task-03-github-repo-deployment-method",
+          "type": "implement",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-03-github-repo-deployment-method",
+        "nextAction": "Continue validation scenarios.",
+        "placement": {
+          "region": "office",
+          "zone": "planning",
+          "floor": "upstairs",
+          "room": "office",
+          "station": "story-shaping-desk",
+          "handoffTarget": {
+            "floor": "downstairs",
+            "room": "workshop",
+            "station": "build-bay"
+          }
+        },
+        "validation": "unknown",
+        "blocker": null,
+        "blockedPosture": null,
+        "crewLocation": {
+          "floor": "upstairs",
+          "room": "office",
+          "station": "story-shaping-desk"
+        }
+      },
+      {
+        "key": "task-20-target-repo-upgrade-fixture",
+        "title": "Prove target repo upgrade with a safe fixture",
+        "floorState": "office",
+        "mission": {
+          "key": "mission-task-20-target-repo-upgrade-fixture",
+          "storyKey": "task-20-target-repo-upgrade-fixture",
+          "type": "brief",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-20-target-repo-upgrade-fixture",
+        "nextAction": "Build an older-install fixture, run upgrade validation, and record proof without private repo details.",
+        "placement": {
+          "region": "office",
+          "zone": "planning",
+          "floor": "upstairs",
+          "room": "office",
+          "station": "briefing-desk",
+          "handoffTarget": null
+        },
+        "validation": "unknown",
+        "blocker": null,
+        "blockedPosture": null,
+        "crewLocation": {
+          "floor": "upstairs",
+          "room": "office",
+          "station": "briefing-desk"
+        }
+      },
+      {
+        "key": "task-21-public-release-readiness",
+        "title": "Prepare Lambchop public release readiness",
+        "floorState": "handoff-to-workshop",
+        "mission": {
+          "key": "mission-task-21-public-release-readiness",
+          "storyKey": "task-21-public-release-readiness",
+          "type": "implement",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-21-public-release-readiness",
+        "nextAction": "Review public-facing docs and release gates after task-20 proves upgrade behavior.",
+        "placement": {
+          "region": "office",
+          "zone": "planning",
+          "floor": "upstairs",
+          "room": "office",
+          "station": "story-shaping-desk",
+          "handoffTarget": {
+            "floor": "downstairs",
+            "room": "workshop",
+            "station": "build-bay"
+          }
+        },
+        "validation": "unknown",
+        "blocker": null,
+        "blockedPosture": null,
+        "crewLocation": {
+          "floor": "upstairs",
+          "room": "office",
+          "station": "story-shaping-desk"
+        }
+      },
+      {
+        "key": "task-23-godot-dashboard-plugin-architecture",
+        "title": "Define shared Godot dashboard plugin architecture",
+        "floorState": "blocked",
+        "mission": {
+          "key": "mission-task-23-godot-dashboard-plugin-architecture",
+          "storyKey": "task-23-godot-dashboard-plugin-architecture",
+          "type": "implement",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-23-godot-dashboard-plugin-architecture",
+        "nextAction": "Proceed with task-27 to add monitoring HUD, agent presence, validation/backoff/trust signals, and world-event feed.",
+        "placement": {
+          "region": "blocked",
+          "zone": "blocked",
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "handoffTarget": null
+        },
+        "validation": "unknown",
+        "blocker": "Design architecture remains open, but first actionable next slice is task-27 gamified monitoring HUD.",
+        "blockedPosture": "waiting-on-human",
+        "crewLocation": {
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "posture": "waiting-on-human"
+        }
+      },
+      {
+        "key": "task-25-godot-dashboard-issue-breakdown-publication",
+        "title": "Publish Godot dashboard tracer-bullet issue breakdown",
+        "floorState": "blocked",
+        "mission": {
+          "key": "mission-task-25-godot-dashboard-issue-breakdown-publication",
+          "storyKey": "task-25-godot-dashboard-issue-breakdown-publication",
+          "type": "implement",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-25-godot-dashboard-issue-breakdown-publication",
+        "nextAction": "Bill approves/edits the 8-slice breakdown, then publish issues in dependency order after label blocker is resolved.",
+        "placement": {
+          "region": "blocked",
+          "zone": "blocked",
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "handoffTarget": null
+        },
+        "validation": "unknown",
+        "blocker": "Waiting for Bill approval of the proposed to-issues breakdown and for canonical triage labels or an explicit label fallback decision.",
+        "blockedPosture": "waiting-on-human",
+        "crewLocation": {
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "posture": "waiting-on-human"
+        }
+      },
+      {
+        "key": "task-36-production-floor-prototype-comparison",
+        "title": "Produce and compare the studio production floor prototype",
+        "floorState": "blocked",
+        "mission": {
+          "key": "mission-task-36-production-floor-prototype-comparison",
+          "storyKey": "task-36-production-floor-prototype-comparison",
+          "type": "asset",
+          "status": "active"
+        },
+        "acceptedOutcomes": [],
+        "sourceWorkItemKey": "task-36-production-floor-prototype-comparison",
+        "nextAction": "The production floor implementation is ready for human visual review on issue #9 when Bill wants to compare prototype directions.",
+        "placement": {
+          "region": "blocked",
+          "zone": "blocked",
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "handoffTarget": null
+        },
+        "validation": "unknown",
+        "blocker": "AFK runtime slices are now in place; the remaining blocker is the human prototype comparison itself.",
+        "blockedPosture": "waiting-on-human",
+        "crewLocation": {
+          "floor": "downstairs",
+          "room": "workshop",
+          "station": "blocked-bay",
+          "posture": "waiting-on-human"
+        }
+      }
+    ]
+  },
+  "managed_projects": [
+    {
+      "slug": "lambchop",
+      "name": "Lambchop",
+      "repository": "justbill2020/Lambchop",
+      "default_branch": "main",
+      "dashboard": {
+        "title": "Lambchop",
+        "role": "first-managed-project"
+      },
+      "policy": {
+        "source_of_truth": "github-issues-and-prs",
+        "auto_merge": false,
+        "worker_sandbox_required": true
+      }
+    }
+  ],
+  "mvp": {
+    "active_goal": {
+      "number": 42,
+      "title": "Dogfood Lambchop as the first managed AI engineering project",
+      "url": "https://github.com/justbill2020/Lambchop/issues/42"
+    },
+    "next_issue": {
+      "number": 43,
+      "title": "Bootstrap Lambchop-operated MVP planning loop",
+      "url": "https://github.com/justbill2020/Lambchop/issues/43"
+    },
+    "counts": {
+      "child_issues": 13,
+      "ready": 1,
+      "blocked": 12,
+      "done": 0,
+      "human": 0
+    },
+    "blockers": [
+      {
+        "number": 44,
+        "title": "Add Lambchop feedback intake and decision queue",
+        "blocked_by": [
+          43
+        ]
+      },
+      {
+        "number": 45,
+        "title": "Create standalone coordinator CLI skeleton",
+        "blocked_by": [
+          43,
+          44
+        ]
+      },
+      {
+        "number": 46,
+        "title": "Register Lambchop as the first managed project",
+        "blocked_by": [
+          45
+        ]
+      },
+      {
+        "number": 47,
+        "title": "Implement GitHub Issues intake and coordinator assignment leases",
+        "blocked_by": [
+          46
+        ]
+      },
+      {
+        "number": 48,
+        "title": "Add machine peer registry and heartbeat for dogfood runners",
+        "blocked_by": [
+          45
+        ]
+      },
+      {
+        "number": 49,
+        "title": "Add project sandbox and issue worktree manager",
+        "blocked_by": [
+          47,
+          48
+        ]
+      },
+      {
+        "number": 50,
+        "title": "Define worker adapter contract with fake worker",
+        "blocked_by": [
+          49
+        ]
+      },
+      {
+        "number": 51,
+        "title": "Implement Codex CLI and Claude CLI MVP worker adapters",
+        "blocked_by": [
+          50
+        ]
+      },
+      {
+        "number": 52,
+        "title": "Add run event log and OFK-style work log for session analytics",
+        "blocked_by": [
+          50
+        ]
+      },
+      {
+        "number": 53,
+        "title": "Add GitHub issue comments, branch push, and linked PR loop",
+        "blocked_by": [
+          51,
+          52
+        ]
+      },
+      {
+        "number": 54,
+        "title": "Build MVP single-pane dashboard with feedback controls and analytics v0",
+        "blocked_by": [
+          47,
+          48,
+          52,
+          53
+        ]
+      },
+      {
+        "number": 55,
+        "title": "Dogfood one complete Lambchop issue-to-PR loop",
+        "blocked_by": [
+          54
+        ]
+      }
+    ],
+    "parallelizable_candidates": [
+      {
+        "number": 43,
+        "title": "Bootstrap Lambchop-operated MVP planning loop",
+        "url": "https://github.com/justbill2020/Lambchop/issues/43"
+      }
+    ]
+  },
+  "peers": [
+    {
+      "runner_id": "bill-windows",
+      "machine_label": "Windows workstation",
+      "platform": "windows",
+      "health": "active",
+      "availability": {
+        "status": "available",
+        "repositories": [
+          "justbill2020/Lambchop"
+        ],
+        "load": 0
+      },
+      "capabilities": [
+        "node",
+        "gh",
+        "codex-cli"
+      ],
+      "workspace_roots": [
+        {
+          "label": "lambchop-sandbox-root"
+        }
+      ]
+    }
+  ],
+  "assignment": {
+    "assignment_state": "assigned",
+    "assigned_issue": 43,
+    "assigned_runner": "bill-windows",
+    "branch": "codex/lambchop-issue-43",
+    "expires_at": "2026-06-24T01:24:12.670Z"
+  },
+  "run_containers": [
+    {
+      "run_id": "run-54-dashboard-mvp-local",
+      "issue_number": 54,
+      "sandbox": {
+        "project_sandbox_path": "C:/Users/BillMartin/.lambchop/sandboxes/projects/lambchop",
+        "worktree_path": "C:/Users/BillMartin/.lambchop/sandboxes/projects/lambchop/worktrees/issue-54"
+      },
+      "worker": {
+        "adapter": "codex-cli",
+        "model": "gpt-5-codex"
+      },
+      "branch": "local-chat-worktree",
+      "pull_request": null,
+      "validation": {
+        "status": "passed",
+        "commands": [
+          "node --test tests/dashboard-mvp-status.test.mjs tests/mvp-dashboard-projection.test.mjs"
+        ],
+        "failures": 0
+      },
+      "blockers": []
+    }
+  ],
+  "feedback": {
+    "allowed_intents": [
+      "approve",
+      "reject",
+      "revise",
+      "pause",
+      "resume",
+      "retry",
+      "reassign",
+      "escalate"
+    ],
+    "queue": []
+  },
+  "analytics": {
+    "retry_count": 0,
+    "validation_failures": 2,
+    "churned_files": [
+      "docs/lambchop/dashboard.html",
+      "docs/lambchop/dashboard-server/server.mjs",
+      "src/mvp-dashboard-projection.mjs",
+      "tests/dashboard-mvp-status.test.mjs",
+      "tests/mvp-dashboard-projection.test.mjs"
+    ],
+    "time_to_pr_minutes": null,
+    "blocker_count": 0,
+    "adapter_used": "codex-cli",
+    "human_intervention_points": [
+      "policy:open-linked-pr"
+    ]
+  },
+  "policy_requests": [
+    {
+      "action": "policy-authorization-request",
+      "status": "needs-human-approval",
+      "repository": "justbill2020/Lambchop",
+      "issue_number": 55,
+      "requested_capability": "open-linked-pr",
+      "reason": "Dogfood proof requires opening a linked PR, but policy has may_open_pr=false.",
+      "constraints": {
+        "may_push": true,
+        "may_open_pr": false,
+        "auto_merge": false,
+        "requested_auto_merge": false
+      },
+      "approval_comment": "/lambchop-feedback\nintent: approve\ntarget: #55\nmessage: allow one coordinator-owned linked PR for the dogfood proof; auto-merge remains disabled.",
+      "next_step": "Bill or the workflow must explicitly allow PR opening for the dogfood proof run."
+    }
   ]
 }

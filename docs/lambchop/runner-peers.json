@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "note": "Local runner peer registry is coordination cache. GitHub Issues and PRs remain work truth.",
+  "peers": [
+    {
+      "runner_id": "bill-windows",
+      "machine_label": "Windows workstation",
+      "platform": "windows",
+      "capabilities": [
+        "node",
+        "gh",
+        "codex-cli"
+      ],
+      "workspace_roots": [
+        {
+          "label": "lambchop-sandbox-root",
+          "path": "C:/Users/BillMartin/.lambchop/sandboxes"
+        }
+      ],
+      "availability": {
+        "status": "available",
+        "repositories": [
+          "justbill2020/Lambchop"
+        ],
+        "load": 0
+      },
+      "active_assignments": [],
+      "last_seen_at": "2026-06-23T23:30:00.000Z"
+    }
+  ]
+}

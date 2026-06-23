@@ -1,5 +1,18 @@
 {
   "version": 1,
-  "updated_at": "2026-05-15T18:10:00.000Z",
-  "requests": []
+  "updated_at": "2026-06-15T12:04:51.0621148-05:00",
+  "requests": [
+    {
+      "id": "dashboard-command-20260611T145228458Z",
+      "action": "lambchop-update",
+      "status": "completed",
+      "requested_by": "dashboard",
+      "reason": "Dashboard user requested Lambchop update.",
+      "requested_at": "2026-06-11T14:52:28.458Z",
+      "source": "dashboard-api",
+      "execution": "automation",
+      "processed_at": "2026-06-15T12:04:51.0621148-05:00",
+      "resolution": "Completed by task-18 historical ledger reconciliation; queue advanced to task-26."
+    }
+  ]
 }

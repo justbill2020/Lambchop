@@ -3,8 +3,30 @@ import test from 'node:test';
 
 test('run evidence appends orchestration facts once and projects coherent dashboard-facing status', async () => {
   const { createRunEvidence } = await import('../src/run-evidence.mjs');
+  const { createProductionFloorProjection } = await import('../src/production-floor-projection.mjs');
 
   const evidence = createRunEvidence();
+  const projectFloor = createProductionFloorProjection().projectFloor({
+    project: {
+      name: 'Lambchop',
+      slug: 'lambchop',
+    },
+    stories: [
+      {
+        key: 'story-portfolio-floor',
+        title: 'Portfolio floor model',
+        floorState: 'workshop',
+        activeMissionKey: 'mission-build-floor',
+        acceptedOutcomes: [],
+      },
+    ],
+    missions: [
+      { key: 'mission-build-floor', storyKey: 'story-portfolio-floor', type: 'implement', status: 'active' },
+    ],
+    evidence: [
+      { type: 'validation_passed', storyKey: 'story-portfolio-floor', at: '2026-06-10T21:16:00Z', summary: 'Focused runtime tests passed.' },
+    ],
+  });
 
   evidence.append({
     type: 'run_started',
@@ -38,6 +60,7 @@ test('run evidence appends orchestration facts once and projects coherent dashbo
       { key: 'task-32-run-evidence-dashboard-projection', status: 'todo', title: 'Run evidence dashboard projection' },
     ],
     nextAction: 'Run task-32-run-evidence-dashboard-projection.',
+    projectFloor,
   });
 
   assert.equal(evidence.entries().length, 3);
@@ -61,4 +84,7 @@ test('run evidence appends orchestration facts once and projects coherent dashbo
     '2026-06-10T21:15:00Z: Started workshop implementation.',
   ]);
   assert.deepEqual(projection.active_lanes, []);
+  assert.equal(projection.projectFloor.stories[0].key, 'story-portfolio-floor');
+  assert.equal(projection.projectFloor.stories[0].placement.station, 'build-bay');
+  assert.equal(projection.projectFloor.stories[0].validation, 'passed');
 });

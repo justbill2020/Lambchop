@@ -39,6 +39,15 @@ The embedded skill lives at `autonomous-coding-team/`. It contains:
 
 Generated target repos get their own workflow and ledgers. Lambchop itself stays the reusable source package.
 
+## Dashboard Truth/Debug Split
+
+Lambchop has two different operator surfaces over the same workflow evidence:
+
+- The web dashboard in `docs/<project-slug>/dashboard.html` is the truth/debug operator surface. It reads the repo evidence, streams the current status, and queues allowed automation requests, but it does not invent production-floor state.
+- The Godot production-floor prototype is an expressive adapter over that same evidence. It can visualize the work as a studio floor, but it must not outrank the web dashboard when a truth/debug question comes down to what `state.json`, `progress.md`, `scheduled-work-plan.md`, `dashboard-data.json`, or `backoff.json` actually say.
+
+This split is intentional: the web dashboard stays literal and evidence-first, while the Godot surface stays free to be theatrical without becoming a second source of truth.
+
 ## Instruction Words
 
 Lambchop uses these words deliberately so future AI runs know how strict an instruction is:

@@ -25,5 +25,8 @@ test('Lambchop can prove the MVPv0 self-hosting path through the Codex CLI-backe
   assert.equal(proof.materialProgress.result, 'pass');
   assert.equal(proof.dashboard.last_run.active_work_item, 'story-self-hosting');
   assert.match(proof.dashboard.last_run.summary, /Completed self-hosting slice/i);
+  assert.equal(proof.dashboard.projectFloor.stories[0].key, 'story-self-hosting');
+  assert.equal(proof.dashboard.projectFloor.stories[0].placement.station, 'build-bay');
+  assert.equal(proof.dashboard.projectFloor.stories[0].mission.type, 'implement');
   assert.equal(proof.meeting.mode, 'party');
 });

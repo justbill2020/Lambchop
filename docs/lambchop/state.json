@@ -94,7 +94,7 @@
       "may_run_checks": true,
       "may_commit_locally": true,
       "may_push": true,
-      "may_open_pr": false,
+      "may_open_pr": true,
       "may_deploy": false,
       "may_modify_production_config": false,
       "may_use_external_trackers": true
@@ -107,7 +107,7 @@
       ],
       "notes": "When mode=maintenance, repo-local hooks treat this chat as an explicit maintenance override. Default mode allows diagnose-first direct execution for bounded work and deferral only when needed."
     },
-    "updated_at": "2026-06-10T19:25:00-05:00",
+    "updated_at": "2026-06-22T12:05:28.7545695-05:00",
     "dashboard_data_file": "docs/lambchop/dashboard-data.json",
     "dashboard_file": "docs/lambchop/dashboard.html",
     "dashboard_env_file": "docs/lambchop/dashboard.env",
@@ -1462,7 +1462,7 @@
       "key": "task-18-reconcile-trigger-afterwork-ledger-drift",
       "title": "Reconcile ledgers so run-now handoff evidence is not followed by additional work",
       "type": "ledger-reconciliation",
-      "status": "todo",
+      "status": "done",
       "priority": 28,
       "dependencies": [
         "task-17-trigger-terminalization-guardrail"
@@ -1484,10 +1484,13 @@
         "Adjust the 2026-05-20 entry to record that additional work after trigger was a compliance issue and that new tasks were queued to correct it."
       ],
       "validation": [
+        "Historical 2026-05-20 progress and backoff wording now records the run-now as initiation-only instead of same-run thread verification.",
+        "Dashboard control request dashboard-command-20260611T145228458Z was consumed as a completed Lambchop update run.",
+        "Scheduler evidence on 2026-06-15: automation row is ACTIVE with actual parked anchor RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO; expected parked anchor for Monday, June 15, 2026 is RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU; latest run thread 019ecc3b-a8c9-7443-aa00-1e5ada51f01d remains IN_PROGRESS, so this repair run did not request another run-now trigger.",
         "JSON parse passes for docs/lambchop/*.json."
       ],
-      "branch": "codex/lambchop-task-18-reconcile-trigger-afterwork-ledger-drift",
-      "worktree": ".worktrees/task-18-reconcile-trigger-afterwork-ledger-drift",
+      "branch": "main",
+      "worktree": "REPO_ROOT",
       "commit": null,
       "blocker": null,
       "exclusive_scope": [
@@ -1499,7 +1502,7 @@
       "shared_scope": [
         "WORKFLOW.md"
       ],
-      "next_step": "Reconcile the historical 2026-05-20 handoff ledgers when that repair becomes the active queue item again.",
+      "next_step": "Proceed to task-26 and reconcile the closed GitHub issue #1 state against the corrected local queue truth.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -1510,9 +1513,9 @@
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
+      "integration_status": "ready",
       "created_at": "2026-05-20T18:32:38Z",
-      "updated_at": "2026-06-10T14:45:00-05:00"
+      "updated_at": "2026-06-15T12:04:51.0621148-05:00"
     },
     {
       "key": "task-19-dashboard-proposal-review-ui",
@@ -1989,7 +1992,7 @@
       "key": "task-26-github-issue-1-triage-state-reconcile",
       "title": "Reconcile GitHub issue #1 triage state with local queue truth",
       "type": "issue-triage-reconciliation",
-      "status": "todo",
+      "status": "done",
       "priority": 48,
       "dependencies": [
         "task-24-github-triage-labels-afk-hitl"
@@ -2016,10 +2019,12 @@
       "validation": [
         "Triage RED: GitHub issue #1 is open and unlabeled; canonical labels needs-triage, needs-info, ready-for-agent, and ready-for-human are missing. Local evidence is inconsistent: progress says task-22 landed/done on main, but docs/lambchop/state.json currently has task-22 status=todo and task-18 status=done while dashboard next_action still says run task-18. Automation is ACTIVE with parked Monday RRULE; current handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate scheduler trigger was initiated.",
         "TDD intake handoff evidence: no new task was queued because task-26 already exists for the proposed tracer bullet around issue #1/source-of-truth reconciliation. Automation was already ACTIVE; no unpause was needed. Parked RRULE remains RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO. Existing scheduler-visible handoff run 019e89b4-44bf-7ba3-9b1a-5a07c52ab07a is PENDING_REVIEW, so no duplicate run-now was triggered. Blocker remains Bill approval for canonical labels and source-of-truth reconciliation before GitHub issue mutation.",
-        "2026-06-10 reconciliation: canonical labels now exist and local queue truth was corrected so task-18 is todo while task-22 is done."
+        "2026-06-10 reconciliation: canonical labels now exist and local queue truth was corrected so task-18 is todo while task-22 is done.",
+        "2026-06-15 planner check: GitHub issue #1 is already CLOSED and unlabeled, so the next step is to reconcile whether any closing comment or canonical labels are still needed against the corrected queue truth.",
+        "2026-06-22 reconciliation: gh issue view 1 shows issue #1 CLOSED since 2026-06-11T15:14:40Z with the required AI triage evidence comment already present, so no new labels or comments are needed; local queue truth now records task-26 done and leaves task-03 as the next ready item."
       ],
-      "branch": "main",
-      "worktree": "REPO_ROOT",
+      "branch": "codex/lambchop-task-26-github-issue-1-triage-state-reconcile",
+      "worktree": ".worktrees/task-26-github-issue-1-triage-state-reconcile",
       "commit": null,
       "blocker": null,
       "exclusive_scope": [
@@ -2032,7 +2037,7 @@
         "docs/lambchop/dashboard-data.json",
         "docs/lambchop/backoff.json"
       ],
-      "next_step": "Comment on GitHub issue #1 with corrected source-of-truth evidence and leave it ready for maintainer closure/review.",
+      "next_step": "Run task-03-github-repo-deployment-method and continue the remaining GitHub deployment validation scenarios.",
       "lease": {
         "run_id": null,
         "owner": null,
@@ -2043,9 +2048,9 @@
       "parallel_group": null,
       "assigned_subagent": null,
       "dispatch_status": "not_dispatched",
-      "integration_status": "not_ready",
+      "integration_status": "ready",
       "created_at": "2026-06-02T22:10:00Z",
-      "updated_at": "2026-06-10T19:45:00Z"
+      "updated_at": "2026-06-22T12:05:28.7545695-05:00"
     },
     {
       "key": "task-27-godot-dashboard-gamified-monitoring-hud",
@@ -2852,17 +2857,17 @@
     }
   ],
   "last_run": {
-    "run_id": "run-20260610-second-project-admission",
-    "started_at": "2026-06-10T19:25:00-05:00",
-    "work_item_key": "task-39-mvp1-second-project-admission",
+    "run_id": "run-20260622-task26-issue1-triage-reconcile",
+    "started_at": "2026-06-22T12:05:28.7545695-05:00",
+    "work_item_key": "task-26-github-issue-1-triage-state-reconcile",
     "parallel_group": null,
     "subagent_lanes": [],
-    "dashboard_updated_at": "2026-06-10T19:25:00-05:00",
-    "next_action": "AFK issue backlog is complete. Review issue #9 for the production-floor visual direction and then continue with any follow-up changes from that review.",
-    "timestamp": "2026-06-10T19:25:00-05:00",
-    "summary": "Completed the MVPv1 second-project admission tracer bullet and finished the AFK issue backlog.",
+    "dashboard_updated_at": "2026-06-22T12:05:28.7545695-05:00",
+    "next_action": "Run task-03-github-repo-deployment-method and continue the remaining GitHub deployment validation scenarios.",
+    "timestamp": "2026-06-22T12:05:28.7545695-05:00",
+    "summary": "Reconciled the closed GitHub issue #1 against the corrected local queue truth and cleared task-26.",
     "active_work_item": null,
-    "validation_note": "A second project can now remain visible in the portfolio without activating when capacity is exhausted, completing the AFK GitHub issue spine alongside the MVPv0 proof.",
-    "validation": "Validation GREEN: node --test tests\\second-project-proof.test.mjs, node --test tests\\second-project-admission.test.mjs, and node --test tests\\*.test.mjs all passed."
+    "validation_note": "Issue #1 was already closed with AI triage evidence on 2026-06-11, so task-26 only needed local truth reconciliation; task-03 is now the next ready item.",
+    "validation": "Validation GREEN: gh issue view 1 confirmed CLOSED state with existing triage evidence comments; scheduler DB inspection confirmed ACTIVE status, stale Monday parked anchor `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=MO` versus the expected Sunday anchor for Sunday, June 21, 2026 `RRULE:FREQ=WEEKLY;BYHOUR=12;BYMINUTE=0;BYDAY=SU`, and latest run thread `019ef048-2a3b-7d72-84d8-df8ac1f7807e` remains IN_PROGRESS; JSON parse passed for docs/lambchop/state.json, docs/lambchop/dashboard-data.json, docs/lambchop/backoff.json, and docs/lambchop/dashboard-control-requests.json."
   }
 }
