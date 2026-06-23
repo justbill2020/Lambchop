@@ -7,6 +7,7 @@ import { createDogfoodProofEvidence } from './dogfood-proof-evidence.mjs';
 import { createFeedbackIntake } from './feedback-intake.mjs';
 import { createPrAuthorizationIntake } from './pr-authorization-intake.mjs';
 import { createPrAuthorizationRequest } from './pr-authorization-request.mjs';
+import { createPrOwnershipLoop } from './pr-ownership-loop.mjs';
 import { createMachinePeerRegistry } from './machine-peer-registry.mjs';
 import { createManagedProjectRegistry } from './managed-project-registry.mjs';
 import { createMvpPlanningLoop } from './mvp-planning-loop.mjs';
@@ -52,6 +53,12 @@ function parseArgs(argv) {
         break;
       case '--issue':
         options.issueNumber = Number(rest[++index]);
+        break;
+      case '--run':
+        options.runId = rest[++index];
+        break;
+      case '--pr':
+        options.pullRequestNumber = Number(rest[++index]);
         break;
       case '--source-checkout':
         options.sourceCheckout = rest[++index];
@@ -103,6 +110,11 @@ export function createCoordinatorCli(options = {}) {
       pullRequestClient: createGhPullRequestClient(),
       runEventLog,
     }),
+  });
+  const prOwnershipLoop = options.prOwnershipLoop ?? createPrOwnershipLoop({
+    issueClient,
+    pullRequestClient: createGhPullRequestClient(),
+    runEventLog,
   });
   const readText = options.readText ?? defaultReadText;
   const writeStdout = options.writeStdout ?? ((text) => process.stdout.write(`${text}\n`));
@@ -297,6 +309,22 @@ export function createCoordinatorCli(options = {}) {
     return { exitCode: 0, status: payload };
   }
 
+  async function prStatus(commandOptions) {
+    const result = await prOwnershipLoop.observePullRequest({
+      repository: requireOption(commandOptions.repository, '--repo'),
+      issueNumber: requireOption(commandOptions.issueNumber, '--issue'),
+      runId: requireOption(commandOptions.runId, '--run'),
+      pullRequestNumber: requireOption(commandOptions.pullRequestNumber, '--pr'),
+    });
+    const payload = {
+      command: 'pr-status',
+      result,
+    };
+
+    writeStdout(JSON.stringify(payload, null, 2));
+    return { exitCode: 0, status: payload };
+  }
+
   return {
     async run(argv) {
       try {
@@ -312,6 +340,9 @@ export function createCoordinatorCli(options = {}) {
         }
         if (commandOptions.command === 'dogfood-proof') {
           return await dogfoodProof(commandOptions);
+        }
+        if (commandOptions.command === 'pr-status') {
+          return await prStatus(commandOptions);
         }
 
         throw new Error(`Unsupported coordinator command: ${commandOptions.command ?? '(none)'}`);

@@ -24,6 +24,8 @@ function snakeRunContainer(container) {
     worker: container.worker ?? {},
     branch: container.branch ?? null,
     pull_request: container.pullRequest ?? container.pull_request ?? null,
+    pr_status: container.prStatus ?? container.pr_status ?? null,
+    repair: container.repair ?? null,
     validation: container.validation ?? { status: 'not recorded' },
     blockers: container.blockers ?? [],
   };

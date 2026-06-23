@@ -381,3 +381,49 @@ test('coordinator CLI dogfood-proof run delegates to the dogfood loop when not d
   assert.equal(writes[0].result.status, 'pr-opened');
   assert.equal(writes[0].result.autoMerge, false);
 });
+
+test('coordinator CLI pr-status delegates to the PR ownership loop', async () => {
+  const writes = [];
+  const ownershipCalls = [];
+  const cli = createCoordinatorCli({
+    prOwnershipLoop: {
+      async observePullRequest(input) {
+        ownershipCalls.push(input);
+        return {
+          status: 'merge-ready',
+          auto_merge: false,
+          pullRequest: {
+            number: 92,
+            url: 'https://github.com/justbill2020/Lambchop/pull/92',
+          },
+        };
+      },
+    },
+    writeStdout(text) {
+      writes.push(JSON.parse(text));
+    },
+  });
+
+  const result = await cli.run([
+    'pr-status',
+    '--repo',
+    'justbill2020/Lambchop',
+    '--issue',
+    '40',
+    '--run',
+    'run-40',
+    '--pr',
+    '92',
+  ]);
+
+  assert.equal(result.exitCode, 0);
+  assert.deepEqual(ownershipCalls, [{
+    repository: 'justbill2020/Lambchop',
+    issueNumber: 40,
+    runId: 'run-40',
+    pullRequestNumber: 92,
+  }]);
+  assert.equal(writes[0].command, 'pr-status');
+  assert.equal(writes[0].result.status, 'merge-ready');
+  assert.equal(writes[0].result.auto_merge, false);
+});
