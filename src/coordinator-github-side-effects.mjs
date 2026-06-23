@@ -275,6 +275,20 @@ export function createGhPullRequestClient(options = {}) {
   const runGh = options.runGh ?? ((args, runOptions) => runProcess('gh', args, runOptions));
 
   return {
+    async viewPullRequest({ repository, number }) {
+      const output = await runGh([
+        'pr',
+        'view',
+        String(requireText(String(number), 'number')),
+        '--repo',
+        requireText(repository, 'repository'),
+        '--json',
+        'number,url,state,mergedAt,mergeStateStatus,reviewDecision,statusCheckRollup',
+      ]);
+
+      return JSON.parse(output);
+    },
+
     async createPullRequest({ repository, title, headBranch, baseBranch, body }) {
       const output = await runGh([
         'pr',

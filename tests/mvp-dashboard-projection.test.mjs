@@ -58,6 +58,17 @@ test('MVP dashboard projection exposes managed project, planning, peers, runs, f
         worker: { adapter: 'codex-cli', model: 'gpt-5-codex' },
         branch: 'codex/lambchop-issue-54',
         pullRequest: { url: 'https://github.com/justbill2020/Lambchop/pull/88', state: 'OPEN' },
+        prStatus: {
+          state: 'merge-ready',
+          merge_state: 'CLEAN',
+          review_decision: 'APPROVED',
+          auto_merge: false,
+        },
+        repair: {
+          status: 'scheduled',
+          run_id: 'run-54-repair-1',
+          reason: 'ci-failed',
+        },
         validation: { status: 'passed', failures: 0 },
         blockers: [],
       },
@@ -97,6 +108,17 @@ test('MVP dashboard projection exposes managed project, planning, peers, runs, f
   assert.equal(projection.assignment.assigned_runner, 'bill-windows');
   assert.equal(projection.run_containers[0].worker.adapter, 'codex-cli');
   assert.equal(projection.run_containers[0].pull_request.url, 'https://github.com/justbill2020/Lambchop/pull/88');
+  assert.deepEqual(projection.run_containers[0].pr_status, {
+    state: 'merge-ready',
+    merge_state: 'CLEAN',
+    review_decision: 'APPROVED',
+    auto_merge: false,
+  });
+  assert.deepEqual(projection.run_containers[0].repair, {
+    status: 'scheduled',
+    run_id: 'run-54-repair-1',
+    reason: 'ci-failed',
+  });
   assert.deepEqual(projection.feedback.allowed_intents, ['approve', 'reject', 'revise', 'pause', 'resume', 'retry', 'reassign', 'escalate']);
   assert.deepEqual(projection.analytics, {
     retry_count: 1,
