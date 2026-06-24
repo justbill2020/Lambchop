@@ -51,9 +51,21 @@ test('MVP dashboard projection exposes managed project, planning, peers, runs, f
       {
         runId: 'run-54',
         issueNumber: 54,
+        issue: {
+          number: 54,
+          title: 'Build MVP single-pane dashboard with feedback controls and analytics v0',
+          labels: ['ready-for-agent'],
+          acceptance: ['dashboard shows run containers'],
+          dependencies: [40],
+          url: 'https://github.com/justbill2020/Lambchop/issues/54',
+        },
         sandbox: {
+          sandboxId: 'sandbox-lambchop-54',
           projectSandboxPath: 'C:/Users/BillMartin/.lambchop/sandboxes/projects/lambchop',
           worktreePath: 'C:/Users/BillMartin/.lambchop/sandboxes/projects/lambchop/worktrees/issue-54',
+          mountedPaths: [{ label: 'workspace', path: '/sandbox/workspace' }],
+          allowedNetwork: ['github.com'],
+          allowedSecrets: ['GITHUB_TOKEN'],
         },
         worker: { adapter: 'codex-cli', model: 'gpt-5-codex' },
         branch: 'codex/lambchop-issue-54',
@@ -70,6 +82,12 @@ test('MVP dashboard projection exposes managed project, planning, peers, runs, f
           reason: 'ci-failed',
         },
         validation: { status: 'passed', failures: 0 },
+        timeline: [
+          { type: 'selected', at: '2026-06-23T23:00:00Z', summary: 'Selected #54.' },
+          { type: 'pr.opened', at: '2026-06-23T23:10:00Z', summary: 'PR opened.' },
+        ],
+        issueComments: ['https://github.com/justbill2020/Lambchop/issues/54#issuecomment-1'],
+        workLogPath: 'runs/run-54/work-log.md',
         blockers: [],
       },
     ],
@@ -107,6 +125,22 @@ test('MVP dashboard projection exposes managed project, planning, peers, runs, f
   assert.equal(projection.peers[0].runner_id, 'bill-windows');
   assert.equal(projection.assignment.assigned_runner, 'bill-windows');
   assert.equal(projection.run_containers[0].worker.adapter, 'codex-cli');
+  assert.deepEqual(projection.run_containers[0].issue, {
+    number: 54,
+    title: 'Build MVP single-pane dashboard with feedback controls and analytics v0',
+    labels: ['ready-for-agent'],
+    acceptance: ['dashboard shows run containers'],
+    dependencies: [40],
+    url: 'https://github.com/justbill2020/Lambchop/issues/54',
+  });
+  assert.deepEqual(projection.run_containers[0].sandbox, {
+    sandbox_id: 'sandbox-lambchop-54',
+    project_sandbox_path: 'C:/Users/BillMartin/.lambchop/sandboxes/projects/lambchop',
+    worktree_path: 'C:/Users/BillMartin/.lambchop/sandboxes/projects/lambchop/worktrees/issue-54',
+    mounted_paths: [{ label: 'workspace', path: '/sandbox/workspace' }],
+    allowed_network: ['github.com'],
+    allowed_secrets: ['GITHUB_TOKEN'],
+  });
   assert.equal(projection.run_containers[0].pull_request.url, 'https://github.com/justbill2020/Lambchop/pull/88');
   assert.deepEqual(projection.run_containers[0].pr_status, {
     state: 'merge-ready',
@@ -119,6 +153,12 @@ test('MVP dashboard projection exposes managed project, planning, peers, runs, f
     run_id: 'run-54-repair-1',
     reason: 'ci-failed',
   });
+  assert.deepEqual(projection.run_containers[0].timeline, [
+    { type: 'selected', at: '2026-06-23T23:00:00Z', summary: 'Selected #54.' },
+    { type: 'pr.opened', at: '2026-06-23T23:10:00Z', summary: 'PR opened.' },
+  ]);
+  assert.deepEqual(projection.run_containers[0].issue_comments, ['https://github.com/justbill2020/Lambchop/issues/54#issuecomment-1']);
+  assert.equal(projection.run_containers[0].work_log_path, 'runs/run-54/work-log.md');
   assert.deepEqual(projection.feedback.allowed_intents, ['approve', 'reject', 'revise', 'pause', 'resume', 'retry', 'reassign', 'escalate']);
   assert.deepEqual(projection.analytics, {
     retry_count: 1,

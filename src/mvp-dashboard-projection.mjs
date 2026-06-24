@@ -14,12 +14,18 @@ function snakePeer(peer) {
 }
 
 function snakeRunContainer(container) {
+  const sandbox = container.sandbox ?? {};
   return {
     run_id: container.runId ?? container.run_id,
     issue_number: container.issueNumber ?? container.issue_number,
+    issue: container.issue ?? null,
     sandbox: {
-      project_sandbox_path: container.sandbox?.projectSandboxPath ?? container.sandbox?.project_sandbox_path,
-      worktree_path: container.sandbox?.worktreePath ?? container.sandbox?.worktree_path,
+      sandbox_id: sandbox.sandboxId ?? sandbox.sandbox_id ?? null,
+      project_sandbox_path: sandbox.projectSandboxPath ?? sandbox.project_sandbox_path,
+      worktree_path: sandbox.worktreePath ?? sandbox.worktree_path,
+      mounted_paths: sandbox.mountedPaths ?? sandbox.mounted_paths ?? [],
+      allowed_network: sandbox.allowedNetwork ?? sandbox.allowed_network ?? [],
+      allowed_secrets: sandbox.allowedSecrets ?? sandbox.allowed_secrets ?? [],
     },
     worker: container.worker ?? {},
     branch: container.branch ?? null,
@@ -27,6 +33,9 @@ function snakeRunContainer(container) {
     pr_status: container.prStatus ?? container.pr_status ?? null,
     repair: container.repair ?? null,
     validation: container.validation ?? { status: 'not recorded' },
+    timeline: container.timeline ?? [],
+    issue_comments: container.issueComments ?? container.issue_comments ?? [],
+    work_log_path: container.workLogPath ?? container.work_log_path ?? null,
     blockers: container.blockers ?? [],
   };
 }
