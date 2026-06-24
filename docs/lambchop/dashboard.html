@@ -4,45 +4,49 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
-  <title>Lambchop Dashboard Hub</title>
+  <title>Lambchop Mission Floor</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #f7f8f5;
+      --bg: #f2f0e8;
       --ink: #17201b;
-      --muted: #607067;
-      --panel: #ffffff;
-      --line: #dbe2dc;
-      --accent: #006d77;
+      --muted: #657067;
+      --panel: #fffdf6;
+      --panel-strong: #f8ecd0;
+      --line: #2f3b35;
+      --soft-line: #d9d0bd;
+      --accent: #0f766e;
+      --accent-2: #7c3aed;
+      --gold: #c47f00;
       --warn: #b54708;
       --bad: #b42318;
       --good: #067647;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.45; }
+    body { margin: 0; background: linear-gradient(90deg, rgba(47,59,53,.12) 1px, transparent 1px), linear-gradient(0deg, rgba(47,59,53,.12) 1px, transparent 1px), radial-gradient(circle at 18% 12%, rgba(196,127,0,.16), transparent 28%), radial-gradient(circle at 88% 24%, rgba(15,118,110,.16), transparent 24%), var(--bg); background-size: 38px 38px, 38px 38px, auto, auto, auto; color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.45; }
     header, main { max-width: 1240px; margin: 0 auto; padding: 24px; }
     header { padding-top: 28px; }
     h1, h2, h3, p { margin: 0; }
-    h1 { font-size: clamp(28px, 5vw, 46px); letter-spacing: 0; }
-    h2 { font-size: 20px; margin-bottom: 12px; }
+    h1 { font-size: clamp(32px, 5vw, 54px); letter-spacing: 0; text-transform: uppercase; }
+    h2 { font-size: 18px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .04em; }
     h3 { font-size: 15px; margin-bottom: 8px; }
-    select, input, textarea { min-height: 40px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); padding: 0 12px; font: inherit; }
+    select, input, textarea { min-height: 40px; border: 2px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); padding: 0 12px; font: inherit; box-shadow: 3px 3px 0 rgba(47, 59, 53, .16); }
     textarea { min-height: 82px; padding: 10px 12px; resize: vertical; }
     .subhead, .meta { color: var(--muted); }
     .subhead { margin-top: 8px; max-width: 820px; }
     .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 18px; }
     .grid { display: grid; gap: 16px; }
     .summary { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 24px; }
-    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(23, 32, 27, .04); }
-    .panel.button { text-align: left; cursor: pointer; transition: border-color .15s ease, transform .15s ease; }
-    .panel.button:hover, .panel.button.active { border-color: var(--accent); transform: translateY(-1px); }
+    .panel { background: var(--panel); border: 2px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 6px 6px 0 rgba(47, 59, 53, .16); }
+    .panel.button { text-align: left; cursor: pointer; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; background: linear-gradient(180deg, #fffdf6, #f6ebd4); }
+    .panel.button:hover, .panel.button.active { border-color: var(--accent); transform: translateY(-2px); box-shadow: 8px 8px 0 rgba(15, 118, 110, .16); }
     .metric { font-size: 30px; font-weight: 700; }
     .label, .meta { font-size: 13px; }
     .cols { grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr); align-items: start; }
-    .lane { border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin-top: 10px; background: #fbfcfa; }
+    .lane { border: 2px solid var(--line); border-radius: 8px; padding: 12px; margin-top: 10px; background: #fffaf0; box-shadow: 4px 4px 0 rgba(47, 59, 53, .12); }
     .lane.clickable { cursor: pointer; }
     .lane.clickable:hover { border-color: var(--accent); }
-    .status { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 8px; border-radius: 999px; background: #e9f3f4; color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    .status { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 8px; border: 1px solid currentColor; border-radius: 999px; background: #e9f3f4; color: var(--accent); font-size: 12px; font-weight: 800; text-transform: uppercase; }
     .status.todo { background: #eef4ff; color: #175cd3; }
     .status.in_progress, .status.dispatched { background: #fff8db; color: #854a0e; }
     .status.blocked { background: #fff4ed; color: var(--warn); }
@@ -60,7 +64,22 @@
     .form-grid { display: grid; gap: 10px; }
     .form-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 10px; align-items: center; }
     .form-row.full { grid-template-columns: 1fr; }
-    .primary { min-height: 40px; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); color: #fff; padding: 0 14px; font: inherit; cursor: pointer; }
+    .primary { min-height: 40px; border: 2px solid var(--line); border-radius: 6px; background: var(--accent); color: #fff; padding: 0 14px; font: inherit; cursor: pointer; box-shadow: 4px 4px 0 rgba(47, 59, 53, .2); }
+    .mission-board { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .mission-tile { border: 2px solid var(--line); border-radius: 8px; padding: 12px; background: var(--panel-strong); box-shadow: 4px 4px 0 rgba(47, 59, 53, .14); }
+    .mission-tile strong { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; }
+    .run-card { position: relative; overflow: hidden; background: linear-gradient(145deg, #fffaf0 0%, #f5e6c8 100%); }
+    .run-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 8px; background: linear-gradient(var(--accent), var(--gold)); }
+    .run-card h3 { padding-left: 10px; font-size: 18px; }
+    .run-track { display: grid; grid-template-columns: repeat(5, minmax(56px, 1fr)); gap: 8px; margin: 12px 0; }
+    .track-step { min-height: 54px; border: 2px solid var(--line); border-radius: 8px; background: #f8fbf6; padding: 8px; text-align: center; font-size: 12px; font-weight: 800; }
+    .track-step.active { background: #dcfce7; color: var(--good); }
+    .track-step.warn { background: #fff7ed; color: var(--warn); }
+    .track-step.bad { background: #fef3f2; color: var(--bad); }
+    .crew-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .crew-token { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; border: 2px solid var(--line); border-radius: 50%; background: #eef4ff; color: #175cd3; font-size: 12px; font-weight: 900; box-shadow: 2px 2px 0 rgba(47, 59, 53, .16); }
+    .timeline-strip { display: grid; gap: 6px; margin-top: 10px; }
+    .timeline-strip p { border-left: 4px solid var(--accent); padding-left: 8px; font-size: 13px; }
     .modal-backdrop { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(15, 23, 42, .44); z-index: 10; }
     .modal-backdrop.open { display: flex; }
     .modal { width: min(900px, 100%); max-height: min(820px, 92vh); overflow: auto; background: var(--panel); border-radius: 8px; border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(15, 23, 42, .22); padding: 20px; }
@@ -77,8 +96,8 @@
 </head>
 <body>
   <header>
-    <h1 id="project-name">Lambchop Dashboard Hub</h1>
-    <p class="subhead" id="project-purpose">Select a registered project to view the truth/debug operator surface for its live Lambchop evidence.</p>
+    <h1 id="project-name">Lambchop Mission Floor</h1>
+    <p class="subhead" id="project-purpose">Live orchestration board for projects, runners, missions, validation, repairs, and PR movement.</p>
     <div class="toolbar">
       <label class="meta" for="project-select">Project</label>
       <select id="project-select" aria-label="Registered project"></select>
@@ -86,26 +105,26 @@
       <span class="meta" id="refresh-status">Connecting to dashboard hub...</span>
     </div>
     <section class="grid summary" aria-label="Status summary">
-      <button class="panel button" data-filter="todo" title="Work ready to claim."><div class="metric" id="todo-count">0</div><div class="label">Todo <span class="hint">?</span></div></button>
-      <button class="panel button" data-filter="in_progress" title="Work currently claimed by a run or lane."><div class="metric" id="active-count">0</div><div class="label">In progress <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="todo" title="Work ready to claim."><div class="metric" id="todo-count">0</div><div class="label">Mission queue <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="in_progress" title="Work currently claimed by a run or lane."><div class="metric" id="active-count">0</div><div class="label">Active runs <span class="hint">?</span></div></button>
       <button class="panel button" data-filter="blocked" title="Work that cannot continue until a named issue is cleared."><div class="metric" id="blocked-count">0</div><div class="label">Blocked <span class="hint">?</span></div></button>
       <button class="panel button" data-filter="done" title="Work completed with recorded validation evidence."><div class="metric" id="done-count">0</div><div class="label">Done <span class="hint">?</span></div></button>
-      <button class="panel button" data-filter="proposal" title="Ideas waiting for Bill to approve before they become executable work."><div class="metric" id="proposal-count">0</div><div class="label">Needs review <span class="hint">?</span></div></button>
-      <button class="panel button" data-filter="in_progress" title="Parallel work lanes currently active."><div class="metric" id="lane-count">0</div><div class="label">Active lanes <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="proposal" title="Ideas waiting for Bill to approve before they become executable work."><div class="metric" id="proposal-count">0</div><div class="label">Review deck <span class="hint">?</span></div></button>
+      <button class="panel button" data-filter="in_progress" title="Parallel work lanes currently active."><div class="metric" id="lane-count">0</div><div class="label">Crew lanes <span class="hint">?</span></div></button>
     </section>
   </header>
   <main class="grid cols">
     <section class="panel">
-      <h2>Current Run</h2>
+      <h2>Current Mission</h2>
       <div id="current-run" class="lane"><p class="meta">Waiting for run data.</p></div>
-      <h2 style="margin-top: 18px;">MVP Orchestration</h2>
+      <h2 style="margin-top: 18px;">Mission Control</h2>
       <div id="mvp-orchestration" class="readout"><p class="meta">Waiting for MVP plan.</p></div>
-      <h2 style="margin-top: 18px;">Run Containers</h2>
+      <h2 style="margin-top: 18px;">Run Deck</h2>
       <div id="run-containers"><p class="meta">No run containers recorded.</p></div>
       <div id="filter-bar" class="filter-bar"><span id="filter-label"></span><button class="link" id="clear-filter" type="button">Clear filter</button></div>
-      <h2 style="margin-top: 18px;">Active Lanes</h2>
+      <h2 style="margin-top: 18px;">Active Crew Lanes</h2>
       <div id="lanes"><p class="meta">No active lanes.</p></div>
-      <h2 style="margin-top: 18px;">Latest Work</h2>
+      <h2 style="margin-top: 18px;">Quest Log</h2>
       <div id="latest-work"></div>
     </section>
     <aside class="grid">
@@ -270,13 +289,14 @@
       const mvp = data.mvp || {};
       const assignment = data.assignment || {};
       byId("mvp-orchestration").innerHTML = `
-        <p><strong>Managed project</strong>${escapeHtml(data.project?.name || "Lambchop")} (${escapeHtml(data.project?.issue_tracker?.repository || data.project?.repository || "repository not recorded")})</p>
-        <p><strong>Goal</strong>#${escapeHtml(mvp.active_goal?.number || "")} ${escapeHtml(mvp.active_goal?.title || "not recorded")}</p>
-        <p><strong>Next issue</strong>#${escapeHtml(mvp.next_issue?.number || "")} ${escapeHtml(mvp.next_issue?.title || "not recorded")}</p>
-        <p><strong>Candidates</strong>${escapeHtml((mvp.parallelizable_candidates || []).map((issue) => `#${issue.number}`).join(", ") || "none")}</p>
-        <p><strong>Assignment</strong>${escapeHtml(assignment.assignment_state || "not assigned")} ${assignment.assigned_issue ? `#${escapeHtml(assignment.assigned_issue)} to ${escapeHtml(assignment.assigned_runner || "")}` : ""}</p>
-        <p><strong>Branch</strong>${escapeHtml(assignment.branch || "not recorded")}</p>
-        <p><strong>Blockers</strong>${escapeHtml((mvp.blockers || []).map((issue) => `#${issue.number}`).join(", ") || "none")}</p>`;
+        <div class="mission-board">
+          <div class="mission-tile"><strong>Project</strong>${escapeHtml(data.project?.name || "Lambchop")}<p class="meta">${escapeHtml(data.project?.issue_tracker?.repository || data.project?.repository || "repository not recorded")}</p></div>
+          <div class="mission-tile"><strong>Campaign</strong>#${escapeHtml(mvp.active_goal?.number || "")} ${escapeHtml(mvp.active_goal?.title || "not recorded")}</div>
+          <div class="mission-tile"><strong>Next mission</strong>#${escapeHtml(mvp.next_issue?.number || "")} ${escapeHtml(mvp.next_issue?.title || "not recorded")}</div>
+          <div class="mission-tile"><strong>Assigned runner</strong>${escapeHtml(assignment.assignment_state || "not assigned")} ${assignment.assigned_issue ? `#${escapeHtml(assignment.assigned_issue)} to ${escapeHtml(assignment.assigned_runner || "")}` : ""}<p class="meta">${escapeHtml(assignment.branch || "branch not recorded")}</p></div>
+          <div class="mission-tile"><strong>Ready deck</strong>${escapeHtml((mvp.parallelizable_candidates || []).map((issue) => `#${issue.number}`).join(", ") || "none")}</div>
+          <div class="mission-tile"><strong>Blocker board</strong>${escapeHtml((mvp.blockers || []).map((issue) => `#${issue.number}`).join(", ") || "clear")}</div>
+        </div>`;
     }
 
     function renderPeers(data) {
@@ -294,7 +314,26 @@
           const sandbox = run.sandbox || {};
           const prStatus = run.pr_status || {};
           const timeline = run.timeline || [];
-          return `<article class="lane"><h3>${escapeHtml(run.run_id || "run")} ${run.issue_number ? `#${escapeHtml(run.issue_number)}` : ""}</h3><dl><dt>Issue</dt><dd>${issue.url ? `<a href="${escapeHtml(issue.url)}">#${escapeHtml(issue.number || run.issue_number || "")}</a>` : `#${escapeHtml(issue.number || run.issue_number || "")}`} ${escapeHtml(issue.title || "")}</dd><dt>Labels</dt><dd>${escapeHtml((issue.labels || []).join(", ") || "not recorded")}</dd><dt>Acceptance</dt><dd>${escapeHtml((issue.acceptance || []).join("; ") || "not recorded")}</dd><dt>Dependencies</dt><dd>${escapeHtml((issue.dependencies || []).map((item) => `#${item}`).join(", ") || "none")}</dd><dt>Sandbox ID</dt><dd>${escapeHtml(sandbox.sandbox_id || "not recorded")}</dd><dt>Sandbox</dt><dd>${escapeHtml(sandbox.project_sandbox_path || "not recorded")}</dd><dt>Worktree</dt><dd>${escapeHtml(sandbox.worktree_path || "not recorded")}</dd><dt>Mounts</dt><dd>${escapeHtml((sandbox.mounted_paths || []).map((item) => item.label || item.path || item).join(", ") || "not recorded")}</dd><dt>Network</dt><dd>${escapeHtml((sandbox.allowed_network || []).join(", ") || "not recorded")}</dd><dt>Secrets</dt><dd>${escapeHtml((sandbox.allowed_secrets || []).join(", ") || "none")}</dd><dt>Worker</dt><dd>${escapeHtml(run.worker?.adapter || "not recorded")} ${escapeHtml(run.worker?.model || "")}</dd><dt>Branch</dt><dd>${escapeHtml(run.branch || "not recorded")}</dd><dt>PR</dt><dd>${escapeHtml(run.pull_request?.url || "not opened")}</dd><dt>PR state</dt><dd>${escapeHtml(prStatus.state || run.pull_request?.state || "not recorded")} ${prStatus.auto_merge === false ? "(auto-merge disabled)" : ""}</dd><dt>Review</dt><dd>${escapeHtml(prStatus.review_decision || "not recorded")}</dd><dt>Validation</dt><dd>${escapeHtml(run.validation?.status || "not recorded")}</dd><dt>Timeline</dt><dd>${escapeHtml(timeline.map((event) => `${event.type || "event"}: ${event.summary || ""}`).join("; ") || "not recorded")}</dd><dt>Issue comments</dt><dd>${escapeHtml((run.issue_comments || []).join("; ") || "not recorded")}</dd><dt>Work log</dt><dd>${escapeHtml(run.work_log_path || "not recorded")}</dd><dt>Blockers</dt><dd>${escapeHtml((run.blockers || []).map((blocker) => blocker.message || blocker.type || blocker).join("; ") || "none")}</dd></dl></article>`;
+          const hasIssue = issue.number || run.issue_number;
+          const hasSandbox = sandbox.sandbox_id || sandbox.worktree_path || sandbox.project_sandbox_path;
+          const hasWorker = run.worker?.adapter;
+          const hasPr = run.pull_request?.url;
+          const validationStatus = run.validation?.status || "not recorded";
+          const validationClass = /fail|blocked/i.test(validationStatus) ? "bad" : /pass|ready|merged/i.test(validationStatus) ? "active" : "warn";
+          const crew = [run.worker?.adapter, run.worker?.model, prStatus.review_decision || prStatus.state].filter(Boolean);
+          return `<article class="lane run-card"><h3>${escapeHtml(run.run_id || "run")} ${hasIssue ? `#${escapeHtml(issue.number || run.issue_number)}` : ""}</h3>
+            <div class="run-track">
+              <div class="track-step ${hasIssue ? "active" : "warn"}">Issue</div>
+              <div class="track-step ${hasSandbox ? "active" : "warn"}">Sandbox</div>
+              <div class="track-step ${hasWorker ? "active" : "warn"}">Worker</div>
+              <div class="track-step ${hasPr ? "active" : "warn"}">PR</div>
+              <div class="track-step ${validationClass}">Validation</div>
+            </div>
+            <div class="crew-row">${crew.length ? crew.map((label) => `<span class="crew-token" title="${escapeHtml(label)}">${escapeHtml(String(label).slice(0, 2).toUpperCase())}</span>`).join("") : `<span class="meta">No crew assigned.</span>`}</div>
+            <dl><dt>Mission</dt><dd>${issue.url ? `<a href="${escapeHtml(issue.url)}">#${escapeHtml(issue.number || run.issue_number || "")}</a>` : `#${escapeHtml(issue.number || run.issue_number || "")}`} ${escapeHtml(issue.title || "")}</dd><dt>Labels</dt><dd>${escapeHtml((issue.labels || []).join(", ") || "not recorded")}</dd><dt>Acceptance</dt><dd>${escapeHtml((issue.acceptance || []).join("; ") || "not recorded")}</dd><dt>Dependencies</dt><dd>${escapeHtml((issue.dependencies || []).map((item) => `#${item}`).join(", ") || "none")}</dd><dt>Sandbox ID</dt><dd>${escapeHtml(sandbox.sandbox_id || "not recorded")}</dd><dt>Sandbox</dt><dd>${escapeHtml(sandbox.project_sandbox_path || "not recorded")}</dd><dt>Worktree</dt><dd>${escapeHtml(sandbox.worktree_path || "not recorded")}</dd><dt>Mounts</dt><dd>${escapeHtml((sandbox.mounted_paths || []).map((item) => item.label || item.path || item).join(", ") || "not recorded")}</dd><dt>Network</dt><dd>${escapeHtml((sandbox.allowed_network || []).join(", ") || "not recorded")}</dd><dt>Secrets</dt><dd>${escapeHtml((sandbox.allowed_secrets || []).join(", ") || "none")}</dd><dt>Branch</dt><dd>${escapeHtml(run.branch || "not recorded")}</dd><dt>PR</dt><dd>${escapeHtml(run.pull_request?.url || "not opened")}</dd><dt>PR state</dt><dd>${escapeHtml(prStatus.state || run.pull_request?.state || "not recorded")} ${prStatus.auto_merge === false ? "(auto-merge disabled)" : ""}</dd><dt>Review</dt><dd>${escapeHtml(prStatus.review_decision || "not recorded")}</dd><dt>Issue comments</dt><dd>${escapeHtml((run.issue_comments || []).join("; ") || "not recorded")}</dd><dt>Work log</dt><dd>${escapeHtml(run.work_log_path || "not recorded")}</dd><dt>Blockers</dt><dd>${escapeHtml((run.blockers || []).map((blocker) => blocker.message || blocker.type || blocker).join("; ") || "none")}</dd></dl>
+            <h3 style="margin-top: 12px;">Timeline</h3>
+            <div class="timeline-strip">${timeline.length ? timeline.slice(-5).map((event) => `<p>${escapeHtml(event.type || "event")}: ${escapeHtml(event.summary || "")}</p>`).join("") : `<p class="meta">No timeline events recorded.</p>`}</div>
+          </article>`;
         }).join("")
         : `<p class="meta">No run containers recorded.</p>`;
     }
@@ -364,8 +403,8 @@
     function renderStatus(data) {
       latestStatus = data;
       const summary = data.summary || {};
-      text("project-name", data.project?.name || "Lambchop project");
-      text("project-purpose", data.project?.purpose || "");
+      text("project-name", `${data.project?.name || "Lambchop"} Mission Floor`);
+      text("project-purpose", data.project?.purpose || "Live orchestration board for projects, runners, missions, validation, repairs, and PR movement.");
       text("refresh-status", `Streaming ${data.project?.slug || "project"} as of ${data.generated_at || new Date().toISOString()}`);
       text("todo-count", summary.todo || 0);
       text("active-count", summary.in_progress || 0);
