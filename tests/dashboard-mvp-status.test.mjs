@@ -124,6 +124,13 @@ test('dashboard HTML renders run-container PR ownership and sandbox policy field
     'Issue comments',
     'Work log',
     'auto-merge disabled',
+    'Mission Floor',
+    'Mission Control',
+    'Run Deck',
+    'mission-board',
+    'run-track',
+    'crew-token',
+    'timeline-strip',
   ]) {
     assert.match(html, new RegExp(expectedText));
   }
