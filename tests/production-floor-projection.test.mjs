@@ -324,3 +324,132 @@ test('production-floor projection gives blocked stories a blocked crew posture i
     ],
   );
 });
+
+test('production-floor evidence summary prefers latest valid timestamp over malformed evidence', async () => {
+  const projection = createProductionFloorProjection().projectFloor({
+    project: {
+      name: 'Lambchop',
+      slug: 'lambchop',
+    },
+    stories: [
+      {
+        key: 'story-evidence',
+        title: 'Keep evidence truthful',
+        floorState: 'workshop',
+        activeMissionKey: 'mission-build',
+        acceptedOutcomes: [],
+      },
+    ],
+    missions: [
+      { key: 'mission-build', storyKey: 'story-evidence', type: 'implement', status: 'active' },
+    ],
+    evidence: [
+      { type: 'validation_failed', storyKey: 'story-evidence', at: '2026-06-18T10:00:00Z', summary: 'Older valid evidence.' },
+      { type: 'agent_note', storyKey: 'story-evidence', at: 'not-a-date', summary: 'Malformed timestamp should not win.' },
+      { type: 'validation_passed', storyKey: 'story-evidence', at: '2026-06-18T12:00:00Z', summary: 'Newest valid evidence.' },
+    ],
+  });
+
+  assert.equal(projection.stories[0].evidenceSummary, 'Newest valid evidence.');
+});
+
+test('production-floor projection exposes MVP visual state, assigned agents, run, and evidence summaries for Godot', async () => {
+  const projection = createProductionFloorProjection().projectFloor({
+    project: {
+      name: 'Lambchop',
+      slug: 'lambchop',
+    },
+    currentRun: {
+      run_id: 'run-active-build',
+      active_work_item: 'story-build',
+      started_at: '2026-06-18T16:00:00Z',
+      status: 'running',
+      owner: 'codex-cli',
+    },
+    stories: [
+      {
+        key: 'story-plan',
+        title: 'Plan the next production floor improvement',
+        floorState: 'office',
+        activeMissionKey: 'mission-plan',
+        acceptedOutcomes: [],
+      },
+      {
+        key: 'story-build',
+        title: 'Build the readable board',
+        floorState: 'workshop',
+        activeMissionKey: 'mission-build',
+        acceptedOutcomes: [],
+      },
+      {
+        key: 'story-review',
+        title: 'Return failed integration to course correction',
+        floorState: 'handoff-to-office',
+        activeMissionKey: 'mission-review',
+        acceptedOutcomes: [],
+      },
+      {
+        key: 'story-blocked',
+        title: 'Resolve dashboard blocker',
+        floorState: 'blocked',
+        activeMissionKey: 'mission-repair',
+        acceptedOutcomes: [],
+      },
+    ],
+    missions: [
+      { key: 'mission-plan', storyKey: 'story-plan', type: 'brief', status: 'active' },
+      { key: 'mission-build', storyKey: 'story-build', type: 'implement', status: 'active' },
+      { key: 'mission-review', storyKey: 'story-review', type: 'validate', status: 'active' },
+      { key: 'mission-repair', storyKey: 'story-blocked', type: 'repair', status: 'active' },
+    ],
+    evidence: [
+      { type: 'validation_failed', storyKey: 'story-review', at: '2026-06-18T16:10:00Z', summary: 'Integration check failed.' },
+      { type: 'human_blocked', storyKey: 'story-blocked', at: '2026-06-18T16:15:00Z', summary: 'Waiting on Bill decision.' },
+    ],
+  });
+
+  assert.deepEqual(
+    projection.stories.map((story) => ({
+      key: story.key,
+      visualState: story.visualState,
+      assignedAgents: story.assignedAgents,
+      currentRun: story.currentRun,
+      evidenceSummary: story.evidenceSummary,
+    })),
+    [
+      {
+        key: 'story-plan',
+        visualState: 'planning',
+        assignedAgents: ['Strategist', 'Steward'],
+        currentRun: null,
+        evidenceSummary: 'No evidence yet.',
+      },
+      {
+        key: 'story-build',
+        visualState: 'building',
+        assignedAgents: ['Builder', 'Steward'],
+        currentRun: {
+          runId: 'run-active-build',
+          owner: 'codex-cli',
+          startedAt: '2026-06-18T16:00:00Z',
+          status: 'running',
+        },
+        evidenceSummary: 'No evidence yet.',
+      },
+      {
+        key: 'story-review',
+        visualState: 'handoff',
+        assignedAgents: ['Verifier', 'Strategist', 'Steward'],
+        currentRun: null,
+        evidenceSummary: 'Integration check failed.',
+      },
+      {
+        key: 'story-blocked',
+        visualState: 'blocked',
+        assignedAgents: ['Scout', 'Steward'],
+        currentRun: null,
+        evidenceSummary: 'Waiting on Bill decision.',
+      },
+    ],
+  );
+});

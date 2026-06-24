@@ -64,6 +64,94 @@ function blockedPosture(floorState, evidence) {
   return 'blocked';
 }
 
+function visualState(missionType, floorState, missionStatus) {
+  if (floorState === 'blocked') {
+    return 'blocked';
+  }
+
+  if (floorState === 'handoff-to-office' || floorState === 'handoff-to-workshop') {
+    return 'handoff';
+  }
+
+  if (floorState === 'complete' || missionStatus === 'complete' || missionStatus === 'completed') {
+    return 'complete';
+  }
+
+  if (floorState === 'office' || missionType === 'brief' || missionType === 'plan') {
+    return 'planning';
+  }
+
+  if (missionType === 'validate' || missionType === 'review' || missionType === 'integrate') {
+    return 'reviewing';
+  }
+
+  return 'building';
+}
+
+function assignedAgents(missionType, floorState) {
+  if (floorState === 'blocked') {
+    return ['Scout', 'Steward'];
+  }
+
+  if (floorState === 'handoff-to-office') {
+    return ['Verifier', 'Strategist', 'Steward'];
+  }
+
+  if (floorState === 'office' || floorState === 'handoff-to-workshop' || missionType === 'brief' || missionType === 'plan') {
+    return ['Strategist', 'Steward'];
+  }
+
+  if (missionType === 'validate' || missionType === 'review' || missionType === 'integrate') {
+    return ['Verifier', 'Steward'];
+  }
+
+  return ['Builder', 'Steward'];
+}
+
+function currentRunSummary(currentRun, storyKey) {
+  if (!currentRun) {
+    return null;
+  }
+
+  const activeWorkItem = currentRun.active_work_item ?? currentRun.activeWorkItem;
+  const workItemKey = currentRun.work_item_key ?? currentRun.workItemKey;
+
+  if (activeWorkItem !== storyKey && workItemKey !== storyKey) {
+    return null;
+  }
+
+  return {
+    runId: currentRun.run_id ?? currentRun.runId ?? null,
+    owner: currentRun.owner ?? null,
+    startedAt: currentRun.started_at ?? currentRun.startedAt ?? null,
+    status: currentRun.status ?? null,
+  };
+}
+
+function evidenceSummary(evidence) {
+  if (evidence.length === 0) {
+    return 'No evidence yet.';
+  }
+
+  const datedEvents = evidence
+    .map((event, index) => ({
+      event,
+      index,
+      at: Date.parse(event.at ?? ''),
+    }))
+    .filter(({ at }) => !Number.isNaN(at));
+
+  const latest = datedEvents.length > 0
+    ? datedEvents.reduce((selected, candidate) => (
+        candidate.at > selected.at || (candidate.at === selected.at && candidate.index > selected.index)
+          ? candidate
+          : selected
+      )).event
+    : evidence[evidence.length - 1];
+
+  return latest?.summary ?? 'No evidence yet.';
+}
+
 function studioPlacement(missionType, floorState) {
   if (floorState === 'blocked') {
     return {
@@ -139,7 +227,7 @@ function studioPlacement(missionType, floorState) {
 
 export function createProductionFloorProjection() {
   return {
-    projectFloor({ project, stories = [], missions = [], evidence = [] }) {
+    projectFloor({ project, stories = [], missions = [], evidence = [], currentRun = null }) {
       const missionsByStoryKey = new Map(
         missions.map((mission) => [mission.storyKey, clone(mission)]),
       );
@@ -159,13 +247,18 @@ export function createProductionFloorProjection() {
           : story.floorState === 'office' || story.floorState === 'handoff-to-workshop'
             ? 'office'
             : 'workshop';
-        const zone = missionZone(mission?.type ?? null, story.floorState);
-        const studio = studioPlacement(mission?.type ?? null, story.floorState);
+        const missionType = mission?.type ?? null;
+        const zone = missionZone(missionType, story.floorState);
+        const studio = studioPlacement(missionType, story.floorState);
 
         return {
           key: story.key,
           title: story.title,
           floorState: story.floorState,
+          visualState: visualState(missionType, story.floorState, mission?.status ?? null),
+          assignedAgents: assignedAgents(missionType, story.floorState),
+          currentRun: currentRunSummary(currentRun, story.key),
+          evidenceSummary: evidenceSummary(storyEvidence),
           mission,
           acceptedOutcomes: clone(story.acceptedOutcomes ?? []),
           placement: {
